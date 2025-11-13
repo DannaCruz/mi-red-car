@@ -1,0 +1,17 @@
+---
+title: "Proyecto — Mi Red CAR"
+format: html
+---
+
+# 👋 Bienvenidos
+
+Este es el proyecto colaborativo del curso **Mi Red CAR**.
+
+Cada estudiante tiene su propio análisis dentro de su carpeta:
+
+- Estudiante 1 → Est1/index.qmd  
+- Estudiante 2 → Est2/index.qmd  
+- ...
+- Estudiante 10 → Est10/index.qmd  
+
+Navega por el menú superior para ver cada análisis individual.

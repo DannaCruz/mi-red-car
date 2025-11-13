@@ -1,0 +1,17 @@
+---
+title: "Análisis de mi Red — Estudiante 10"
+format: html
+---
+
+# 🧩 Mi análisis
+
+Aquí presento mi red personal del curso.
+
+- Cargué mis datos
+- Analicé grados y centralidades
+- Encontré comunidades
+- Hice visualizaciones
+
+```{r}
+# Acá irá mi código de análisis para la red del Estudiante 10
+```

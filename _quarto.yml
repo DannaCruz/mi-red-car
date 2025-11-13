@@ -1,0 +1,44 @@
+project:
+  type: website
+
+website:
+  title: "Proyecto — Mi Red CAR"
+  navbar:
+    background: light
+    collapse-below: lg
+    left:
+      - text: "Inicio"
+        href: index.qmd
+      - text: "Estudiante 1"
+        href: Est1/index.qmd
+      - text: "Estudiante 2"
+        href: Est2/index.qmd
+      - text: "Estudiante 3"
+        href: Est3/index.qmd
+      - text: "Estudiante 4"
+        href: Est4/index.qmd
+      - text: "Estudiante 5"
+        href: Est5/index.qmd
+      - text: "Estudiante 6"
+        href: Est6/index.qmd
+      - text: "Estudiante 7"
+        href: Est7/index.qmd
+      - text: "Estudiante 8"
+        href: Est8/index.qmd
+      - text: "Estudiante 9"
+        href: Est9/index.qmd
+      - text: "Estudiante 10"
+        href: Est10/index.qmd
+
+  page-footer:
+    left: "© Curso de Programación y Lenguajes Estadísticos"
+
+format:
+  html:
+    theme:
+      light: cosmo
+    toc: true
+    toc-depth: 3
+    code-copy: true
+    code-overflow: wrap
+    css: styles.css
