@@ -1,0 +1,122 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2867
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\froman\fcharset0 Times-Bold;\f2\fmodern\fcharset0 Courier-Bold;
+\f3\fmodern\fcharset0 Courier;\f4\froman\fcharset0 Times-Italic;\f5\froman\fcharset0 Times-BoldItalic;
+}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red109\green109\blue109;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c50196\c50196\c50196;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid1}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Perfecto, Profe. Aqu\'ed tienes un 
+\f1\b texto simple, corto, definitivo y sin enredos
+\f0\b0 , para que lo uses SIEMPRE con tus estudiantes y en cualquier proyecto:\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 \uc0\u55357 \u56594  Regla definitiva para usar Quarto + GitHub + alumnos (texto simple y estable)\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\fs24 \cf0 1. La p\'e1gina web SIEMPRE se publica desde la carpeta 
+\f2\fs26 docs/
+\f1\fs24 .
+\f0\b0 \uc0\u8232 Por eso, en el archivo 
+\f3\fs26 _quarto.yml
+\f0\fs24  debe aparecer:\
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs26 \cf0 project:\
+  type: website\
+  output-dir: docs\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b\fs24 \cf0 2. Nadie debe usar 
+\f2\fs26 _site/
+\f1\fs24 .
+\f0\b0 \uc0\u8232 Esa carpeta la crea Quarto cuando alguien hace 
+\f4\i Render Website
+\f0\i0 , pero 
+\f1\b NO la necesitamos
+\f0\b0 .\uc0\u8232 Si aparece, simplemente se borra:\
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs26 \cf0 rm -rf _site\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b\fs24 \cf0 3. Los estudiantes NO deben renderizar el sitio completo (no \'93Render Website\'94).
+\f0\b0 \uc0\u8232 Cada estudiante debe 
+\f1\b solo renderizar su archivo
+\f0\b0 , por ejemplo:\
+\pard\tx220\tx720\pardeftab720\li720\fi-720\sa240\partightenfactor0
+\ls1\ilvl0
+\f3\fs26 \cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Est1/index.qmd
+\f0\fs24 \
+\ls1\ilvl0
+\f3\fs26 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 {\listtext	\uc0\u8226 	}\expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Est2/index.qmd
+\f0\fs24 \
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 Usando \'93Render Document\'94 (Cmd + Shift + K), nunca \'93Render Website\'94.\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b \cf0 4. El archivo 
+\f2\fs26 .gitignore
+\f1\fs24  debe ser muy corto, solo esto:
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs26 \cf0 .Rproj.user/\
+.DS_Store\
+.quarto-cache/\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b\fs24 \cf0 5. La carpeta 
+\f2\fs26 docs/
+\f1\fs24  S\'cd debe subir a GitHub.
+\f0\b0 \uc0\u8232 Porque GitHub Pages lee esa carpeta directamente.\
+
+\f1\b 6. Cada vez que t\'fa (la profe) quieras actualizar la p\'e1gina web, solo corre:
+\f0\b0 \
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs26 \cf0 quarto render\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 y luego:\
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs26 \cf0 git add .\
+git commit -m "Update website"\
+git push\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f1\b\fs24 \cf0 7. Si aparece 
+\f2\fs26 _site/
+\f1\fs24 , conflictos, locks o cosas raras:
+\f0\b0 \uc0\u8232 Siempre limpia as\'ed:\
+\pard\pardeftab720\partightenfactor0
+
+\f3\fs26 \cf0 rm -rf _site .quarto-cache\
+git clean -fd\
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\fs24 \cf0 Y ya.\
+\pard\pardeftab720\partightenfactor0
+\cf3 \strokec3 \
+\pard\pardeftab720\sa321\partightenfactor0
+
+\f1\b\fs48 \cf0 \strokec2 \uc0\u11088  
+\f5\i Este es el texto definitivo.
+\f1\i0 \
+\pard\pardeftab720\sa240\partightenfactor0
+
+\f0\b0\fs24 \cf0 Sencillo, estable, y funciona SIEMPRE.\
+Si quieres, te lo dejo tambi\'e9n como una secci\'f3n lista para pegar en tu 
+\f1\b Gu\'eda Oficial de Git + Quarto
+\f0\b0 .\
+}
