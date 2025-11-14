@@ -1,5 +1,5 @@
 ---
-title: "Análisis de mi Red — Estudiante 1"
+title: "Análisis de mi Red — Estudiante Prueba 1 Yo"
 format: html
 ---
 
