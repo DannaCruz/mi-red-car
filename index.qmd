@@ -17,5 +17,5 @@ Cada estudiante tiene su propio análisis dentro de su carpeta:
 Navega por el menú superior para ver cada análisis individual.
 
 
-HAY 12 CARPETAS
+HAY 12 CARPETAS - organizado vertical
 
