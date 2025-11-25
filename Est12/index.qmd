@@ -1,5 +1,5 @@
 ---
-title: "Análisis de mi Red — aarevaloa"
+title: "Análisis de mi Red — Estudiante 11"
 format: html
 ---
 
@@ -13,14 +13,8 @@ Aquí presento mi red personal del curso.
 -   Hice visualizaciones
 
 ```{r}
-library(readr)
+# Acá irá mi código de análisis para la red del Estudiante 11
 ```
 
-```{r}
-hospitales <- read_csv("Est5/hospitales.csv")
-```
-
-```{r}
-knitr::include_graphics("Red_hospitales.png")
-```
+![](images.jpeg)
 
