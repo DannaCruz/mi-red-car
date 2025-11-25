@@ -2,35 +2,42 @@ project:
   type: website
   output-dir: docs
 
-
 website:
   title: "Proyecto — Mi Red CAR"
-  navbar:
-    background: light
-    collapse-below: lg
-    left:
+  sidebar:
+    style: "docked"
+    search: true
+    logo: images/logo.png   # opcional
+    contents:
       - text: "Inicio"
         href: index.qmd
-      - text: "Estudiante 1"
-        href: Est1/index.qmd
-      - text: "Estudiante 2"
-        href: Est2/index.qmd
-      - text: "Estudiante 3"
-        href: Est3/index.qmd
-      - text: "Estudiante 4"
-        href: Est4/index.qmd
-      - text: "Estudiante 5"
-        href: Est5/index.qmd
-      - text: "Estudiante 6"
-        href: Est6/index.qmd
-      - text: "Estudiante 7"
-        href: Est7/index.qmd
-      - text: "Estudiante 8"
-        href: Est8/index.qmd
-      - text: "Estudiante 9"
-        href: Est9/index.qmd
-      - text: "Estudiante 10"
-        href: Est10/index.qmd
+
+      - section: "Estudiantes"
+        contents:
+          - text: "Estudiante 1"
+            href: Est1/index.qmd
+          - text: "Estudiante 2"
+            href: Est2/index.qmd
+          - text: "Estudiante 3"
+            href: Est3/index.qmd
+          - text: "Estudiante 4"
+            href: Est4/index.qmd
+          - text: "Estudiante 5"
+            href: Est5/index.qmd
+          - text: "Estudiante 6"
+            href: Est6/index.qmd
+          - text: "Estudiante 7"
+            href: Est7/index.qmd
+          - text: "Estudiante 8"
+            href: Est8/index.qmd
+          - text: "Estudiante 9"
+            href: Est9/index.qmd
+          - text: "Estudiante 10"
+            href: Est10/index.qmd
+          - text: "Estudiante 11"
+            href: Est11/index.qmd
+          - text: "Estudiante 12"
+            href: Est12/index.qmd            
 
   page-footer:
     left: "© Curso de Programación y Lenguajes Estadísticos"
