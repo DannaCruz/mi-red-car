@@ -18,4 +18,4 @@ Aquí presento mi red personal del curso.
 
 Esta es mi primera prueba usando Git y Quarto dentro del proyecto.
 
-![](hotel.png)
+![](hotel.jpg)
