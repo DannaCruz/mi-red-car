@@ -48,31 +48,20 @@
     "href": "index.html",
     "title": "Proyecto — Mi Red CAR",
     "section": "",
-    "text": "👋 Bienvenidos\nEste es el proyecto colaborativo del curso Mi Red CAR.\nCada estudiante tiene su propio análisis dentro de su carpeta:\n\nEstudiante 1 → Est1/index.qmd\n\nEstudiante 2 → Est2/index.qmd\n\n…\nEstudiante 10 → Est10/index.qmd\n\nNavega por el menú superior para ver cada análisis individual.\nHAY 12 CARPETAS",
+    "text": "👋 Bienvenidos\nEste es el proyecto colaborativo del curso Mi Red CAR.\nCada estudiante tiene su propio análisis dentro de su carpeta:\n\nEstudiante 1 → Est1/index.qmd\n\nEstudiante 2 → Est2/index.qmd\n\n…\nEstudiante 10 → Est10/index.qmd\n\nNavega por el menú superior para ver cada análisis individual.\nHAY 12 CARPETAS - organizado vertical",
     "crumbs": [
       "Inicio"
     ]
   },
   {
-    "objectID": "Est3/index.html",
-    "href": "Est3/index.html",
-    "title": "Análisis de mi Red — Estudiante 3",
+    "objectID": "Est4/index.html",
+    "href": "Est4/index.html",
+    "title": "Análisis de mi Red — Estudiante 4",
     "section": "",
-    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 3",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 4",
     "crumbs": [
       "Estudiantes",
-      "Estudiante 3"
-    ]
-  },
-  {
-    "objectID": "Est5/index.html",
-    "href": "Est5/index.html",
-    "title": "Análisis de mi Red — aarevaloa",
-    "section": "",
-    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\nlibrary(readr)\n\n\nhospitales &lt;- read_csv(\"hospitales.csv\")\n\nRows: 60 Columns: 9\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): place_id, nombre, address, types\ndbl (4): rating, reseñas, lat, lon\nlgl (1): price_level\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nknitr::include_graphics(\"Red_hospitales.png\")",
-    "crumbs": [
-      "Estudiantes",
-      "Estudiante 5"
+      "Estudiante 4"
     ]
   },
   {
@@ -87,14 +76,36 @@
     ]
   },
   {
-    "objectID": "Est4/index.html",
-    "href": "Est4/index.html",
-    "title": "Análisis de mi Red — Estudiante 4",
+    "objectID": "Est5/index.html",
+    "href": "Est5/index.html",
+    "title": "Análisis de mi Red — aarevaloa",
     "section": "",
-    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 4",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\nlibrary(readr)\n\n\nhospitales &lt;- read_csv(\"hospitales.csv\")\n\nRows: 60 Columns: 9\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): place_id, nombre, address, types\ndbl (4): rating, reseñas, lat, lon\nlgl (1): price_level\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nknitr::include_graphics(\"Red_hospitales.png\")",
     "crumbs": [
       "Estudiantes",
-      "Estudiante 4"
+      "Estudiante 5"
+    ]
+  },
+  {
+    "objectID": "Est3/index.html",
+    "href": "Est3/index.html",
+    "title": "Análisis de mi Red — Estudiante 3",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 3",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 3"
+    ]
+  },
+  {
+    "objectID": "Est13/index.html",
+    "href": "Est13/index.html",
+    "title": "Análisis de mi Red — Estudiante 11",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 11",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 13"
     ]
   },
   {
