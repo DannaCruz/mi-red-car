@@ -18,7 +18,7 @@ Aquí presento mi red personal del curso.
 # Acá irá mi código de análisis para la red del Estudiante 12
 ```
 
-![](gato.jpeg)
+![](gato.jpg)
 
 Acá dejo mi primera imagen en el proyecto.
 
