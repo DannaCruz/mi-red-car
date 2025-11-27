@@ -1,5 +1,5 @@
 ---
-title: "Análisis de mi Red — Estudiante 5"
+title: "Análisis de mi Red LIMP"
 format: html
 ---
 
@@ -13,5 +13,11 @@ Aquí presento mi red personal del curso.
 - Hice visualizaciones
 
 ```{r}
-# Acá irá mi código de análisis para la red del Estudiante 5
+# Acá irá mi código de análisis para la red del Estudiante 1
 ```
+
+![](escuela.png)
+
+Esta es mi primera prueba usando Git y Quarto dentro del proyecto.
+
+

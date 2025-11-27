@@ -1,0 +1,26 @@
+---
+title: "Análisis de mi Red — aarevaloa"
+format: html
+---
+
+# 🧩 Mi análisis
+
+Aquí presento mi red personal del curso.
+
+-   Cargué mis datos
+-   Analicé grados y centralidades
+-   Encontré comunidades
+-   Hice visualizaciones
+
+```{r}
+library(readr)
+```
+
+```{r}
+hospitales <- read_csv("hospitales.csv")
+```
+
+```{r}
+knitr::include_graphics("Red_hospitales.png")
+```
+
