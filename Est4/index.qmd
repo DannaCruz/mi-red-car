@@ -1,17 +1,20 @@
 ---
-title: "Análisis de mi Red — Estudiante 4"
+title: "Red de vecindad de licenciamiento de cannabis por tipología"
 format: html
+author: Sofía A. Ropero Rodriguez
 ---
 
 # 🧩 Mi análisis
 
 Aquí presento mi red personal del curso.
 
-- Cargué mis datos
-- Analicé grados y centralidades
-- Encontré comunidades
-- Hice visualizaciones
+-   Cargué mis datos
+-   Analicé grados y centralidades
+-   Encontré comunidades
+-   Hice visualizaciones
 
 ```{r}
 # Acá irá mi código de análisis para la red del Estudiante 4
 ```
+
+![Referencia imágen de derivados del cannabis](derivados.jpeg)

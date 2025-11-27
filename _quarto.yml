@@ -13,7 +13,7 @@ website:
         href: index.qmd
       - text: "Estudiante 1"
         href: Est1/index.qmd
-      - text: "Estudiante 2"
+      - text: "Red de hoteles Bogotá"
         href: Est2/index.qmd
       - text: "Estudiante 3"
         href: Est3/index.qmd

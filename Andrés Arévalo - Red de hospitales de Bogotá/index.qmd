@@ -17,7 +17,7 @@ library(readr)
 ```
 
 ```{r}
-hospitales <- read_csv("Est5/hospitales.csv")
+hospitales <- read_csv("hospitales.csv")
 ```
 
 ```{r}

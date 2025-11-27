@@ -1,5 +1,5 @@
 ---
-title: "Análisis de mi Red — Estudiante 6"
+title: "Análisis de uaa red de cines — Julian Barros Hernandez"
 format: html
 ---
 

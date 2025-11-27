@@ -15,3 +15,7 @@ Cada estudiante tiene su propio análisis dentro de su carpeta:
 - Estudiante 10 → Est10/index.qmd  
 
 Navega por el menú superior para ver cada análisis individual.
+
+
+HAY 12 CARPETAS - organizado vertical
+

@@ -1,0 +1,24 @@
+---
+title: "Red Felina: Un Estudio de Grafos de las
+Fundaciones de Gatos en Bogotá y sus Alrededores."
+format: html
+author: Danna Catalina Amezquita Borja.
+---
+
+# 🧩 Mi análisis
+
+Aquí presento mi red personal del curso.
+
+-   Cargué mis datos
+-   Analicé grados y centralidades
+-   Encontré comunidades
+-   Hice visualizaciones
+
+```{r}
+# Acá irá mi código de análisis para la red del Estudiante 12
+```
+
+![](gato.jpg)
+
+Acá dejo mi primera imagen en el proyecto.
+
