@@ -1,5 +1,5 @@
 ---
-title: "Análisis de mi Red — Estudiante 2"
+title: "Análisis de mi Red de hoteles — Estudiante 2"
 format: html
 ---
 
@@ -18,7 +18,6 @@ Aquí presento mi red personal del curso.
 
 Esta es mi primera prueba usando Git y Quarto dentro del proyecto.
 
-<<<<<<< HEAD
 Aqui voy a cargar mis datos csv de mi red de hoteles
 
 ```{r}
@@ -27,6 +26,3 @@ hotel_bogota <- read_csv("Est2/hotel_bogota.csv")
 ```
 
 ![](hotel.jpg)
-=======
-![](hotel.jpg)
->>>>>>> 598273186cc4aa8890cd02476fae41fc893b43f7
