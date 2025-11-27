@@ -7,10 +7,10 @@ format: html
 
 Aquí presento mi red personal del curso.
 
-- Cargué mis datos
-- Analicé grados y centralidades
-- Encontré comunidades
-- Hice visualizaciones
+-   Cargué mis datos
+-   Analicé grados y centralidades
+-   Encontré comunidades
+-   Hice visualizaciones
 
 ```{r}
 # Acá irá mi código de análisis para la red del Estudiante 2
@@ -18,4 +18,11 @@ Aquí presento mi red personal del curso.
 
 Esta es mi primera prueba usando Git y Quarto dentro del proyecto.
 
-![](hotel.png)
+Aqui voy a cargar mis datos csv de mi red de hoteles
+
+```{r}
+library(readr)
+hotel_bogota <- read_csv("Est2/hotel_bogota.csv")
+```
+
+![](hotel.jpg)
