@@ -15,6 +15,7 @@ website:
       - section: "Estudiantes"
         contents:
           - text: "Red Colegios Bta"
+          - text: "Estudiante 1"
             href: Est1/index.qmd
           - text: "Estudiante 2"
             href: Est2/index.qmd

@@ -1,10 +1,22 @@
 [
   {
+<<<<<<< HEAD
     "objectID": "YesicaSepulvedaCardona-Red Colegios Bta/index.html",
     "href": "YesicaSepulvedaCardona-Red Colegios Bta/index.html",
     "title": "Análisis de mi Red LIMP",
     "section": "",
     "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 1\n\n\nEsta es mi primera prueba usando Git y Quarto dentro del proyecto."
+=======
+    "objectID": "Est11/index.html",
+    "href": "Est11/index.html",
+    "title": "Análisis de mi Red — Estudiante 11",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 11",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 11"
+    ]
+>>>>>>> 598273186cc4aa8890cd02476fae41fc893b43f7
   },
   {
     "objectID": "Est9/index.html",
@@ -18,6 +30,20 @@
     ]
   },
   {
+<<<<<<< HEAD
+=======
+    "objectID": "Est6/index.html",
+    "href": "Est6/index.html",
+    "title": "Análisis de mi Red — Estudiante 6",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 6",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 6"
+    ]
+  },
+  {
+>>>>>>> 598273186cc4aa8890cd02476fae41fc893b43f7
     "objectID": "Est8/index.html",
     "href": "Est8/index.html",
     "title": "Análisis de mi Red — Estudiante 8",
@@ -29,6 +55,7 @@
     ]
   },
   {
+<<<<<<< HEAD
     "objectID": "Est6/index.html",
     "href": "Est6/index.html",
     "title": "Análisis de uaa red de cines — Julian Barros Hernandez",
@@ -37,6 +64,48 @@
     "crumbs": [
       "Estudiantes",
       "Estudiante 6"
+=======
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Proyecto — Mi Red CAR",
+    "section": "",
+    "text": "👋 Bienvenidos\nEste es el proyecto colaborativo del curso Mi Red CAR.\nCada estudiante tiene su propio análisis dentro de su carpeta:\n\nEstudiante 1 → Est1/index.qmd\n\nEstudiante 2 → Est2/index.qmd\n\n…\nEstudiante 10 → Est10/index.qmd\n\nNavega por el menú superior para ver cada análisis individual.\nHAY 12 CARPETAS - organizado vertical",
+    "crumbs": [
+      "Inicio"
+    ]
+  },
+  {
+    "objectID": "Est4/index.html",
+    "href": "Est4/index.html",
+    "title": "Análisis de mi Red — Estudiante 4",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 4",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 4"
+    ]
+  },
+  {
+    "objectID": "Est2/index.html",
+    "href": "Est2/index.html",
+    "title": "Análisis de mi Red — Estudiante 2",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 2\n\nEsta es mi primera prueba usando Git y Quarto dentro del proyecto.",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 2"
+    ]
+  },
+  {
+    "objectID": "Est5/index.html",
+    "href": "Est5/index.html",
+    "title": "Análisis de mi Red — aarevaloa",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\nlibrary(readr)\n\n\nhospitales &lt;- read_csv(\"hospitales.csv\")\n\nRows: 60 Columns: 9\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr (4): place_id, nombre, address, types\ndbl (4): rating, reseñas, lat, lon\nlgl (1): price_level\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\nknitr::include_graphics(\"Red_hospitales.png\")",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 5"
+>>>>>>> 598273186cc4aa8890cd02476fae41fc893b43f7
     ]
   },
   {
@@ -62,13 +131,19 @@
     ]
   },
   {
+<<<<<<< HEAD
     "objectID": "Est11/index.html",
     "href": "Est11/index.html",
+=======
+    "objectID": "Est12/index.html",
+    "href": "Est12/index.html",
+>>>>>>> 598273186cc4aa8890cd02476fae41fc893b43f7
     "title": "Análisis de mi Red — Estudiante 11",
     "section": "",
     "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 11",
     "crumbs": [
       "Estudiantes",
+<<<<<<< HEAD
       "Estudiante 11"
     ]
   },
@@ -117,6 +192,20 @@
     "crumbs": [
       "Estudiantes",
       "Estudiante 4"
+=======
+      "Estudiante 12"
+    ]
+  },
+  {
+    "objectID": "Est1/index.html",
+    "href": "Est1/index.html",
+    "title": "Análisis de mi Red LIMP",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 1",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 1"
+>>>>>>> 598273186cc4aa8890cd02476fae41fc893b43f7
     ]
   },
   {
@@ -131,6 +220,7 @@
     ]
   },
   {
+<<<<<<< HEAD
     "objectID": "index.html",
     "href": "index.html",
     "title": "Proyecto — Mi Red CAR",
@@ -138,6 +228,16 @@
     "text": "👋 Bienvenidos\nEste es el proyecto colaborativo del curso Mi Red CAR.\nCada estudiante tiene su propio análisis dentro de su carpeta:\n\nEstudiante 1 → Est1/index.qmd\n\nEstudiante 2 → Est2/index.qmd\n\n…\nEstudiante 10 → Est10/index.qmd\n\nNavega por el menú superior para ver cada análisis individual.\nHAY 12 CARPETAS - organizado vertical",
     "crumbs": [
       "Inicio"
+=======
+    "objectID": "Est10/index.html",
+    "href": "Est10/index.html",
+    "title": "Análisis de mi Red — Estudiante 10",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 10",
+    "crumbs": [
+      "Estudiantes",
+      "Estudiante 10"
+>>>>>>> 598273186cc4aa8890cd02476fae41fc893b43f7
     ]
   }
 ]
