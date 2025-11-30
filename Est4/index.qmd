@@ -2,6 +2,12 @@
 title: "Red de vecindad de licenciamiento de cannabis por tipología"
 format: html
 author: Sofía A. Ropero Rodriguez
+listing:
+  type: grid
+  sort: none
+  contents:
+    - descriptivo.qmd
+    - bayesiano.qmd
 ---
 
 # 🧩 Mi análisis
