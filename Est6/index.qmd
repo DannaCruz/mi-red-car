@@ -1,17 +1,22 @@
 ---
-title: "Análisis de uaa red de cines — Julian Barros Hernandez"
+title: "Análisis de una red de cines — Julian Barros Hernandez"
 format: html
+listing: 
+  type: grid
+  sort: none
+  contents:
+    - text: Est. Descriptiva
+      href: Est6-descriptiva.qmd
+    - text: Est. Bayesiana
+      href: Est6-bayesiana.qmd
 ---
 
-# 🧩 Mi análisis
+# Mi red de datos
 
-Aquí presento mi red personal del curso.
+Este sitio resume el análisis que realicé sobre una red de cines.  
+Se muestra carga de datos, construccion de la red, calculo de medidas como grados y centralidades, identificacion de comunidades y generacion de visualizaciones.  
 
-- Cargué mis datos
-- Analicé grados y centralidades
-- Encontré comunidades
-- Hice visualizaciones
+Puedes navegar a cada parte del análisis desde el menú.
 
-```{r}
-# Acá irá mi código de análisis para la red del Estudiante 6
-```
+
+![Foto de un cine](figs/cinema.png){width=70%}

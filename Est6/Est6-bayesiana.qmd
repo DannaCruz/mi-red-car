@@ -1,0 +1,5 @@
+---
+title: "Est6-bayesiana"
+format: html
+---
+

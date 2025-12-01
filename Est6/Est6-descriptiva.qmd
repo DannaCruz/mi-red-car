@@ -1,0 +1,73 @@
+---
+title: "Est6-descriptiva"
+format: html
+---
+
+```{r, message = FALSE}
+library(tidyverse)
+library(igraph)
+library(FNN)        # para k-NN
+library(geosphere)  # distancia haversine
+
+df <- read.csv("cine_data.csv")
+head(df)
+
+```
+
+```{r}
+coords <- df %>% 
+  drop_na(lat, lon) %>% 
+  select(lat, lon) %>% 
+  as.matrix()
+
+# Convertir a radianes (igual que Python)
+coords_rad <- coords * pi/180
+k <- 6
+
+
+```
+
+```{r}
+nbrs <- get.knn(coords_rad, k = k)
+idx <- nbrs$nn.index
+
+```
+
+```{r}
+G <- graph_empty(nrow(coords), directed = FALSE)
+
+# Añadir atributos de nodo
+V(G)$name <- df$name
+V(G)$rating <- df$rating
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
