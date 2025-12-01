@@ -1,24 +1,119 @@
 ---
-title: "Red Felina: Un Estudio de Grafos de las
-Fundaciones de Gatos en Bogotá y sus Alrededores."
+title: "Red Felina: Un Estudio de Grafos de las Fundaciones de Gatos en Bogotá y sus Alrededores."
 format: html
 author: Danna Catalina Amezquita Borja.
+css: styles.css
+execute: 
+  freeze: true
 ---
 
-# 🧩 Mi análisis
+```{=html}
+<style>
+/* Solo ajustes visuales, sin cambiar la tipografía por defecto de Quarto */
 
-Aquí presento mi red personal del curso.
+/* Modo claro */
+:root {
+  color-scheme: light;
+}
 
--   Cargué mis datos
--   Analicé grados y centralidades
--   Encontré comunidades
--   Hice visualizaciones
+/* Fondo blanco y texto oscuro */
+body { 
+  background: #ffffff;
+  color: #111;
+}
 
-```{r}
-# Acá irá mi código de análisis para la red del Estudiante 12
+/* Contenedor principal */
+.container { 
+  max-width: 1100px; 
+  margin: 30px auto; 
+}
+
+/* Imagen principal */
+.header-img {
+  width: 100%; 
+  max-height: 360px; 
+  object-fit: cover; 
+  border-radius: 6px;
+  display:block;
+}
+
+/* Texto inicial */
+.top-desc { 
+  margin: 18px 0 28px 0; 
+  font-size: 1.05rem; line-height:1.5;
+}
+
+/* Tarjetas */
+.card-row { 
+  display: flex; 
+  gap: 18px; 
+  margin-bottom: 35px;
+}
+
+.card { 
+  background: #f7f7f7; 
+  border-radius: 10px; 
+  padding: 16px; 
+  flex: 1; 
+  border: 1px solid #ddd;
+  transition: 0.25s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.card h3 { 
+  margin-top: 10px; 
+  margin-bottom: 8px; 
+  font-size: 1.1rem; 
+}
+
+.card p { 
+  font-size: 0.95rem; 
+}
+
+.card .thumb { 
+  height: 120px; 
+  width: 100%; 
+  object-fit: cover; 
+  border-radius: 6px;
+  
+}
+</style>
 ```
 
-![](gato.jpg)
+::::::: container
+<!-- Imagen superior -->
 
-Acá dejo mi primera imagen en el proyecto.
+<img src="head.jpg" alt="Encabezado" class="header-img"/>
+
+<!-- Descripción -->
+
+::: top-desc
+Este proyecto aplica análisis de redes y teoría de grafos para estudiar las fundaciones de gatos en Bogotá y sus alrededores, utilizando un enfoque metodológico dual que combina análisis descriptivo y modelado bayesiano. El trabajo construye un grafo que representa las conexiones y relaciones entre las fundaciones, permitiendo caracterizar la estructura del ecosistema de cuidado felino a través de métricas de red, clusters de colaboración, y patrones de distribución geográfica.
+:::
+
+<!-- Tarjetas -->
+
+::::: card-row
+<!-- Descriptiva -->
+
+::: {.card}
+<img class="thumb" src="descrptiva.jpg" alt="Análisis descriptivo" style="width:auto; height:auto; max-width:none; max-height:none;"/>
+<h3>Descriptiva</h3>
+<p>Se exploran las propiedades topológicas del grafo generado para identificar nodos centrales, comunidades naturales de organizaciones, y flujos de información o recursos.</p>
+<p><a href="descriptiva.qmd" style="text-decoration:none; font-weight:bold;">Abrir sección →</a></p>
+:::
+<!-- Bayesiana -->
+
+::: card
+<img class="thumb" src="bayesiana.jpg" alt="Análisis Bayesiano" style="width:auto; height:auto; max-width:none; max-height:none;"/>
+<h3>Bayesiana</h3>
+<p>Incorpora incertidumbre y conocimiento previo para realizar inferencias probabilísticas sobre factores como capacidad de adopción, cobertura geográfica óptima, y probabilidad de colaboración entre fundaciones, proporcionando insights accionables para mejorar la coordinación del cuidado animal en la región.</p>
+<p><a href="bayesiana.qmd" style="text-decoration:none; font-weight:bold;">Abrir sección →</a></p>
+:::
+:::::
+:::::::
 
