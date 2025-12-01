@@ -2,7 +2,6 @@ project:
   type: website
   output-dir: docs
 
-
 website:
   title: "Proyecto — Mi Red CAR"
   navbar:
@@ -11,41 +10,18 @@ website:
     left:
       - text: "Inicio"
         href: index.qmd
-<<<<<<< HEAD
-      - text: "Estudiante 1"
-        href: Est1/index.qmd
-      - text: "Red de hoteles Bogotá"
-        href: Est2/index.qmd
-      - text: "Estudiante 3"
-        href: Est3/index.qmd
-      - text: "Estudiante 4"
-        href: Est4/index.qmd
-      - text: "Estudiante 5"
-        href: Est5/index.qmd
-      - text: "Estudiante 6"
-        href: Est6/index.qmd
-      - text: "Estudiante 7"
-        href: Est7/index.qmd
-      - text: "Estudiante 8"
-        href: Est8/index.qmd
-      - text: "Estudiante 9"
-        href: Est9/index.qmd
-      - text: "Estudiante 10"
-        href: Est10/index.qmd
-=======
 
-      - section: "Estudiantes"
-        contents:
-          - text: "Red Colegios Bta"
+      - text: "Estudiantes"
+        menu:
           - text: "Estudiante 1"
             href: Est1/index.qmd
-          - text: "Estudiante 2"
+          - text: "Red de hoteles Bogotá"
             href: Est2/index.qmd
           - text: "Estudiante 3"
             href: Est3/index.qmd
-          - text: "Estudiante 4"
+          - text: "Licenciamiento de cannabis"
             href: Est4/index.qmd
-          - text: "Estudiante 5"
+          - text: " Red hospitalaria de Bogotá y su área metropolitana"
             href: Est5/index.qmd
           - text: "Estudiante 6"
             href: Est6/index.qmd
@@ -57,13 +33,12 @@ website:
             href: Est9/index.qmd
           - text: "Estudiante 10"
             href: Est10/index.qmd
-          - text: "Estudiante 11"
+          - text: "Estudiante 10"
             href: Est11/index.qmd
-          - text: "Estudiante 12"
-            href: Est12/index.qmd     
+          - text: "Red fundaciones felinas"
+            href: Est12/intro.qmd
           - text: "Estudiante 13"
-            href: Est13/index.qmd             
->>>>>>> c3b5866a4af90ef44cdc7163278040b47e104f67
+            href: Est13/index.qmd
 
   page-footer:
     left: "© Curso de Programación y Lenguajes Estadísticos"

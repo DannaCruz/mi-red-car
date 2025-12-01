@@ -1,0 +1,6 @@
+---
+title: PRELIMINARES
+jupyter: python3
+---
+
+Borre todo porque no es compatible y no está bien
