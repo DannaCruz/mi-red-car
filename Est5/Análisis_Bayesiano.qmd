@@ -1,0 +1,5 @@
+---
+title: "Análisis Bayesiano"
+author: "Andrés Arévalo"
+editor: visual
+---
