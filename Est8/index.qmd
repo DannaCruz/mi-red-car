@@ -1,7 +1,14 @@
 ---
-title: "Análisis de redes espaciales de estaciones de gasolina
-en Bogotá mediante teoría de grafos — Samuel Andrés Moreno"
+title: "Análisis de redes espaciales de estaciones de gasolina en Bogotá mediante teoría de grafos"
+
 format: html
+author: Samuel A. Moreno Lascarro
+listing:
+  type: grid
+  sort: none
+  contents:
+    - Descriptivo.qmd
+    - Bayesiano.qmd
 ---
 
 # 🧩 Mi análisis
@@ -15,12 +22,5 @@ Aquí presento mi red personal del curso.
 
 ```{r}
 # Acá irá mi código de análisis para la red del Estudiante 8
-
-library(readr)
-Gasolineras_bogota <- read_csv("Gasolineras_bogota.csv")
-View(Gasolineras_bogota)
 ```
 ![](Gas.jpg)
-##Mi primera página
-
-Este es mi segundo intento tratando de que Git funcione
