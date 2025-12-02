@@ -1,7 +1,13 @@
 ---
 title: "Red de Barberias - Est14"
-author: "Juan Pablo Casilimas Camargo"
 format: html
+author: "Juan Pablo Casilimas Camargo"
+listing:
+  type: grid
+  sort: none
+  contents:
+    - descriptivo.qmd
+    - bayesiano.qmd
 ---
 
 ## Mi primera página
@@ -16,7 +22,9 @@ Aquí presento mi red personal del curso.
 - Encontré comunidades  
 - Hice visualizaciones  
 
-### Construcción del grafo de proximidad
+## Construcción del grafo de proximidad
+
+
 Los datos provienen de una base tipo Google Places/Yelp, exportada como `barberia_bogota.csv`.  
 Cada fila representa una barbería con atributos como coordenadas, calificación y número de reseñas.
 
@@ -54,6 +62,6 @@ for(i in 1:nrow(df)){
 
 # Opcional: visualizar resumen del grafo
 print(G)
-
+```
 
 
