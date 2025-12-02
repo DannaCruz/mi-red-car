@@ -1,26 +1,380 @@
+Conversación abierta. 12 mensajes. Todos los mensajes leídos.
+
+Ir al contenido
+Uso de Correo de Universidad Nacional de Colombia con lectores de pantalla
+in:sent 
+
+1 de 286
+Programación estadística - Java clase 1
+Recibidos
+
+Andres Felipe Arevalo Arevalo <aarevaloa@unal.edu.co>
+Archivos adjuntos
+mar, 26 ago, 8:42
+para mí
+
+
+Andrés Felipe Arévalo Arévalo
+Economista - Estudiante de Estadística 
+Universidad Nacional de Colombia 
+E-mail: aarevaloa@unal.edu.co
+
+ Un archivo adjunto
+  •  Analizados por Gmail
+
+Andres Felipe Arevalo Arevalo
+Archivos adjuntos
+jue, 28 ago, 8:39
+Andrés Felipe Arévalo ArévaloEconomista - Estudiante de Estadística Universidad Nacional de Colombia E-mail: aarevaloa@unal.edu.co El mar, 26 ago 2025 a las 8:4
+8
+
+Andres Felipe Arevalo Arevalo
+Archivos adjuntos
+mar, 21 oct, 7:53
+Andrés Felipe Arévalo ArévaloEconomista - Estudiante de Estadística Universidad Nacional de Colombia E-mail: aarevaloa@unal.edu.co El mar, 14 oct 2025 a las 7:5
+
+Andres Felipe Arevalo Arevalo <aarevaloa@unal.edu.co>
+Archivos adjuntos
+8:58 (hace 5 horas)
+para mí
+
+ Un archivo adjunto
+  •  Analizados por Gmail
 ---
-title: "Análisis de mi Red — aarevaloa"
-format: html
+title: "Análisis descriptivo de la red Hospitalaria de Bogotá y su área metropolitana"
+listing:
+  type: grid
+  sort: none
+  contents:
+    - Analisis_descriptivo.qmd
 ---
 
-# 🧩 Mi análisis
+# Abstract
 
-Aquí presento mi red personal del curso.
+El acceso oportuno a servicios de salud de mediana y alta complejidad depende no sólo del número de instituciones disponibles, sino también de su distribución espacial y de la forma en que se articulan dentro del territorio urbano. En este trabajo se presenta un análisis estructural de la red de hospitales de Bogotá y su área metropolitana a partir de datos abiertos de opinión en Google. Se recopilaron 60 instituciones hospitalarias con información de localización geográfica, nombre, calificación promedio y número de reseñas. Con estos datos se construyó un grafo geográfico no dirigido mediante un modelo de $k$ vecinos más cercanos ($k=6$) sobre la métrica haversine, en el que los nodos representan hospitales y las aristas indican proximidad espacial. \\
 
--   Cargué mis datos
--   Analicé grados y centralidades
--   Encontré comunidades
--   Hice visualizaciones
+Sobre esta red se calcularon medidas clásicas de teoría de grafos; distribución de grados, centralidades de grado, cercanía e intermediación, coeficiente de agrupamiento, longitud promedio de caminos mínimos y diámetro. Se aplicó además un algoritmo de maximización de modularidad para detectar comunidades espaciales y se evaluó la robustez estructural frente a la remoción de hospitales clave, así como la relación entre estructura y calidad percibida. Los resultados muestran una red conexa, moderadamente densa y con alto agrupamiento local, cercana a un patrón \emph{small-world}, organizada en tres comunidades territoriales con modularidad elevada ($Q \approx 0.53$) y una homofilia leve–moderada en la calificación promedio. La red es resiliente ante fallos aislados de hospitales puente, aunque su eliminación aumenta las distancias promedio. En conjunto, el estudio ilustra cómo el análisis de redes basado en datos de plataformas digitales puede aportar insumos cuantitativos para la planificación, coordinación y evaluación de la oferta hospitalaria en contextos urbanos.
+
+# Metodología
+
+Se utilizó un conjunto de datos conformado por 60 instituciones hospitalarias ubicadas en Bogotá y su área metropolitana, obtenido a partir de las opiniones de usuarios en Google. Para cada hospital se dispone de un identificador de lugar, nombre, calificación promedio reportada por los usuarios y número de reseñas asociadas. Adicionalmente, el conjunto incluye información de localización geográfica (latitud y longitud), dirección y categorías de servicio según Google, lo que permite caracterizar simultáneamente la reputación en línea y la distribución espacial de la oferta hospitalaria en la ciudad. \\
+
+Previa construcción de la red, se filtraron los registros con información incompleta de georreferenciación, de manera que sólo se consideraron hospitales con coordenadas válidas. A partir de esta base depurada se construyó un grafo simple no dirigido en el que cada nodo representa un hospital y conserva como atributos su nombre y calificación promedio en Google. \\
+
+La estructura de adyacencia se definió mediante un esquema de $K$–vecinos más cercanos, conectando cada hospital con sus seis hospitales geográficamente más próximos. La vecindad se determinó a partir de las coordenadas de latitud y longitud empleando la métrica de Haversine. De esta forma, las aristas representan proximidad espacial entre instituciones, y el grafo resultante modela la red de oferta hospitalaria como una estructura que captura tanto la organización geográfica local como posibles patrones de concentración territorial. Sobre esta red se calcularon posteriormente métricas estructurales de grado, densidad, componentes conexas, entre otras que permiten describir su conectividad y estudiar la formación de conglomerados de hospitales en el espacio urbano.
+
+# Análisis estructural de la red
+
+A partir del grafo construido se obtiene una red no dirigida de 60 nodos y 240 aristas, con un grado medio de 8 (mediana 8, rango entre 6 y 13). Esta configuración implica una densidad aproximada de $0.14$, por lo que la red es relativamente dispersa en términos de todas las conexiones posibles; sin embargo, cada hospital mantiene, en promedio, vínculos con un número moderado de vecinos cercanos, lo que refleja una importante proximidad local dentro de la estructura urbana.
 
 ```{r}
 library(readr)
+library(igraph)
+
+df <- read_csv("hospitales.csv")
+df2 <- df[!is.na(df$lat) & !is.na(df$lon), ]
+
+coords_deg <- as.matrix(df2[, c("lat", "lon")])
+coords <- coords_deg * pi/180  # radianes como en Python
+k <- 6
+n <- nrow(coords)
+
+
+# -------------------------
+# Haversine EXACTA como scikit-learn
+# -------------------------
+haversine <- function(a, b) {
+  R <- 6371
+  dlat <- b[,1] - a[1]
+  dlon <- b[,2] - a[2]
+
+  h <- sin(dlat/2)^2 +
+       cos(a[1]) * cos(b[,1]) * sin(dlon/2)^2
+
+  2 * R * asin(pmin(1, sqrt(h)))
+}
+
+# matriz de distancias km
+dist_km <- matrix(0, n, n)
+for (i in 1:n) {
+  dist_km[i, ] <- haversine(coords[i, ], coords)
+}
+
+# obtener vecinos igual que sklearn
+idx <- apply(dist_km, 1, function(row) {
+  order(row, seq_along(row))  # desempate por índice
+})
+
+idx <- idx[1:(k+1), ]
+dist <- apply(dist_km, 1, sort)[1:(k+1), ]
+
+# -------------------------
+# Grafo
+# -------------------------
+G_hospitales <- graph.empty(directed = FALSE)
+
+G_hospitales <- add_vertices(
+  G_hospitales, n,
+  name = df2$nombre,
+  rating = df2$rating,
+  lat = df2$lat,
+  lon = df2$lon
+)
+
+# aristas idénticas a Python
+for (i in 1:n) {
+  vecinos <- idx[2:(k+1), i]    # omitir uno mismo
+  for (j in vecinos) {
+    G_hospitales <- add_edges(G_hospitales, c(i, j))
+  }
+}
+
+# layout geográfico igual que Python
+x <- (df2$lon - min(df2$lon)) / (max(df2$lon) - min(df2$lon))
+y <- (df2$lat - min(df2$lat)) / (max(df2$lat) - min(df2$lat))
+layout <- cbind(x, y)
+
+# plot
+plot(
+  G_hospitales,
+  layout = layout,
+  vertex.size = 4,
+  vertex.color = "tomato",
+  edge.color = "gray80",
+  vertex.label = NA, 
+  axes = FALSE,
+  xlab = "",
+  ylab = "",
+  main = "Red de hospitales (k vecinos más cercanos)"
+)
+
+
 ```
+
+En términos de conectividad global, la red conforma un único componente; no se observan hospitales aislados ni subgrupos desconectados. La presencia de algunos nodos con grado más alto sugiere puntos que actúan como pequeños \textit{hubs} de proximidad geográfica, potencialmente relevantes para la accesibilidad territorial y, en un sentido más amplio, para la difusión de información o prácticas entre distintas zonas de la ciudad. \\
+
+Las conexiones no reflejan afinidad o colaboración funcional, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta de establecimientos de salud en la ciudad y su área metropolitana, y permite explorar su conectividad y la posible formación de conglomerados territoriales.
 
 ```{r}
-hospitales <- read_csv("hospitales.csv")
+library(leaflet)
+library(dplyr)
+
+# 1️⃣ Crear mapa centrado en Bogotá
+m <- leaflet() %>%
+  addTiles() %>%
+  setView(lng = -74.07, lat = 4.65, zoom = 12)
+
+# 2️⃣ Función para asignar color según rating
+color_rating <- function(rating) {
+  if (rating >= 4.5) {
+    return("green")       # excelente
+  } else if (rating >= 3.5) {
+    return("orange")      # bueno
+  } else {
+    return("red")         # bajo
+  }
+}
+
+# 3️⃣ Agregar cada hospital como marcador circular
+for (i in 1:nrow(df)) {
+  r <- df[i, ]
+
+  m <- m %>%
+    addCircleMarkers(
+      lng = r$lon,
+      lat = r$lat,
+      radius = 6,
+      color = color_rating(r$rating),         # borde
+      fillColor = color_rating(r$rating),     # interior
+      fillOpacity = 0.85,
+      popup = paste0(
+        r$nombre, " ⭐", r$rating,
+        " (", r$reseñas, " reseñas)"
+      )
+    )
+}
+
+# Mostrar mapa
+m
+
 ```
+
+Las conexiones no reflejan afinidad o colaboración funcional, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta de establecimientos de salud en la ciudad y su área metropolitana, y permite explorar su conectividad y la posible formación de conglomerados territoriales.
+
+# Grado, distribución del grado y Componentes conexos
 
 ```{r}
-knitr::include_graphics("Red_hospitales.png")
+# Obtener grados de cada nodo
+deg <- degree(G_hospitales)
+
+cat("Grado por nodo:\n")
+print(deg)
+
+# Convertir a vector numérico
+grados <- as.numeric(deg)
+
+cat("Grado medio:", mean(grados),
+    " | Mediana:", median(grados),
+    " | Máx:", max(grados), "\n")
+
 ```
 
+En la red de hospitales analizada se observa un grado medio de $k \approx 12$, con mediana 12.5 y un rango que va de 6 a 17 vecinos por nodo. Esta configuración es consistente con el esquema de construcción por $K$–vecinos más cercanos, que garantiza un número mínimo de conexiones por hospital y genera grados algo mayores en aquellos nodos que son vecinos simultáneos de varios hospitales. \\
+
+En términos estructurales, estos resultados apuntan a una conectividad local relativamente alta y bastante homogénea: la mayoría de los hospitales se sitúan en torno al grado medio, sin presencia de hubs extremadamente dominantes. No obstante, algunos nodos alcanzan grados en el extremo superior del rango, lo que indica la existencia de puntos de mayor concentración de vínculos en el tejido urbano. Tales hospitales pueden interpretarse como pequeños centros de proximidad espacial, potencialmente relevantes para el acceso a servicios de salud y para la articulación entre diferentes subregiones de la ciudad.
+
+# Centralidades: grado, cercanía y betweenness
+
+```{r}
+# Centralidad de grado
+c_deg <- degree(G_hospitales, normalized = TRUE)
+
+# Centralidad de cercanía (closeness)
+# Nota: en igraph, closeness está basada en la suma de distancias en el componente conexo
+c_clo <- closeness(G_hospitales, normalized = TRUE)
+
+# Centralidad de intermediación (betweenness)
+c_bet <- betweenness(G_hospitales, normalized = TRUE)
+
+# Mostrar resultados
+cat("Centralidad de grado:\n")
+print(c_deg)
+
+cat("\nCentralidad de cercanía:\n")
+print(c_clo)
+
+cat("\nCentralidad de intermediación:\n")
+print(c_bet)
+```
+
+Dado que la red de hospitales forma un único componente conexo, estas medidas son comparables en toda la estructura. La centralidad de grado toma valores entre $0.10$ y $0.29$, con un promedio cercano a $0.136$. Los nodos con mayores valores de grado, en particular los vértices 43, 16 y 25, representan hospitales con un número especialmente alto de vecinos geográficos inmediatos, lo que sugiere áreas de fuerte concentración de la oferta alrededor de estos establecimientos. \\
+
+La centralidad de cercanía presenta valores entre aproximadamente $0.245$ y $0.371$, con un promedio cercano a $0.303$. Destacan, la Clínica del Occidente (0), la Clínica Universitaria Colombia (5), el Hospital Fontibón E.S.E. (23), el Hospital Pediátrico El Tintal (36) y la Clinica Santa Teresita Normandía (57), que se ubican a distancias geodésicas relativamente cortas del resto de la red. Estos hospitales pueden interpretarse como puntos de fácil acceso desde múltiples direcciones dentro del tejido urbano, al encontrarse “en medio” de la red en términos de distancia total acumulada.
+
+# Coeficiente de agrupamiento
+
+```{r}
+# Clustering local (coeficiente de agrupamiento por nodo)
+clust_local <- transitivity(G_hospitales, type = "local", isolates = "zero")
+
+# Clustering promedio (coeficiente global promedio)
+clust_prom <- transitivity(G_hospitales, type = "average")
+
+cat("Clustering local:\n")
+print(clust_local)
+
+cat("\nClustering promedio:\n")
+print(clust_prom)
+```
+
+En la red de hospitales, el \emph{clustering} local presenta valores que oscilan aproximadamente entre $0.35$ y $0.93$, mientras que el coeficiente de agrupamiento promedio es
+
+$C \approx 0.61.$
+
+Este valor puede considerarse moderadamente alto para una red de proximidad espacial, e indica que, en promedio, los vecinos de un hospital tienden a formar triángulos y pequeñas estructuras cuasi–cliqué. En términos urbanos, ello sugiere la existencia de microzonas de oferta hospitalaria, en las que varios establecimientos se encuentran mutuamente próximos y redundan como alternativas de atención dentro del mismo entorno barrial. \\
+
+# Caminos más cortos y diámetro
+
+```{r}
+# Obtener el componente conectado más grande
+comp <- components(G_hospitales)
+largest_comp_nodes <- which(comp$membership == which.max(comp$csize))
+Gcc <- induced_subgraph(G_hospitales, vids = largest_comp_nodes)
+
+# Longitud promedio de caminos más cortos
+asp <- mean_distance(Gcc, directed = FALSE)
+
+# Diámetro del grafo
+diam <- diameter(Gcc, directed = FALSE)
+
+cat("Longitud promedio de camino (ASP):", asp, "\n")
+cat("Diámetro (máx. distancia más corta):", diam, "\n")
+```
+
+Para el análisis de conectividad global se estudiaron la longitud promedio de los caminos mínimos (\emph{Average Shortest Path}, ASP) y el diámetro de la red, calculados sobre el componente conexo principal. Dado que la red de hospitales es conexa, dicho componente incluye a los 60 nodos del grafo. La longitud promedio de los caminos más cortos fue
+
+$\text{ASP} \approx 3.34,$
+
+lo que indica que, en promedio, es posible ir de un hospital a otro mediante tres o cuatro “saltos” a través de la red de proximidad. Una longitud de camino promedio reducida sugiere una red eficiente en términos de accesibilidad topológica: aunque las conexiones se basan únicamente en cercanía geográfica local, el conjunto de hospitales se mantiene relativamente “cerca” en el sentido de distancias en el grafo. Esta propiedad es coherente con la densidad intermedia y el alto coeficiente de agrupamiento observados. Por su parte, el diámetro, definido como la distancia geodésica máxima entre cualquier par de nodos, resultó igual a
+
+$\text{diam} = 7,$
+
+es decir, los hospitales más alejados entre sí se conectan a través de una cadena de siete pasos. El valor del diámetro refleja, a su vez, la extensión espacial del área metropolitana estudiada: los pares de hospitales más distantes corresponden a establecimientos ubicados en extremos opuestos de la ciudad o en zonas periféricas. Si bien un diámetro de 7 no indica fragmentación, sí pone de relieve la existencia de trayectorias más largas en la periferia, donde la conectividad depende críticamente de unos pocos nodos puente. Desde una perspectiva de planificación urbana y de servicios de salud, esta configuración sugiere que, en general, la red facilita el encadenamiento de referencias o traslados entre instituciones, aunque las zonas más alejadas podrían enfrentar mayores costos de desplazamiento y depender de manera más fuerte de ciertos hospitales intermedios para mantener la integración del sistema.
+
+# Comunidades y modularidad
+
+```{r}
+# Eliminar multi-edges y loops
+G_simple <- simplify(G_hospitales, remove.multiple = TRUE, remove.loops = TRUE)
+
+# Detectar comunidades con greedy modularity
+coms <- cluster_fast_greedy(G_simple)
+
+# Lista de nodos por comunidad
+coms_list <- lapply(communities(coms), sort)
+
+# Número de comunidades
+num_coms <- length(coms_list)
+
+# Modularidad Q
+Q <- modularity(coms)
+
+cat("Comunidades (greedy):\n")
+print(coms_list)
+
+cat("\nNúmero de comunidades:", num_coms, "\n")
+cat("Modularidad Q:", Q, "\n")
+
+```
+
+En la red de hospitales se detectaron tres comunidades principales, con tamaños de 23, 19 y 18 hospitales, respectivamente, y una modularidad total de
+
+$Q \approx 0{,}53.$
+
+Este valor indica una estructura comunitaria marcada, la red tiende a organizarse en bloques de hospitales densamente interconectados entre sí y más débilmente conectados con el resto. Dado que las aristas se construyen a partir de proximidad geográfica, estas comunidades pueden interpretarse como conglomerados territoriales de oferta hospitalaria, que corresponden de manera aproximada a subzonas de la ciudad y su área metropolitana; por ejemplo, sectores centrales frente a zonas más periféricas. \\
+
+# Distribución del grado
+
+Finalmente, la distribución empírica de grados proporciona una síntesis de la heterogeneidad en la conectividad local de la red. El histograma de la Figura \ref{fig:Dist_grado} muestra una forma claramente unimodal, con ligera cola hacia la derecha. La mayoría de los hospitales tienen entre 6 y 10 vecinos; aproximadamente el 75 % de los nodos presenta grados en ese rango y el grado medio y mediano coinciden en 8. Sólo unos pocos hospitales alcanzan valores más altos, 11 y 13 conexiones, lo que sugiere la presencia de \emph{hubs} locales pero sin llegar a una estructura fuertemente jerárquica o de tipo libre de escala. \\
+
+Esta distribución es coherente con el procedimiento de construcción por $K$–vecinos más cercanos, que garantiza un número mínimo de conexiones por nodo y genera grados algo mayores en aquellos hospitales que son vecinos simultáneos de varios establecimientos. En conjunto, la red resulta relativamente homogénea en términos de conectividad; la mayoría de los hospitales tiene un número de enlaces similar, mientras que un pequeño subconjunto concentra un mayor número de conexiones directas y puede considerarse estructuralmente más relevante.
+
+```{r}
+# Suponiendo que 'grados' es un vector numérico
+
+bins <- seq(min(grados), max(grados) + 1, by = 1)
+
+hist(
+  grados,
+  breaks = bins,
+  right = FALSE,
+  col = "lightblue",
+  main = "Distribución de grado — Red de hospitales de Bogotá",
+  xlab = "Grado (vecinos)",
+  ylab = "Frecuencia de cafés"
+)
+
+grid(nx = NA, ny = NULL, col = "gray", lty = 3)
+
+```
+
+La función de distribución acumulada (CDF) del grado, presentada en la Figura \ref{fig:CDF}, complementa este análisis. La curva evidencia que cerca de la mitad de los hospitales tiene grado menor o igual que 8 y que alrededor del 95 % no supera las 10 conexiones, lo que confirma la ausencia de colas pesadas en la distribución. Esta representación resulta especialmente útil para comparar configuraciones alternativas del parámetro $K$; al incrementar $K$, la CDF se desplazaría hacia la derecha, reflejando un aumento general del grado medio y una red más densa, con implicaciones directas sobre la longitud de caminos, la redundancia local y la robustez global de la estructura.
+
+```{r}
+library(ggplot2)
+
+df <- data.frame(grados = grados)
+
+ggplot(df, aes(grados)) +
+  stat_ecdf(geom = "step") +
+  labs(
+    x = "Grado",
+    y = "Proporción acumulada",
+    title = "CDF del grado — Red de hospitales"
+  ) +
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank())
+
+```
+Avances_estadísticas_descriptivas.txt
+Mostrando Avances_estadísticas_descriptivas.txt.
