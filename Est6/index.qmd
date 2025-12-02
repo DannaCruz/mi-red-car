@@ -5,11 +5,10 @@ listing:
   type: grid
   sort: none
   contents:
-    - text: Est. Descriptiva
-      href: Est6-descriptiva.qmd
-    - text: Est. Bayesiana
-      href: Est6-bayesiana.qmd
+    Est6-descriptiva.qmd
+    Est6-bayesiana.qmd
 ---
+
 
 # Mi red de datos
 
