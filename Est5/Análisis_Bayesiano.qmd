@@ -1,5 +1,8 @@
 ---
 title: "Análisis Bayesiano"
 author: "Andrés Arévalo"
+format: html
 editor: visual
 ---
+
+Aca va lo Bayesiano

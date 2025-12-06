@@ -13,7 +13,7 @@ website:
 
       - text: "Estudiantes"
         menu:
-          - text: "Estudiante 1"
+          - text: "Red de Colegios Bogotá"
             href: Est1/index.qmd
           - text: "Red de hoteles Bogotá"
             href: Est2/index.qmd
