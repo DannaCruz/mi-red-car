@@ -9,6 +9,7 @@ library(stringi)
 library(tidyr)
 library(FNN)
 library(igraph)
+library(leaflet)
 
 
 # CARGAR DATOS
@@ -301,7 +302,7 @@ com_greedy <- cluster_fast_greedy(g)
 muni2$comunidad <- com_greedy$membership
 mod_greedy <- modularity(com_greedy)
 mod_greedy
-install.packages("RColorBrewer")
+
 library(RColorBrewer)
 
 n_com <- length(unique(muni2$comunidad))
