@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Danna Catalina Amezquita Borja.">
 
-<title>Analisis_descriptivo_de_mi_red.qmd – Proyecto — Mi Red CAR</title>
+<title>Red Felina: Un Estudio de Grafos de las Fundaciones de Gatos en Bogotá y sus Alrededores. – Proyecto — Mi Red CAR</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -105,6 +71,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="../styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -128,54 +95,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Inicio</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est1/index.html"> 
-<span class="menu-text">Red de Escuelas Bogotá</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-estudiantes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Estudiantes</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-estudiantes">    
+        <li>
+    <a class="dropdown-item" href="../Est14/Intro.html">
+ <span class="dropdown-text">Red de Barberias</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est2/index.html"> 
-<span class="menu-text">Estudiante 2</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est1/index.html">
+ <span class="dropdown-text">Red de Colegios Bogotá</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est3/index.html"> 
-<span class="menu-text">Estudiante 3</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est2/index.html">
+ <span class="dropdown-text">Red de hoteles Bogotá</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est4/index.html"> 
-<span class="menu-text">Estudiante 4</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est3/index.html">
+ <span class="dropdown-text">Estudiante 3</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est5/index.html"> 
-<span class="menu-text">Red hospitalaria de Bogotá y su área metropolitana</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est4/index.html">
+ <span class="dropdown-text">Licenciamiento de cannabis</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est6/index.html"> 
-<span class="menu-text">Estudiante 6</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est5/index.html">
+ <span class="dropdown-text">Red hospitalaria de Bogotá y su área metropolitana</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est7/index.html"> 
-<span class="menu-text">Estudiante 7</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est6/index.html">
+ <span class="dropdown-text">Estudiante 6</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est8/index.html"> 
-<span class="menu-text">Estudiante 8</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est7/index.html">
+ <span class="dropdown-text">Estudiante 7</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est9/index.html"> 
-<span class="menu-text">Estudiante 9</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est8/index.html">
+ <span class="dropdown-text">Estudiante 8</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est10/index.html"> 
-<span class="menu-text">Estudiante 10</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est9/index.html">
+ <span class="dropdown-text">Estudiante 9</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est12/intro.html"> 
-<span class="menu-text">Red fundaciones felinas</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est10/index.html">
+ <span class="dropdown-text">Estudiante 10</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est13/index.html"> 
-<span class="menu-text">Estudiante 13</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est11/index.html">
+ <span class="dropdown-text">Estudiante 10</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../Est12/intro.html">
+ <span class="dropdown-text">Red fundaciones felinas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est13/index.html">
+ <span class="dropdown-text">Estudiante 13</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -187,28 +169,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#quarto" id="toc-quarto" class="nav-link active" data-scroll-target="#quarto">Quarto</a></li>
-  <li><a href="#running-code" id="toc-running-code" class="nav-link" data-scroll-target="#running-code">Running Code</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Analisis_descriptivo_de_mi_red.qmd</h1>
+<h1 class="title">Red Felina: Un Estudio de Grafos de las Fundaciones de Gatos en Bogotá y sus Alrededores.</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Danna Catalina Amezquita Borja. </p>
+          </div>
+  </div>
     
   
     
@@ -219,29 +200,119 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
-</section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<style>
+/* Solo ajustes visuales, sin cambiar la tipografía por defecto de Quarto */
+
+/* Modo claro */
+:root {
+  color-scheme: light;
+}
+
+/* Fondo blanco y texto oscuro */
+body { 
+  background: #ffffff;
+  color: #111;
+}
+
+/* Contenedor principal */
+.container { 
+  max-width: 1100px; 
+  margin: 30px auto; 
+}
+
+/* Imagen principal */
+.header-img {
+  width: 100%; 
+  max-height: 360px; 
+  object-fit: cover; 
+  border-radius: 6px;
+  display:block;
+}
+
+/* Texto inicial */
+.top-desc { 
+  margin: 18px 0 28px 0; 
+  font-size: 1.05rem; line-height:1.5;
+}
+
+/* Tarjetas */
+.card-row { 
+  display: flex; 
+  gap: 18px; 
+  margin-bottom: 35px;
+}
+
+.card { 
+  background: #f7f7f7; 
+  border-radius: 10px; 
+  padding: 16px; 
+  flex: 1; 
+  border: 1px solid #ddd;
+  transition: 0.25s ease;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+
+.card h3 { 
+  margin-top: 10px; 
+  margin-bottom: 8px; 
+  font-size: 1.1rem; 
+}
+
+.card p { 
+  font-size: 0.95rem; 
+}
+
+.card .thumb { 
+  height: 120px; 
+  width: 100%; 
+  object-fit: cover; 
+  border-radius: 6px;
+  
+}
+</style>
+<div class="container">
+<!-- Imagen superior -->
+<p><img src="head.jpg" alt="Encabezado" class="header-img"></p>
+<!-- Descripción -->
+<div class="top-desc">
+<p>Este proyecto aplica análisis de redes y teoría de grafos para estudiar las fundaciones de gatos en Bogotá y sus alrededores, utilizando un enfoque metodológico dual que combina análisis descriptivo y modelado bayesiano. El trabajo construye un grafo que representa las conexiones y relaciones entre las fundaciones, permitiendo caracterizar la estructura del ecosistema de cuidado felino a través de métricas de red, clusters de colaboración, y patrones de distribución geográfica.</p>
+</div>
+<!-- Tarjetas -->
+<div class="card-row">
+<!-- Descriptiva -->
+<div class="card">
+<img class="thumb" src="descrptiva.jpg" alt="Análisis descriptivo" style="width:auto; height:auto; max-width:none; max-height:none;">
+<h3 class="anchored">
+Descriptiva
+</h3>
+<p>
+Se exploran las propiedades topológicas del grafo generado para identificar nodos centrales, comunidades naturales de organizaciones, y flujos de información o recursos.
+</p>
+<p>
+<a href="../Est12/descriptiva.html" style="text-decoration:none; font-weight:bold;">Abrir sección →</a>
+</p>
+</div>
+<!-- Bayesiana -->
+<div class="card">
+<img class="thumb" src="bayesiana.jpg" alt="Análisis Bayesiano" style="width:auto; height:auto; max-width:none; max-height:none;">
+<h3 class="anchored">
+Bayesiana
+</h3>
+<p>
+Incorpora incertidumbre y conocimiento previo para realizar inferencias probabilísticas sobre factores como capacidad de adopción, cobertura geográfica óptima, y probabilidad de colaboración entre fundaciones, proporcionando insights accionables para mejorar la coordinación del cuidado animal en la región.
+</p>
+<p>
+<a href="../Est12/bayesiana.html" style="text-decoration:none; font-weight:bold;">Abrir sección →</a>
+</p>
 </div>
 </div>
-<p>You can add options to executable code like this</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
 </div>
-</div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

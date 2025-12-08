@@ -12,11 +12,11 @@ listing:
 
 
 
+
 # Mi primera página
 
 ![](KvecinosCercanos.png)
 
-🧩 Mi análisis  
 Aquí presento mi red personal del curso.
 
 - Cargué mis datos  

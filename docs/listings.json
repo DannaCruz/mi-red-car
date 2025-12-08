@@ -1,14 +1,17 @@
 [
   {
+    "listing": "/Est14/Intro.html",
+    "items": [
+      "/Est14/descriptivo.html",
+      "/Est14/bayesiano.html"
+    ]
+  },
+  {
     "listing": "/Est5/index.html",
     "items": [
       "/Est5/descriptivo.html",
       "/Est5/Análisis_Bayesiano.html"
     ]
-  },
-  {
-    "listing": "/Est2/index.html",
-    "items": []
   },
   {
     "listing": "/Est4/index.html",
@@ -18,18 +21,7 @@
     ]
   },
   {
-    "listing": "/Est14/Intro.html",
-    "items": [
-      "/Est14/descriptivo.html",
-      "/Est14/bayesiano.html"
-    ]
-  },
-  {
-    "listing": "/Est8/index.html",
-    "items": []
-  },
-  {
-    "listing": "/Est6/index.html",
+    "listing": "/Est2/index.html",
     "items": []
   }
 ]

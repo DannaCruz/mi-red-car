@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Samuel A. Moreno Lascarro">
 
-<title>Análisis de mi Red de hoteles — Estudiante 2 – Proyecto — Mi Red CAR</title>
+<title>Análisis de redes espaciales de estaciones de gasolina en Bogotá mediante teoría de grafos – Proyecto — Mi Red CAR</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -188,54 +189,69 @@ window.Quarto = {
     <a class="nav-link" href="../index.html"> 
 <span class="menu-text">Inicio</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est1/index.html"> 
-<span class="menu-text">Red de Escuelas Bogotá</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-estudiantes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Estudiantes</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-estudiantes">    
+        <li>
+    <a class="dropdown-item" href="../Est14/Intro.html">
+ <span class="dropdown-text">Red de Barberias</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="../Est2/index.html" aria-current="page"> 
-<span class="menu-text">Estudiante 2</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est1/index.html">
+ <span class="dropdown-text">Red de Colegios Bogotá</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est3/index.html"> 
-<span class="menu-text">Estudiante 3</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est2/index.html">
+ <span class="dropdown-text">Red de hoteles Bogotá</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est4/index.html"> 
-<span class="menu-text">Estudiante 4</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est3/index.html">
+ <span class="dropdown-text">Estudiante 3</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est5/index.html"> 
-<span class="menu-text">Red hospitalaria de Bogotá y su área metropolitana</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est4/index.html">
+ <span class="dropdown-text">Licenciamiento de cannabis</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est6/index.html"> 
-<span class="menu-text">Estudiante 6</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est5/index.html">
+ <span class="dropdown-text">Red hospitalaria de Bogotá y su área metropolitana</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est7/index.html"> 
-<span class="menu-text">Estudiante 7</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est6/index.html">
+ <span class="dropdown-text">Estudiante 6</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est8/index.html"> 
-<span class="menu-text">Estudiante 8</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est7/index.html">
+ <span class="dropdown-text">Estudiante 7</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est9/index.html"> 
-<span class="menu-text">Estudiante 9</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est8/index.html">
+ <span class="dropdown-text">Estudiante 8</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est10/index.html"> 
-<span class="menu-text">Estudiante 10</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est9/index.html">
+ <span class="dropdown-text">Estudiante 9</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est12/intro.html"> 
-<span class="menu-text">Red fundaciones felinas</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est10/index.html">
+ <span class="dropdown-text">Estudiante 10</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../Est13/index.html"> 
-<span class="menu-text">Estudiante 13</span></a>
+        <li>
+    <a class="dropdown-item" href="../Est11/index.html">
+ <span class="dropdown-text">Estudiante 10</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../Est12/intro.html">
+ <span class="dropdown-text">Red fundaciones felinas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est13/index.html">
+ <span class="dropdown-text">Estudiante 13</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -261,13 +277,19 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Análisis de mi Red de hoteles — Estudiante 2</h1>
+<h1 class="title">Análisis de redes espaciales de estaciones de gasolina en Bogotá mediante teoría de grafos</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Samuel A. Moreno Lascarro </p>
+          </div>
+  </div>
     
   
     
@@ -288,26 +310,9 @@ window.Quarto = {
 <li>Hice visualizaciones</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Acá irá mi código de análisis para la red del Estudiante 2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Acá irá mi código de análisis para la red del Estudiante 8</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Esta es mi primera prueba usando Git y Quarto dentro del proyecto.</p>
-<p>Aqui voy a cargar mis datos csv de mi red de hoteles</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>hotel_bogota <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"hotel_bogota.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 60 Columns: 9
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr (4): place_id, nombre, address, types
-dbl (4): rating, reseñas, lat, lon
-lgl (1): price_level
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-</div>
-<p><img src="hotel.jpg" class="img-fluid"></p>
+<p><img src="Gas.jpg" class="img-fluid"></p>
 
 
 

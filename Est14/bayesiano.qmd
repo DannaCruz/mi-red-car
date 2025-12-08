@@ -1,11 +1,10 @@
 ---
 title: "Análisis bayesiano de la Red de Barberias"
-author: "Juan Pablo Casilimas Camargo"
 format: html
 editor: visual
 ---
 
-## Quarto
+# Quarto
 
 Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
 
