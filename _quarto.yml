@@ -39,6 +39,8 @@ website:
             href: Est12/intro.qmd
           - text: "Estudiante 13"
             href: Est13/index.qmd
+          - text: "Red de Barberias"
+            href: Est14/intro.qmd         
 
   page-footer:
     left: "© Curso de Programación y Lenguajes Estadísticos"
