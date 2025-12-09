@@ -1,9 +1,16 @@
 ---
-title: "Análisis de mi Red — Estudiante 7"
+title: "Red de centros de entretenimiento para adultos (Moteles y Burdeles) en la ciudad de Bogotá"
 format: html
+author: Andrea Catalina Mora Roa
+listing: 
+  type: grid
+  sort: none
+  contents: 
+    - descriptivo.qmd
+    - bayesiano.qmd
 ---
 
-# 🧩 Mi análisis
+# Moteles y Burdeles en Bogotá
 
 Aquí presento mi red personal del curso.
 
@@ -11,7 +18,5 @@ Aquí presento mi red personal del curso.
 - Analicé grados y centralidades
 - Encontré comunidades
 - Hice visualizaciones
+![](Imagen burdel.webp)
 
-```{r}
-# Acá irá mi código de análisis para la red del Estudiante 7
-```
