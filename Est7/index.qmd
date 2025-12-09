@@ -1,22 +1,38 @@
 ---
 title: "Red de centros de entretenimiento para adultos (Moteles y Burdeles) en la ciudad de Bogotá"
-format: html
-author: Andrea Catalina Mora Roa
-listing: 
-  type: grid
-  sort: none
-  contents: 
-    - descriptivo.qmd
-    - bayesiano.qmd
+author: Andrea Catalina Mora Roa.
 ---
 
-# Moteles y Burdeles en Bogotá
+### **Introducción**
 
-Aquí presento mi red personal del curso.
-
-- Cargué mis datos
-- Analicé grados y centralidades
-- Encontré comunidades
-- Hice visualizaciones
+BLABLABLABALA
 ![](Imagen burdel.webp)
+
+=======
+![](Imagen burdel.webp){width=60% .center-img}
+
+### **SECCIÓN 1**
+
+
+::: {#card-container layout="[[1,1],[1,1]]"}
+
+::: {.card .mis-card}
+### 1. BLOQUE 1
+**![Imagen](Imagen burdel.webp){.center-img width=50%}**
+
+**TÍTULO CAJITA 1**
+DESCRIPCIÓN CAJITA 1
+[Ver más →](.qmd){.btn-vermas}
+
+:::
+
+::: {.card .mis-card}
+### 2. BLOQUE 2
+**![Imagen](Imagen burdel.webp){.center-img width=50%}**
+
+**TÍTULO CAJITA 2**
+DESCRIPCIÓN CAJITA 2
+[Ver más →](.qmd){.btn-vermas}
+
+:::
 
