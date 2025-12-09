@@ -1,5 +1,169 @@
 ---
-title: "Análisis Bayesiano"
+title: "Análisis Bayesiano - Red de hospitales de Bogotá y su área metropolitana"
 author: "Andrés Arévalo"
 editor: visual
 ---
+
+```{r}
+# -------------------------
+# Paquetes
+# -------------------------
+library(sf)
+library(spdep)
+library(mapview)
+library(CARBayes)
+library(readr)
+library(igraph)
+library(dplyr)
+```
+```{r}
+shape_bogota <- st_read("Shapes\\Bogotá\\Loca.shp")
+shp_bogota <- as(shape_bogota, "Spatial")
+vecinos <- poly2nb(shp_bogota)               # lista de vecinos
+W  <- nb2mat(vecinos, style = "B")           # matriz binaria
+```
+
+```{r}
+# -------------------------
+# Red de hospitales 
+# -------------------------
+df <- read_csv("hospitales.csv")
+df2 <- df[!is.na(df$lat) & !is.na(df$lon), ]
+
+coords_deg <- as.matrix(df2[, c("lat", "lon")])
+coords <- coords_deg * pi/180  # radianes como en Python
+k <- 6
+n <- nrow(coords)
+
+
+# -------------------------
+# Haversine EXACTA como scikit-learn
+# -------------------------
+haversine <- function(a, b) {
+  R <- 6371
+  dlat <- b[,1] - a[1]
+  dlon <- b[,2] - a[2]
+
+  h <- sin(dlat/2)^2 +
+       cos(a[1]) * cos(b[,1]) * sin(dlon/2)^2
+
+  2 * R * asin(pmin(1, sqrt(h)))
+}
+
+# matriz de distancias km
+dist_km <- matrix(0, n, n)
+for (i in 1:n) {
+  dist_km[i, ] <- haversine(coords[i, ], coords)
+}
+
+# obtener vecinos igual que sklearn
+idx <- apply(dist_km, 1, function(row) {
+  order(row, seq_along(row))  # desempate por índice
+})
+
+idx <- idx[1:(k+1), ]
+dist <- apply(dist_km, 1, sort)[1:(k+1), ]
+
+# -------------------------
+# Grafo
+# -------------------------
+G_hospitales <- graph.empty(directed = FALSE)
+
+G_hospitales <- add_vertices(
+  G_hospitales, n,
+  name = df2$nombre,
+  rating = df2$rating,
+  lat = df2$lat,
+  lon = df2$lon
+)
+
+# aristas idénticas a Python
+for (i in 1:n) {
+  vecinos <- idx[2:(k+1), i]    # omitir uno mismo
+  for (j in vecinos) {
+    G_hospitales <- add_edges(G_hospitales, c(i, j))
+  }
+}
+
+# layout geográfico igual que Python
+x <- (df2$lon - min(df2$lon)) / (max(df2$lon) - min(df2$lon))
+y <- (df2$lat - min(df2$lat)) / (max(df2$lat) - min(df2$lat))
+layout <- cbind(x, y)
+
+# plot
+plot(
+  G_hospitales,
+  layout = layout,
+  vertex.size = 4,
+  vertex.color = "tomato",
+  edge.color = "gray80",
+  vertex.label = NA, 
+  axes = FALSE,
+  xlab = "",
+  ylab = "",
+  main = "Red de hospitales (k vecinos más cercanos)"
+)
+```
+
+```{r}
+# -------------------------
+# Agregado de hospitales por localidad
+# -------------------------
+# Puntos de hospitales como sf
+hosp_sf <- st_as_sf(df2, coords = c("lon", "lat"), crs = 4326)
+shape_bogota <- st_transform(shape_bogota, 4326)
+
+# Asignar localidad a cada hospital
+hosp_loc <- st_join(hosp_sf, shape_bogota)  # agrega columnas de la localidad a cada hospital
+
+# Agregar por localidad: media del rating
+rating_loc <- hosp_loc |>
+  st_drop_geometry() |>
+  group_by(LocNombre) |>
+  summarise(rating_mean = mean(rating, na.rm = TRUE), .groups = "drop")
+
+# Unir la media de rating al shapefile de localidades
+shp_bogota_sf <- shape_bogota |>
+  left_join(rating_loc, by = "LocNombre")
+
+shp_bogota <- as(shp_bogota_sf, "Spatial")
+
+# Verifica que la nueva variable existe y que coincide la dimensión con W
+nrow(shp_bogota@data)
+dim(W)          # debería ser n_localidades x n_localidades
+names(shp_bogota@data)   # deberías ver "rating_mean"
+
+```
+
+```{r}
+modelo <- S.CARleroux(
+  formula = rating_mean ~ 1,
+  family  = "gaussian",
+  data    = shp_bogota@data,
+  W       = W,
+  burnin  = 10,
+  n.sample = 100,
+  thin     = 1
+)
+```
+
+```{r}
+summary(modelo)
+```
+
+```{r}
+# medias posteriores de los efectos espaciales phi
+theta_hat <- apply(modelo$samples$phi, 2, mean)  # columnas = áreas
+
+# añadirlos al shapefile (sf)
+shape_bogota$theta_hat <- theta_hat
+
+library(ggplot2)
+
+ggplot(shape_bogota) +
+  geom_sf(aes(fill = theta_hat), color = "white") +
+  scale_fill_viridis_c() +
+  labs(title = "Efectos espaciales estimados (CARBayes)",
+       fill = "phi (media)") +
+  theme_minimal()
+```
