@@ -32,7 +32,7 @@ sobre la base de datos de moteles es entender el comportamiento general del sect
 
 **TÍTULO CAJITA 2**
 DESCRIPCIÓN CAJITA 2
-[Ver más →](.qmd){.btn-vermas}
+[Ver más →](Grafos.qmd){.btn-vermas}
 
 :::
 
