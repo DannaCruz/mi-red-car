@@ -5,7 +5,6 @@ format: html
 editor: visual
 ---
 
-<<<<<<< HEAD
 ```{r}
 # -------------------------
 # Paquetes
@@ -169,6 +168,11 @@ ggplot(shape_bogota) +
        fill = "phi (media)") +
   theme_minimal()
 ```
-=======
-Aca va lo Bayesiano
->>>>>>> 7b1a7ab3ae0cf7ae11b16e6630ca10e0d0bf25a6
+
+El mapa presenta la distribución espacial de los efectos aleatorios estructurados $\phi_i$ estimados mediante el modelo CAR de CARBayes para las localidades de Bogotá y su área metropolitana. Cada polígono corresponde a una unidad geográfica (localidad o municipio), coloreada según la media posterior de $\phi_i$. Valores positivos (tonos amarillos/verdosos) indican áreas donde la calificación promedio de los hospitales tiende a situarse por encima del nivel medio global de la ciudad, una vez considerado sólo el intercepto del modelo; valores negativos (tonos azul-violáceos) señalan áreas con desempeño sistemáticamente inferior al promedio. \\
+
+La figura revela una clara heterogeneidad espacial; no todas las localidades se comportan de manera similar, sino que se observan conglomerados de áreas con efectos positivos y negativos contiguos entre sí. Esta estructura es coherente con la presencia de autocorrelación espacial en la calidad percibida de los servicios hospitalarios. En términos prácticos, hay zonas de la ciudad donde, en promedio, los hospitales están mejor valorados de lo que cabría esperar bajo un patrón puramente aleatorio, y otras donde ocurre lo contrario, lo que sugiere la existencia de factores comunes a escala de localidad; infraestructura, oferta de servicios, características socioeconómicas, accesibilidad, etc.\\
+
+En el contexto de la red de hospitales, estos efectos espaciales pueden interpretarse como la manifestación territorial de patrones de la propia red. Localidades con $\phi_i$ elevados concentrar hospitales que ocupan posiciones ventajosas en la red; mayor centralidad, mejor conectividad con otros nodos, menor aislamiento geográfico; lo que se traduciría en mayores niveles de satisfacción y mejores puntuaciones. Por el contrario, localidades con $\phi_i$ negativos corresponden a segmentos de la red más periféricos, con menor densidad de hospitales cercanos o con conexiones menos eficientes, lo cual puede repercutir en tiempos de desplazamiento, congestión de servicios y, en última instancia, en una peor percepción de calidad.\\
+
+Finalmente, es importante subrayar que el modelo ajustado es, por ahora, sólo incluye un intercepto y el término espacial. En consecuencia, los efectos $\phi_i$ están capturando de manera conjunta tanto la dependencia espacial residual como un conjunto amplio de factores no observados. El siguiente paso sería incorporar covariables a nivel de hospital y de localidad; tipo de institución, indicadores de oferta y demanda, estrato socioeconómico, métricas de centralidad de la red, entre otros; para evaluar hasta qué punto estas variables explican las diferencias espaciales observadas y cuánto de la estructura capturada por $\phi_i$ corresponde específicamente a la topología de la red hospitalaria frente a otras dimensiones territoriales.
