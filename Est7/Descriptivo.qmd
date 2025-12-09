@@ -22,7 +22,7 @@ coords_completo <- as.matrix(
 
 ```{r}
 #| echo: false
-
+library(ggplot2)
 ggplot(df_moteles, aes(x = rating)) +
   geom_histogram(bins = 20, fill = "#1f78b4", color = "white") +
   labs(
@@ -120,5 +120,6 @@ leaflet(df_moteles_mapa) %>%
   )
 
 ```
+
 
 
