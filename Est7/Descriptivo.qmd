@@ -54,6 +54,7 @@ El histograma muestra que la mayoría de los moteles tienen **muy pocas reseñas
 #### Versión log 10 para reseñas
 
 ```{r}
+#| echo: false
 ggplot(df_moteles, aes(x = reseñas)) +
   geom_histogram(bins = 30, fill = "#b2df8a", color = "black") +
   scale_x_log10() +
@@ -69,6 +70,7 @@ El histograma en escala log10 muestra una distribución mucho más equilibrada d
 ### Relación entre raiting y número de reseñas
 
 ```{r}
+#| echo: false
 ggplot(df_moteles, aes(x = reseñas, y = rating)) +
   geom_point(color = "#1f78b4", alpha = 0.7, size = 3) +
   scale_x_log10() +
@@ -86,6 +88,7 @@ El diagrama muestra que, aunque existe una ligera tendencia a que los moteles co
 Veamos ahora la distribución geográfica de los moteles en Bogotá
 
 ```{r}
+#| echo: false
 library(leaflet)
 
 # Opcional: filtrar solo registros con coordenadas válidas
@@ -120,6 +123,7 @@ leaflet(df_moteles_mapa) %>%
   )
 
 ```
+
 
 
 
