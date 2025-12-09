@@ -11,7 +11,7 @@ BLABLABLABALA
 =======
 ![](Imagen burdel.webp){width=60% .center-img}
 
-### **SECCIÓN 1**
+### **Análisis de Moteles en Bogotá**
 
 
 ::: {#card-container layout="[[1,1],[1,1]]"}
@@ -20,14 +20,14 @@ BLABLABLABALA
 ### 1. DESCRIPTIVO
 **![Imagen](Imagen burdel.webp){.center-img width=50%}**
 
-**LIMPIEZA**
-DESCRIPCIÓN CAJITA 1
-[Ver más →](.qmd){.btn-vermas}
+**Realizar un análisis descriptivo**
+sobre la base de datos de moteles es entender el comportamiento general del sector antes de entrar en análisis más complejos.
+[Ver más →](Descriptivo.qmd){.btn-vermas}
 
 :::
 
 ::: {.card .mis-card}
-### 2. BLOQUE 2
+### 2. GRAFOS
 **![Imagen](Imagen burdel.webp){.center-img width=50%}**
 
 **TÍTULO CAJITA 2**
