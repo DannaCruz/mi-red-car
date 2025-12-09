@@ -1,9 +1,11 @@
 ---
 title: "Análisis Bayesiano - Red de hospitales de Bogotá y su área metropolitana"
 author: "Andrés Arévalo"
+format: html
 editor: visual
 ---
 
+<<<<<<< HEAD
 ```{r}
 # -------------------------
 # Paquetes
@@ -167,3 +169,6 @@ ggplot(shape_bogota) +
        fill = "phi (media)") +
   theme_minimal()
 ```
+=======
+Aca va lo Bayesiano
+>>>>>>> 7b1a7ab3ae0cf7ae11b16e6630ca10e0d0bf25a6

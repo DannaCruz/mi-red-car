@@ -1,5 +1,5 @@
 ---
-title: "Análisis de mi Red de hoteles — Estudiante 2"
+title: "Análisis de mi Red de hoteles"
 format: html
 listing:
   type: grid

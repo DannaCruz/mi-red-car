@@ -1,14 +1,4 @@
-install.packages("sf")
-install.packages("tidyverse")
-install.packages("spdep")
-install.packages("ggraph")
-install.packages("dplyr")
-install.packages("stringi")
-install.packages("lwgeom")
-
-
 # PAQUETES
-# _________
 
 library(sf)
 library(dplyr)
@@ -17,10 +7,12 @@ library(ggplot2)
 library(readr)
 library(stringi)
 library(tidyr)
+library(FNN)
+library(igraph)
+library(leaflet)
 
 
 # CARGAR DATOS
-# _____________
 df <- read_csv("C:/Users/User/Pictures/red de cannabis/Distribución_de_licencias_de_cannabis_vigentes_por_departamentos_20251126.csv",
                show_col_types = FALSE)
 
@@ -29,7 +21,6 @@ muni <- st_read("C:/Users/User/Pictures/red de cannabis/MGN2023_MPIO_POLITICO/MG
 
 
 # NORMALIZAR NOMBRES (quita tildes, mayúsculas, trim)
-# ___________________________________________________
 df <- df %>%
   mutate(
     MUN_norm = MUNICIPIO %>%
@@ -56,7 +47,6 @@ muni <- muni %>%
 
 
 # CREAR KEY (DEPARTAMENTO + MUNICIPIO) para join único
-# _______________________________________________________
 df <- df %>%
   mutate(key = paste0(DEP_norm, "_", MUN_norm))
 
@@ -65,8 +55,7 @@ muni <- muni %>%
 
 
 # LIMPIAR duplicados en df (agrupar por key, sumar numéricos)
-# ___________________________________________________________
-# Identificamos columnas numéricas relevantes en el CSV
+
 num_cols <- c("NO PSICO", "PSICO", "SEMILLAS", "TOTAL")
 
 num_cols_existing <- intersect(num_cols, names(df))
@@ -92,7 +81,6 @@ df_clean <- left_join(df_agg, df_meta, by = "key")
 
 
 # Reparar geometrías y reproyectar a CRS métrico para cálculos espaciales
-# _______________________________________________________________________
 sf::sf_use_s2(FALSE)
 muni <- st_make_valid(muni)
 
@@ -107,7 +95,6 @@ muni_proj <- muni_proj %>%
 
 
 # Hacer el join usando la key única
-# _________________________________
 muni2 <- left_join(muni_proj, df_clean, by = "key")
 
 # Reemplazar NAs numéricos por 0 (municipios sin licencias)
@@ -115,90 +102,295 @@ muni2 <- muni2 %>%
   mutate(across(all_of(num_cols_existing), ~ replace_na(., 0)))
 
 
-# Crear la variable 'tipo' (dominante)
-# _______________________________________
+
+
+# _______________________________
+# RED SIN DISTINCIÓN DE LICENCIAS
+# _______________________________
+
+library(sf)
+library(dplyr)
+library(FNN)
+library(igraph)
+
+# ------------------------------------------------------------
+# 1. Crear KEY única (departamento + municipio)
+# ------------------------------------------------------------
 muni2 <- muni2 %>%
-  mutate(tipo = case_when(
-    `PSICO` > `NO PSICO` & `PSICO` > `SEMILLAS` ~ "psico",
-    `NO PSICO` > `PSICO` & `NO PSICO` > `SEMILLAS` ~ "no_psico",
-    `SEMILLAS` > `PSICO` & `SEMILLAS` > `NO PSICO` ~ "semillas",
-    (`PSICO` + `NO PSICO` + `SEMILLAS`) == 0 ~ "sin_datos",
-    TRUE ~ "empate"    # por si hay empates exactos
-  ))
+  mutate(
+    KEY = paste0(dpto_cnmbr, "_", mpio_cnmbr),
+    KEY = gsub(" ", "_", KEY)   # evitar espacios
+  )
 
-# Ajustar factor ordenado
-muni2$tipo <- factor(muni2$tipo, levels = c("psico", "no_psico", "semillas", "empate", "sin_datos"))
+# ------------------------------------------------------------
+# 2. Calcular centroides y coordenadas X/Y
+# ------------------------------------------------------------
+muni2$centroid <- st_centroid(muni2$geometry)
 
-
-# MATRIZ DE VECINDAD (k-NN por cercanía) - opción estable (k = 4)
-# _______________________________________________________________
-# Centroid coords (en metros)
 coords <- st_coordinates(muni2$centroid)
+# coords tiene columnas X y Y ✔✔
 
+muni2 <- muni2 %>%
+  mutate(
+    cx = coords[,1],
+    cy = coords[,2]
+  )
 
+# Matriz numérica para FNN
+coords_mat <- as.matrix(muni2[, c("cx", "cy")])
+coords_clean <- apply(coords_mat[, 1:2], 2, function(x) as.numeric(unlist(x)))
+
+# Convertir a matriz numérica
+coords_clean <- as.matrix(coords_clean)
+
+# Verificar
+str(coords_clean)
+class(coords_clean)
+
+# ------------------------------------------------------------
+# 3. KNN (k vecinos más cercanos)
+# ------------------------------------------------------------
 k <- 4
-knn_4 <- knearneigh(coords, k = k)
-nb_knn <- knn2nb(knn_4)
+knn_res <- get.knn(coords_clean, k = k)
 
-# Crear líneas de edges (sf) para visualización
-edges_knn <- nb2lines(nb_knn, coords = coords, as_sf = TRUE)
-st_crs(edges_knn) <- st_crs(muni2)
+# ------------------------------------------------------------
+# 4. Construir tabla de aristas
+# ------------------------------------------------------------
+edges <- data.frame(
+  from = rep(muni2$KEY, each = k),
+  to   = muni2$KEY[as.vector(knn_res$nn.index)]
+)
+
+# ------------------------------------------------------------
+# 5. Construcción de nodos
+# rating = TOTAL
+# ------------------------------------------------------------
+nodes <- muni2 %>%
+  mutate(
+    rating = ifelse(is.na(TOTAL), 0, TOTAL),
+    x = cx,
+    y = cy
+  ) %>%
+  select(KEY, departamento = dpto_cnmbr, municipio = mpio_cnmbr, rating, x, y)
+
+# Quitar el geometry porque igraph no lo quiere
+nodes_df <- st_drop_geometry(nodes)
+
+# ------------------------------------------------------------
+# 6. Crear grafo
+# ------------------------------------------------------------
+G <- igraph::graph_from_data_frame(
+  edges,
+  vertices = nodes_df,
+  directed = FALSE
+)
+
+# ------------------------------------------------------------
+# 7. Layout
+# ------------------------------------------------------------
+pos_mat <- as.matrix(nodes_df[, c("x", "y")])
+
+# ------------------------------------------------------------
+# 8. Plot de la red
+# ------------------------------------------------------------
+plot(
+  G,
+  layout = pos_mat,
+  vertex.size = 2,
+  vertex.color = "forestgreen",
+  vertex.label = NA,
+  edge.color = rgb(0.8, 0.8, 0.8),
+  main = "Red de cercanía (kNN = 4) — TOTAL de licencias por municipio"
+)
+
+G <- simplify(G, remove.multiple = TRUE, remove.loops = TRUE)
+g <- G
 
 
-# 9. CREAR EDGE LIST (segura) y añadir coordenadas
-# _________________________________________________
-edge_list <- do.call(rbind, lapply(seq_along(nb_knn), function(i) {
-  neighs <- nb_knn[[i]]
-  if (length(neighs) == 0) return(NULL)
-  data.frame(from = rep(i, length(neighs)), to = neighs, stringsAsFactors = FALSE)
-}))
 
+# =====================================================
+#        ANALISIS DESCRIPTIVO COMPLETO DE LA RED
+# =====================================================
 
-edge_list$from <- as.integer(edge_list$from)
-edge_list$to   <- as.integer(edge_list$to)
+library(igraph)
+library(dplyr)
+library(ggplot2)
+library(scales)
 
-# Añadir coordenadas corregidas
-edge_list$x    <- muni2$cx[edge_list$from]
-edge_list$y    <- muni2$cy[edge_list$from]
-edge_list$xend <- muni2$cx[edge_list$to]
-edge_list$yend <- muni2$cy[edge_list$to]
+# -----------------------------------------------------
+# 0. Suponemos que ya tienes tu grafo g cargado
+#    y es un objeto igraph válido
+# -----------------------------------------------------
 
+# =====================================================
+# 1. GRADO DEL NODO
+# =====================================================
 
-# Mapa con red por cercanía (k-NN)
-#_____________________________________________
-# Escala de verdes para tipos
-cols <- c("psico" = "#006400", "no_psico" = "#228B22", "semillas" = "#66C266",
-          "empate" = "#8B8B00", "sin_datos" = "grey90")
+deg <- degree(g, mode = "all")
 
-map <- ggplot() +
-  geom_sf(data = st_transform(muni2, 4326), fill = "grey95", color = "white", size = 0.15) + # base en lon/lat para visual
-  geom_segment(data = edge_list, aes(x = x, y = y, xend = xend, yend = yend), color = "gray40", alpha = 0.25, size = 0.3, linewidth = 0.3) +
-  geom_point(data = as.data.frame(st_coordinates(muni2$centroid)) %>% 
-               bind_cols(st_drop_geometry(muni2) %>% select(TOTAL, tipo)),
-             aes(x = X, y = Y, size = TOTAL, color = tipo), alpha = 0.9) +
-  scale_color_manual(
-    values = cols,
-    labels = c(
-      psico = "Licencia: uso psicoactivo",
-      no_psico = "Licencia: uso no psicoactivo",
-      semillas = "Licencia de semillas",
-      empate = "Misma cantidad de licencias de uso psicoactivo y no psicoactivo",
-      sin_datos = "Sin licencias"
-    ),
-    na.value = "grey80"
-  ) +
-  scale_size(range = c(1, 6), name = "Total licencias") +
+# Tabla descriptiva del grado
+summary(deg)
+
+# Histograma
+ggplot(data.frame(deg), aes(deg)) +
+  geom_histogram(bins = 40, fill="steelblue") +
   theme_minimal() +
-  labs(title = "Red de cercanía (k-NN) y licencias de cannabis por municipio",
-       subtitle = paste0("k = ", k, "  —  puntos: tamaño = TOTAL"),
-       caption = "Fuente: Datos tomados de la Subdirección de Control y Fiscalización de Sustancias Químicas y Estupefacientes \n del Ministerio de Justicia y del Derecho")+
-  coord_sf(expand = FALSE) +
-theme(aspect.ratio = 1)
+  labs(title="Distribución del grado", x="Grado", y="Frecuencia")
+
+# CDF
+ggplot(data.frame(deg), aes(x = deg)) +
+  stat_ecdf(geom="step") +
+  theme_minimal() +
+  labs(title="Función de distribución acumulada (CDF)", 
+       x="Grado", y="F(deg)")
+
+# =====================================================
+# 2. COMPONENTES CONEXOS
+# =====================================================
+
+comp <- components(g)
+num_comp <- comp$no
+tam_comp <- sizes(comp)
+giant_comp <- induced_subgraph(g, which(comp$membership == which.max(tam_comp)))
+
+num_comp
+tam_comp
+
+# =====================================================
+# 3. CENTRALIDADES
+# =====================================================
+
+cent_degree <- degree(g)
+cent_close  <- closeness(g, normalized = TRUE)
+cent_between <- betweenness(g, normalized = TRUE)
+
+centralidades <- data.frame(
+  nodo = names(cent_degree),
+  grado = cent_degree,
+  closeness = cent_close,
+  betweenness = cent_between
+) %>% arrange(desc(grado))
+
+head(centralidades, 15)  # Los 15 más importantes
+
+# =====================================================
+# 4. CLUSTERING (coeficiente de agrupamiento)
+# =====================================================
+
+clustering_global <- transitivity(g, type = "global")
+clustering_por_nodo <- transitivity(g, type = "local")
+
+clustering_global
+summary(clustering_por_nodo)
+
+# =====================================================
+# 5. CAMINOS MÁS CORTOS: ASP Y DIÁMETRO
+# =====================================================
+
+# Solo dentro del componente gigante
+asp <- mean_distance(giant_comp, directed = FALSE)
+diam <- diameter(giant_comp, directed = FALSE)
+
+asp
+diam
+
+# =====================================================
+# 6. COMUNIDADES + MODULARIDAD Q (greedy)
+# =====================================================
+
+com_greedy <- cluster_fast_greedy(g)
+muni2$comunidad <- com_greedy$membership
+mod_greedy <- modularity(com_greedy)
+mod_greedy
+
+library(RColorBrewer)
+
+n_com <- length(unique(muni2$comunidad))
+paleta_com <- colorFactor(brewer.pal(min(n_com, 12), "Set3"),
+                          domain = muni2$comunidad)
+muni2_wgs <- st_transform(muni2, 4326)
+coords <- st_coordinates(st_centroid(muni2_wgs$geometry))
+muni2_wgs$lon <- coords[,1]
+muni2_wgs$lat <- coords[,2]
+library(leaflet)
+
+leaflet(muni2_wgs) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addCircleMarkers(
+    lng = ~lon,
+    lat = ~lat,
+    fillColor = ~paleta_com(comunidad),
+    color = "#444444",
+    weight = 0.4,
+    radius = 5,
+    fillOpacity = 0.9,
+    popup = ~paste0(
+      "<b>Municipio: </b>", mpio_cnmbr, "<br>",
+      "<b>Comunidad #: </b>", comunidad, "<br>",
+      "<b>Departamento: </b>", dpto_cnmbr
+    )
+  ) %>%
+  addLegend(
+    "bottomright",
+    pal = paleta_com,
+    values = ~comunidad,
+    title = "Comunidades detectadas",
+    opacity = 1
+  )
 
 
-# Exportar objetos para inspección
-#__________________________________
-st_write(edges_knn, "edges_knn.shp", delete_dsn = TRUE)
-st_write(muni2, "muni2_with_licenses.shp", delete_dsn = TRUE)
+# =====================================================
+# 7. NODOS ESTRATÉGICOS SEGÚN CENTRALIDADES
+# =====================================================
 
-ggsave("C:/Users/User/Pictures/red de cannabis/red_knn.png", map, width = 11, height = 11, dpi = 300)
+top_nodos <- centralidades %>%
+  mutate(rank_grado = rank(-grado),
+         rank_close = rank(-closeness),
+         rank_between = rank(-betweenness),
+         score = rank_grado + rank_close + rank_between) %>%
+  arrange(score)
+
+head(top_nodos, 20)
+
+# =====================================================
+# 8. RECORRIDO BFS (por capas)
+# =====================================================
+
+nodo_inicio <- V(g)[1]   # Puedes cambiar el nodo
+bfs_res <- bfs(g, root = nodo_inicio, dist = TRUE)
+
+table(bfs_res$dist)
+
+# =====================================================
+# 9. RECORRIDO DFS
+# =====================================================
+
+dfs_res <- dfs(g, root = nodo_inicio)
+dfs_res$order[1:50]   # primeros 50 nodos del recorrido
+
+# =====================================================
+# 10. RUTA MÁS CORTA (DIJKSTRA)
+# =====================================================
+
+# Si la red NO tiene pesos, Dijkstra = BFS ponderado a 1
+origen <- V(g)[1]
+destino <- V(g)[50]
+
+ruta <- shortest_paths(g, from = origen, to = destino, output = "vpath")
+ruta
+
+# =====================================================
+# 11. ASORTATIVIDAD (HOMOFILIA)
+# =====================================================
+
+# Si tienes un atributo en los nodos, ej: "region"
+# V(g)$region <- muni2_wgs$region   # ejemplo
+
+# Asortatividad por atributo categórico
+# asort1 <- assortativity_nominal(g, as.factor(V(g)$region))
+
+# Asortatividad por grado (preferencia por nodos similares en grado)
+asort_grado <- assortativity_degree(g)
+
+asort_grado
+

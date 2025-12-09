@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.7.31">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -21,41 +21,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -72,10 +37,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-6957ec2732917c3acd9217c3064faa9e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-f07a380226b71dccd824dee245407231.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -135,7 +100,6 @@ window.Quarto = {
 </script>
 
 <link rel="stylesheet" href="../styles.css">
-<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="nav-fixed quarto-light">
@@ -165,8 +129,12 @@ window.Quarto = {
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-estudiantes">    
         <li>
+    <a class="dropdown-item" href="../Est14/Intro.html">
+ <span class="dropdown-text">Red de Barberias</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../Est1/index.html">
- <span class="dropdown-text">Estudiante 1</span></a>
+ <span class="dropdown-text">Red de Colegios Bogotá</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../Est2/index.html">
@@ -236,7 +204,10 @@ window.Quarto = {
   <ul>
   <li><a href="#introducción" id="toc-introducción" class="nav-link active" data-scroll-target="#introducción"><strong>Introducción</strong></a></li>
   <li><a href="#análisis-de-redes-geoespaciales-de-colegios-en-bogotá" id="toc-análisis-de-redes-geoespaciales-de-colegios-en-bogotá" class="nav-link" data-scroll-target="#análisis-de-redes-geoespaciales-de-colegios-en-bogotá">Análisis de Redes Geoespaciales de Colegios en Bogotá</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><img src="escuela.png" class="img-fluid"></a>
+  <ul class="collapse">
   <li><a href="#metodología-y-resultados-clave" id="toc-metodología-y-resultados-clave" class="nav-link" data-scroll-target="#metodología-y-resultados-clave"><strong>Metodología y Resultados Clave</strong></a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -275,17 +246,20 @@ window.Quarto = {
 <section id="análisis-de-redes-geoespaciales-de-colegios-en-bogotá" class="level3">
 <h3 class="anchored" data-anchor-id="análisis-de-redes-geoespaciales-de-colegios-en-bogotá">Análisis de Redes Geoespaciales de Colegios en Bogotá</h3>
 <p>Este proyecto de análisis de redes se enfoca en los resultados de la prueba estandarizada Saber 11 del ICFES, de las instituciones educativas de Bogotá, Colombia. El estudio se construye a partir del <strong>Puntaje Global promedio</strong> que obtuvieron algunos de los colegios oficiales y no oficiales de la ciudad en la <strong>prueba Saber 11 del año 2023</strong>.</p>
-<p>Utilizando la <strong>Teoría de Grafos</strong> y el análisis geoespacial, el proyecto tiene tres objetivos principales:</p>
 <ul>
-<li><strong>Modelar la Vecindad:</strong> Construir una <strong>red de <span class="math inline">\(k\)</span>-vecinos cercanos</strong> (<span class="math inline">\(k\)</span>-NN) donde las aristas representan la proximidad geográfica (distancia Haversine) entre las instituciones.</li>
-<li><strong>Clasificar el Rendimiento:</strong> Clasificar los colegios en niveles (Alto, Promedio, Bajo) basados en métricas estadísticas (media y desviación estándar) de sus puntajes.</li>
-<li><strong>Validar la Hipótesis:</strong> Emplear métricas de centralidad (Grado, Betweenness) y el <strong>Análisis de Varianza</strong> para determinar si la ubicación estratégica o la división en zonas geográficas amplias influye significativamente en el desempeño académico.</li>
+<li><p>Cargué mis datos</p></li>
+<li><p>Analicé grados y centralidades</p></li>
+<li><p>Encontré comunidades</p></li>
+<li><h1 id="hice-visualizaciones">Hice visualizaciones</h1>
+<p>Utilizando la <strong>Teoría de Grafos</strong> y el análisis geoespacial, el proyecto tiene tres objetivos principales:</p></li>
+<li><p><strong>Modelar la Vecindad:</strong> Construir una <strong>red de <span class="math inline">\(k\)</span>-vecinos cercanos</strong> (<span class="math inline">\(k\)</span>-NN) donde las aristas representan la proximidad geográfica (distancia Haversine) entre las instituciones.</p></li>
+<li><p><strong>Clasificar el Rendimiento:</strong> Clasificar los colegios en niveles (Alto, Promedio, Bajo) basados en métricas estadísticas (media y desviación estándar) de sus puntajes.</p></li>
+<li><p><strong>Validar la Hipótesis:</strong> Emplear métricas de centralidad (Grado, Betweenness) y el <strong>Análisis de Varianza</strong> para determinar si la ubicación estratégica o la división en zonas geográficas amplias influye significativamente en el desempeño académico.</p></li>
 </ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Acá irá mi código de análisis para la red del Estudiante 1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p><img src="colegios_bta.jpg" class="center-img img-fluid" style="width:60.0%"></p>
 </section>
+<section id="section" class="level1">
+<h1><img src="escuela.png" class="img-fluid"></h1>
+<p><img src="colegios_bta.jpg" class="center-img img-fluid" style="width:60.0%"></p>
 <section id="metodología-y-resultados-clave" class="level3">
 <h3 class="anchored" data-anchor-id="metodología-y-resultados-clave"><strong>Metodología y Resultados Clave</strong></h3>
 </section>
@@ -299,14 +273,14 @@ window.Quarto = {
 <section id="análisis-de-la-red" class="level3 card mis-card quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <h3 class="anchored" data-anchor-id="análisis-de-la-red">2. Análisis de la Red</h3>
 <p><strong><img src="grafo.jpg" class="center-img img-fluid" style="width:50.0%" alt="Imagen de Bases de Datos"></strong></p>
-<p><strong>Métrica y Estructura</strong> Una vez organizada la información, se exploran las propiedades de la red de <span class="math inline">\(k\)</span>-vecinos cercanos. Se determina el grado promedio (<span class="math inline">\(\approx 8.23\)</span>) y la densidad (<span class="math inline">\(\approx 0.19\)</span>). El análisis de centralidad de Betweenness mostró qué colegios actúan como “puentes” clave entre los clusters geográficos de la ciudad de Bogotá, Colombia. <a href="metricas.qmd" class="btn-vermas">Ver más →</a></p>
+<p><strong>Métrica y Estructura</strong> Una vez organizada la información, se exploran las propiedades de la red de <span class="math inline">\(k\)</span>-vecinos cercanos. Se determina el grado promedio (<span class="math inline">\(\approx 8.23\)</span>) y la densidad (<span class="math inline">\(\approx 0.19\)</span>). El análisis de centralidad de Betweenness mostró qué colegios actúan como “puentes” clave entre los clusters geográficos de la ciudad de Bogotá, Colombia. <a href="../Est1/descriptiva.html" class="btn-vermas">Ver más →</a></p>
 </section>
 </div>
 <div class="quarto-layout-row">
 <section id="clasificación-geoespacial" class="level3 card mis-card quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <h3 class="anchored" data-anchor-id="clasificación-geoespacial">3. Clasificación Geoespacial</h3>
 <p><strong><img src="analisis de red.jpg" class="center-img img-fluid" style="width:50.0%" alt="Imagen de Bases de Datos"></strong></p>
-<p><strong>Visualización de la Hipótesis</strong> A partir de la depuración inicial, se clasificaron 44 colegios sobre el mapa de la ciudad de Bogotá, evidenciando su nivel de desempeño en la prueba Saber 11 del año 2023: Alto, Promedio y Bajo. Estos niveles se asignaron utilizando la media y la desviación estándar, estableciendo los umbrales en torno a la media ± 0.5σ. Al visualizar el mapa resultante en Folium, se observa una tendencia en la distribución geográfica: los colegios de alto rendimiento (marcados en verde) tienden a concentrarse en el norte de la ciudad. <a href="hipotesis.qmd" class="btn-vermas">Ver más →</a></p>
+<p><strong>Visualización de la Hipótesis</strong> A partir de la depuración inicial, se clasificaron 44 colegios sobre el mapa de la ciudad de Bogotá, evidenciando su nivel de desempeño en la prueba Saber 11 del año 2023: Alto, Promedio y Bajo. Estos niveles se asignaron utilizando la media y la desviación estándar, estableciendo los umbrales en torno a la media ± 0.5σ. Al visualizar el mapa resultante en Folium, se observa una tendencia en la distribución geográfica: los colegios de alto rendimiento (marcados en verde) tienden a concentrarse en el norte de la ciudad. <a href="../Est1/bayesian.html" class="btn-vermas">Ver más →</a></p>
 </section>
 <section id="validación-estadística" class="level3 card mis-card quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <h3 class="anchored" data-anchor-id="validación-estadística">4. Validación Estadística</h3>
@@ -315,10 +289,19 @@ window.Quarto = {
 </section>
 </div>
 <div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>======= <img src="colegios.png" class="img-fluid"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>Mi primer cambio (imagen)</p>
+</div>
+</div>
+<div class="quarto-layout-row">
 
 
 </div>
 </div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

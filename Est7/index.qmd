@@ -1,17 +1,38 @@
 ---
-title: "Análisis de mi Red — Estudiante 7"
-format: html
+title: "Red de Moteles en la ciudad de Bogotá"
+author: Andrea Catalina Mora Roa.
 ---
 
-# 🧩 Mi análisis
+### **Introducción**
 
-Aquí presento mi red personal del curso.
+BLABLABLABALA
+![](Imagen burdel.webp)
 
-- Cargué mis datos
-- Analicé grados y centralidades
-- Encontré comunidades
-- Hice visualizaciones
+=======
+![](Imagen burdel.webp){width=60% .center-img}
 
-```{r}
-# Acá irá mi código de análisis para la red del Estudiante 7
-```
+### **Análisis de Moteles en Bogotá**
+
+
+::: {#card-container layout="[[1,1],[1,1]]"}
+
+::: {.card .mis-card}
+### 1. DESCRIPTIVO
+**![Imagen](Imagen burdel.webp){.center-img width=50%}**
+
+**Realizar un análisis descriptivo**
+sobre la base de datos de moteles es entender el comportamiento general del sector antes de entrar en análisis más complejos.
+[Ver más →](Descriptivo.qmd){.btn-vermas}
+
+:::
+
+::: {.card .mis-card}
+### 2. GRAFOS
+**![Imagen](Imagen burdel.webp){.center-img width=50%}**
+
+**TÍTULO CAJITA 2**
+DESCRIPCIÓN CAJITA 2
+[Ver más →](Grafos.qmd){.btn-vermas}
+
+:::
+

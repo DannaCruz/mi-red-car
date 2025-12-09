@@ -10,10 +10,11 @@ website:
     left:
       - text: "Inicio"
         href: index.qmd
-
       - text: "Estudiantes"
         menu:
-          - text: "Estudiante 1"
+          - text: "Red de Barberias"
+            href: Est14/Intro.qmd
+          - text: "Red de Colegios Bogotá"
             href: Est1/index.qmd
           - text: "Red de hoteles Bogotá"
             href: Est2/index.qmd
@@ -39,6 +40,7 @@ website:
             href: Est12/intro.qmd
           - text: "Estudiante 13"
             href: Est13/index.qmd
+      
 
   page-footer:
     left: "© Curso de Programación y Lenguajes Estadísticos"

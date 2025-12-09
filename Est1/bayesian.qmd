@@ -1,0 +1,149 @@
+---
+title: "Bayesiano"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code-overflow: scroll
+---
+
+
+
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+
+df <- read_csv("resultados_final.csv")
+
+df$PUNT_GLOBAL_2024 <- ifelse(
+  is.na(df$PUNT_GLOBAL_2024),
+  df$PUNT_GLOBAL_2023,
+  df$PUNT_GLOBAL_2024
+)
+
+df$PUNT_GLOBAL_2025 <- ifelse(
+  is.na(df$PUNT_GLOBAL_2025),
+  df$PUNT_GLOBAL_2024,  # usar 2024 como predictor natural
+  df$PUNT_GLOBAL_2025
+)
+
+
+df <- df %>%
+    filter(!is.na(PUNT_GLOBAL_2024), !is.na(PUNT_GLOBAL_2025), !is.na(PUNT_GLOBAL_2023))
+
+library(sf)
+
+df <- df %>% filter(!is.na(lat) & !is.na(lon))
+
+
+colegios_sf <- st_as_sf(
+  df,
+  coords = c("lon", "lat"),
+  crs = 4326,     # WGS84
+  remove = FALSE  # NO borra lat/lon originales
+)
+
+library(tidygraph)
+library(igraph)
+
+# Matriz de coordenadas
+coords <- df %>% select(lon, lat)
+
+# Número de vecinos (ajusta según quieras)
+k <- 10
+
+nn <- RANN::nn2(coords, k = k + 1)  # +1 porque incluye el mismo punto
+df$id <- seq_len(nrow(df))
+
+
+edges <- data.frame(
+  from = rep(1:nrow(df), each = k),
+  to   = as.vector(nn$nn.idx[, 2:(k+1)])  # eliminamos el self-match
+)
+
+
+df_clean <- df %>%
+    mutate(name = as.character(row_number())) %>%
+    select(name, everything())  # name debe ser la primera columna
+
+edges_clean <- edges %>%
+    mutate(
+        from = as.character(from),
+        to   = as.character(to)
+    )
+
+g <- graph_from_data_frame(edges_clean, directed = FALSE, vertices = df_clean)
+
+
+
+```
+
+
+
+
+```{r}
+library(igraph)
+library(dplyr)
+
+# --- Base de trabajo (si aún no la tienes limpia, usa df tal cual) ---
+df_clean <- df  # o el nombre que estés usando
+
+# Número de nodos
+N <- nrow(df_clean)
+
+# --- Matriz de adyacencia A (0/1) desde el grafo g ---
+A <- as_adj(g, sparse = FALSE)      # matriz N x N
+A <- (A > 0) * 1                    # asegurar 0/1 explícito
+
+# Vector de grados d_i
+d <- rowSums(A)
+
+# --- Respuesta: matriz Y (N x T) con los 3 años ---
+Y_mat <- as.matrix(df_clean[, c("PUNT_GLOBAL_2023",
+                                "PUNT_GLOBAL_2024",
+                                "PUNT_GLOBAL_2025")])
+
+T_years <- ncol(Y_mat)  # debería ser 3
+
+# --- Covariable: rating de Google ---
+rating <- df_clean$rating
+
+# Stan NO acepta NA, así que ponemos un valor dummy
+# y creamos un indicador de observación
+rating_filled <- ifelse(is.na(rating), 0, rating)
+is_obs <- ifelse(is.na(rating), 0L, 1L)   # 1 = observado, 0 = faltante
+
+# --- Lista de datos para Stan ---
+data_car <- list(
+  N      = N,
+  T      = T_years,
+  y      = Y_mat,
+  A      = A,
+  d      = as.vector(d),
+  rating = as.vector(rating_filled),
+  is_obs = as.integer(is_obs)
+)
+
+```
+
+
+
+```{r}
+# library(rstan)
+# 
+# rstan_options(auto_write = TRUE)
+# options(mc.cores = parallel::detectCores())
+# 
+# fit_car <- stan(
+#   file = "car_colegios.stan",
+#   data = data_car,
+#   chains = 2,
+#   iter = 2000,
+#   warmup = 1000,
+#   seed = 123
+# )
+
+
+#save(fit_car, file="fit_car.RData")
+```
+

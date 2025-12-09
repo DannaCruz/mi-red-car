@@ -10,17 +10,12 @@ listing:
     - bayesiano.qmd
 ---
 
-# 🧩 Mi análisis
+# 🧩 Licenciamiento de cannabis en Colombia
+En está página hago un análisis de la distribución de la red de Licenciamiento de Cannabis en Colombia a partir de los datos por municipio que reporta la Subdirección de Control y Fiscalización de Sustancias Químicas del Ministerio de Justicia y el Derechoa corte de agosto de 2025
 
-Aquí presento mi red personal del curso.
-
--   Cargué mis datos
--   Analicé grados y centralidades
--   Encontré comunidades
--   Hice visualizaciones
 
 ```{r}
 # Acá irá mi código de análisis para la red del Estudiante 4
 ```
 
-![Referencia imágen de derivados del cannabis](derivados.jpeg)
+![Referencia imágen de derivados del cannabis](red_licencias.jpg)

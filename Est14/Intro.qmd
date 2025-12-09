@@ -1,5 +1,5 @@
 ---
-title: "Red de Barberias - Est14"
+title: "Red de Barberias"
 format: html
 author: "Juan Pablo Casilimas Camargo"
 listing:
@@ -10,11 +10,13 @@ listing:
     - bayesiano.qmd
 ---
 
-## Mi primera página
+
+
+
+# Mi primera página
 
 ![](KvecinosCercanos.png)
 
-🧩 Mi análisis  
 Aquí presento mi red personal del curso.
 
 - Cargué mis datos  

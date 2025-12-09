@@ -1,0 +1,1773 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>descriptivo – Proyecto — Mi Red CAR</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-f07a380226b71dccd824dee245407231.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="../site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<script src="../site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="../site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="../site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="../site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="../site_libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="../site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="../site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="../site_libs/leaflet-binding-2.2.3/leaflet.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Proyecto — Mi Red CAR</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Inicio</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-estudiantes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Estudiantes</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-estudiantes">    
+        <li>
+    <a class="dropdown-item" href="../Est14/Intro.html">
+ <span class="dropdown-text">Red de Barberias</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est1/index.html">
+ <span class="dropdown-text">Red de Colegios Bogotá</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est2/index.html">
+ <span class="dropdown-text">Red de hoteles Bogotá</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est3/index.html">
+ <span class="dropdown-text">Estudiante 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est4/index.html">
+ <span class="dropdown-text">Licenciamiento de cannabis</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est5/index.html">
+ <span class="dropdown-text">Red hospitalaria de Bogotá y su área metropolitana</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est6/index.html">
+ <span class="dropdown-text">Estudiante 6</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est7/index.html">
+ <span class="dropdown-text">Estudiante 7</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est8/index.html">
+ <span class="dropdown-text">Estudiante 8</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est9/index.html">
+ <span class="dropdown-text">Estudiante 9</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est10/index.html">
+ <span class="dropdown-text">Estudiante 10</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est11/index.html">
+ <span class="dropdown-text">Estudiante 10</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est12/intro.html">
+ <span class="dropdown-text">Red fundaciones felinas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../Est13/index.html">
+ <span class="dropdown-text">Estudiante 13</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#análisis-estructural-de-la-red" id="toc-análisis-estructural-de-la-red" class="nav-link active" data-scroll-target="#análisis-estructural-de-la-red">Análisis estructural de la red</a></li>
+  <li><a href="#grado-distribución-del-grado-y-componentes-conexos" id="toc-grado-distribución-del-grado-y-componentes-conexos" class="nav-link" data-scroll-target="#grado-distribución-del-grado-y-componentes-conexos">Grado, distribución del grado y Componentes conexos</a></li>
+  <li><a href="#centralidades-grado-cercanía-y-betweenness" id="toc-centralidades-grado-cercanía-y-betweenness" class="nav-link" data-scroll-target="#centralidades-grado-cercanía-y-betweenness">Centralidades: grado, cercanía y betweenness</a></li>
+  <li><a href="#coeficiente-de-agrupamiento" id="toc-coeficiente-de-agrupamiento" class="nav-link" data-scroll-target="#coeficiente-de-agrupamiento">Coeficiente de agrupamiento</a></li>
+  <li><a href="#caminos-más-cortos-y-diámetro" id="toc-caminos-más-cortos-y-diámetro" class="nav-link" data-scroll-target="#caminos-más-cortos-y-diámetro">Caminos más cortos y diámetro</a></li>
+  <li><a href="#comunidades-y-modularidad" id="toc-comunidades-y-modularidad" class="nav-link" data-scroll-target="#comunidades-y-modularidad">Comunidades y modularidad</a></li>
+  <li><a href="#distribución-del-grado" id="toc-distribución-del-grado" class="nav-link" data-scroll-target="#distribución-del-grado">Distribución del grado</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">descriptivo</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="análisis-estructural-de-la-red" class="level1">
+<h1>Análisis estructural de la red</h1>
+<p>A partir del grafo construido se obtiene una red no dirigida de 60 nodos y 240 aristas, con un grado medio de 8 (mediana 8, rango entre 6 y 13). Esta configuración implica una densidad aproximada de <span class="math inline">\(0.14\)</span>, por lo que la red es relativamente dispersa en términos de todas las conexiones posibles; sin embargo, cada hospital mantiene, en promedio, vínculos con un número moderado de vecinos cercanos, lo que refleja una importante proximidad local dentro de la estructura urbana.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(igraph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'igraph'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    decompose, spectrum</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:base':
+
+    union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"hospitales.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 60 Columns: 9</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (4): place_id, nombre, address, types
+dbl (4): rating, reseñas, lat, lon
+lgl (1): price_level
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="ot">&lt;-</span> df[<span class="sc">!</span><span class="fu">is.na</span>(df<span class="sc">$</span>lat) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(df<span class="sc">$</span>lon), ]</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>coords_deg <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(df2[, <span class="fu">c</span>(<span class="st">"lat"</span>, <span class="st">"lon"</span>)])</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> coords_deg <span class="sc">*</span> pi<span class="sc">/</span><span class="dv">180</span>  <span class="co"># radianes como en Python</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(coords)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Haversine EXACTA como scikit-learn</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>haversine <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b) {</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  R <span class="ot">&lt;-</span> <span class="dv">6371</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  dlat <span class="ot">&lt;-</span> b[,<span class="dv">1</span>] <span class="sc">-</span> a[<span class="dv">1</span>]</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  dlon <span class="ot">&lt;-</span> b[,<span class="dv">2</span>] <span class="sc">-</span> a[<span class="dv">2</span>]</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  h <span class="ot">&lt;-</span> <span class="fu">sin</span>(dlat<span class="sc">/</span><span class="dv">2</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>       <span class="fu">cos</span>(a[<span class="dv">1</span>]) <span class="sc">*</span> <span class="fu">cos</span>(b[,<span class="dv">1</span>]) <span class="sc">*</span> <span class="fu">sin</span>(dlon<span class="sc">/</span><span class="dv">2</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span> <span class="sc">*</span> R <span class="sc">*</span> <span class="fu">asin</span>(<span class="fu">pmin</span>(<span class="dv">1</span>, <span class="fu">sqrt</span>(h)))</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="co"># matriz de distancias km</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>dist_km <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">0</span>, n, n)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  dist_km[i, ] <span class="ot">&lt;-</span> <span class="fu">haversine</span>(coords[i, ], coords)</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="co"># obtener vecinos igual que sklearn</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> <span class="fu">apply</span>(dist_km, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">order</span>(row, <span class="fu">seq_along</span>(row))  <span class="co"># desempate por índice</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>idx <span class="ot">&lt;-</span> idx[<span class="dv">1</span><span class="sc">:</span>(k<span class="sc">+</span><span class="dv">1</span>), ]</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>dist <span class="ot">&lt;-</span> <span class="fu">apply</span>(dist_km, <span class="dv">1</span>, sort)[<span class="dv">1</span><span class="sc">:</span>(k<span class="sc">+</span><span class="dv">1</span>), ]</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafo</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co"># -------------------------</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>G_hospitales <span class="ot">&lt;-</span> <span class="fu">graph.empty</span>(<span class="at">directed =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: `graph.empty()` was deprecated in igraph 2.1.0.
+ℹ Please use `make_empty_graph()` instead.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>G_hospitales <span class="ot">&lt;-</span> <span class="fu">add_vertices</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  G_hospitales, n,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> df2<span class="sc">$</span>nombre,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">rating =</span> df2<span class="sc">$</span>rating,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lat =</span> df2<span class="sc">$</span>lat,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">lon =</span> df2<span class="sc">$</span>lon</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># aristas idénticas a Python</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n) {</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  vecinos <span class="ot">&lt;-</span> idx[<span class="dv">2</span><span class="sc">:</span>(k<span class="sc">+</span><span class="dv">1</span>), i]    <span class="co"># omitir uno mismo</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (j <span class="cf">in</span> vecinos) {</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    G_hospitales <span class="ot">&lt;-</span> <span class="fu">add_edges</span>(G_hospitales, <span class="fu">c</span>(i, j))</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># layout geográfico igual que Python</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> (df2<span class="sc">$</span>lon <span class="sc">-</span> <span class="fu">min</span>(df2<span class="sc">$</span>lon)) <span class="sc">/</span> (<span class="fu">max</span>(df2<span class="sc">$</span>lon) <span class="sc">-</span> <span class="fu">min</span>(df2<span class="sc">$</span>lon))</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> (df2<span class="sc">$</span>lat <span class="sc">-</span> <span class="fu">min</span>(df2<span class="sc">$</span>lat)) <span class="sc">/</span> (<span class="fu">max</span>(df2<span class="sc">$</span>lat) <span class="sc">-</span> <span class="fu">min</span>(df2<span class="sc">$</span>lat))</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>layout <span class="ot">&lt;-</span> <span class="fu">cbind</span>(x, y)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co"># plot</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  G_hospitales,</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> layout,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">vertex.size =</span> <span class="dv">4</span>,</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">vertex.color =</span> <span class="st">"tomato"</span>,</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">edge.color =</span> <span class="st">"gray80"</span>,</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">vertex.label =</span> <span class="cn">NA</span>, </span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">axes =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">""</span>,</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">""</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Red de hospitales (k vecinos más cercanos)"</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="descriptivo_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>En términos de conectividad global, la red conforma un único componente; no se observan hospitales aislados ni subgrupos desconectados. La presencia de algunos nodos con grado más alto sugiere puntos que actúan como pequeños de proximidad geográfica, potencialmente relevantes para la accesibilidad territorial y, en un sentido más amplio, para la difusión de información o prácticas entre distintas zonas de la ciudad. \</p>
+<p>Las conexiones no reflejan afinidad o colaboración funcional, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta de establecimientos de salud en la ciudad y su área metropolitana, y permite explorar su conectividad y la posible formación de conglomerados territoriales.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'dplyr'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:igraph':
+
+    as_data_frame, groups, union</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    filter, lag</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1️⃣ Crear mapa centrado en Bogotá</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">leaflet</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">setView</span>(<span class="at">lng =</span> <span class="sc">-</span><span class="fl">74.07</span>, <span class="at">lat =</span> <span class="fl">4.65</span>, <span class="at">zoom =</span> <span class="dv">12</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2️⃣ Función para asignar color según rating</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>color_rating <span class="ot">&lt;-</span> <span class="cf">function</span>(rating) {</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (rating <span class="sc">&gt;=</span> <span class="fl">4.5</span>) {</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"green"</span>)       <span class="co"># excelente</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (rating <span class="sc">&gt;=</span> <span class="fl">3.5</span>) {</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"orange"</span>)      <span class="co"># bueno</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="st">"red"</span>)         <span class="co"># bajo</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 3️⃣ Agregar cada hospital como marcador circular</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df)) {</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  r <span class="ot">&lt;-</span> df[i, ]</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> m <span class="sc">%&gt;%</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addCircleMarkers</span>(</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">lng =</span> r<span class="sc">$</span>lon,</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">lat =</span> r<span class="sc">$</span>lat,</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">radius =</span> <span class="dv">6</span>,</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">color =</span> <span class="fu">color_rating</span>(r<span class="sc">$</span>rating),         <span class="co"># borde</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">fillColor =</span> <span class="fu">color_rating</span>(r<span class="sc">$</span>rating),     <span class="co"># interior</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>      <span class="at">fillOpacity =</span> <span class="fl">0.85</span>,</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>      <span class="at">popup =</span> <span class="fu">paste0</span>(</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>        r<span class="sc">$</span>nombre, <span class="st">" ⭐"</span>, r<span class="sc">$</span>rating,</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">" ("</span>, r<span class="sc">$</span>reseñas, <span class="st">" reseñas)"</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar mapa</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>m</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-6befd6db6b3ef6dfbc6f" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-6befd6db6b3ef6dfbc6f">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addCircleMarkers","args":[4.6294743,-74.13574699999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Clínica del Occidente ⭐2.4 (810 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6485378,-74.09509729999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Colombia National University Hospital ⭐3.6 (808 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6284494,-74.0642962,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Universitario San Ignacio ⭐3.2 (855 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6922817,-74.09808149999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Clinica Infantil Santa Maria del Lago - Colsanitas ⭐3.8 (1326 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6956426,-74.03302699999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Fundación Santa Fe de Bogotá ⭐3.8 (266 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6482114,-74.1062148,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Clínica Universitaria Colombia ⭐3.8 (1915 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6652513,-74.078525,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"University Children's Hospital of San José. ⭐2.8 (1142 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.710620599999999,-74.03229589999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Los Cobos Medical Center 👍 ⭐3.3 (2051 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6233209,-74.08270569999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Méderi ⭐3.3 (957 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6354956,-74.06221979999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Hospital Militar Central ⭐3.8 (650 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6538135,-74.0655975,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Chapinero hospital ⭐2.7 (127 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6472533,-74.09744259999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Hospital de la Policia Nacional ⭐3.5 (291 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6029766,-74.086731,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Sociedad de Cirugía de Bogotá - Hospital de San José ⭐3.4 (689 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.607115600000001,-74.21751859999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Clinic Avidanti Ciudad Verde ⭐2.8 (468 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.7426182,-74.02300769999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Unidad de Servicios de Salud Simón Bolívar ⭐2.7 (533 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5767107,-74.0912065,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Universitario Clinica San Rafael ⭐2.4 (854 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.591307,-74.0920058,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Anti-Tuberculoso Santa Clara ⭐3 (314 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6165239,-74.1533192,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital de Kennedy ⭐3 (622 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.7477956,-74.10299569999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Suba Hospital Cafam ⭐3 (143 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5853867,-74.21977099999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Mario Gaitan Yanguas Hospital in Soacha ⭐1.8 (158 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6367632,-74.06505749999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Marly Clinic ⭐3.7 (892 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.7113285,-74.10965569999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Engativa Hospital ⭐2.5 (361 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6628657,-74.0597085,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Clínica Nueva El Lago ⭐2.5 (571 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6716675,-74.14634290000001,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Fontibón E.S.E. ⭐2.8 (141 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5697384,-74.0835065,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital San Blas ⭐3.2 (145 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6638565,-74.0798245,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Universitario Méderi Barrios Unidos ⭐3.3 (396 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.593217399999999,-74.0886079,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Misericordia Foundation Hospital ⭐4.3 (980 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.750058999999999,-74.06548739999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Clínica La Colina ⭐3.3 (836 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.634244799999999,-74.0709708,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Clinica Nueva ⭐3.4 (460 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6350989,-74.2060717,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital de Bosa Nivel IV ⭐2.7 (235 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5708494,-74.1072001,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Fundación Hospital San Carlos ⭐3.3 (539 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5835956,-74.1319836,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Centro de Salud El Carmen ⭐3.8 (63 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.7535488,-74.09174609999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital de Suba ⭐3 (289 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5595,-74.1383,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Meissen ⭐3 (310 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.587446700000001,-74.08371389999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Samaritan Hospital ⭐3.9 (306 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5930293,-74.08850079999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Hospital \"La Misericordia\" Bogotá (HoMi) ⭐3.6 (260 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.651581999999999,-74.14898190000001,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Pediátrico El Tintal ⭐2.7 (200 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6973756,-74.03178009999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Usaqun ⭐2.9 (24 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.735297099999999,-74.25971079999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"E.S.E. Hospital Santa Matilde ⭐1.8 (155 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5986357,-74.06429349999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Instituto Roosevelt ⭐4 (445 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.712146499999999,-74.21292339999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Nuestra Señora De Las Mercedes E.S.E ⭐1.6 (164 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5524572,-74.1446454,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Hospital Vista Hermosa, Public Health Office ⭐3.8 (95 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.622451499999999,-74.1204274,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"SOUTH TRINITY HOSPITAL CAMI GALAN ⭐3.3 (80 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6982516,-74.0730753,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Shaio Clinic ⭐3.8 (2677 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.606870799999999,-74.130899,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"SAMU Alqueria Cruz Roja Bogotá ⭐1.5 (215 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5526674,-74.09457499999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital La Victoria ⭐2.8 (136 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6170675,-74.08122419999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Hospital Centro Oriente CAMI Samper Mendoza ⭐3.6 (31 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.7413984,-74.0345157,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"LaCardio ⭐3.9 (1075 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5725221,-74.1059348,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital San Carlos ⭐2.9 (82 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.473222499999999,-74.1218348,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Usme Hospital ⭐3.7 (35 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.571655199999999,-74.12860719999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital El Tunal ⭐2.9 (181 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.5823769,-74.20044779999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Cardiovascular Hospital del Niño de Cundinamarca ⭐2.4 (483 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.7152017,-74.1408969,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Emaus Center - Engativa Hospital ⭐2.9 (59 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.703639799999999,-74.2278912,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital María Auxiliadora E.S.E. ⭐2.4 (131 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.688603,-74.0517749,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Clínica La Sabana ⭐3.1 (213 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.8063474,-74.34988609999999,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Antiguo Hospital San Rafael ⭐2.5 (220 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6687069,-74.0568042,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"orange","weight":5,"opacity":0.5,"fill":true,"fillColor":"orange","fillOpacity":0.85},null,null,"Clínica del Country ⭐3.5 (635 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.6687118,-74.1077312,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Colombian Cardiovascular Center - Clinica Santa Teresita Normandía ⭐3.4 (150 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.914657,-74.0997486,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Hospital Our Lady of Carmen Tabio ⭐3.3 (27 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[4.666116,-74.078829,6,null,null,{"interactive":true,"className":"","stroke":true,"color":"red","weight":5,"opacity":0.5,"fill":true,"fillColor":"red","fillOpacity":0.85},null,null,"Chapinero Hospital ⭐3 (8 reseñas)",null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"setView":[[4.65,-74.06999999999999],12,[]],"limits":{"lat":[4.473222499999999,4.914657],"lng":[-74.34988609999999,-74.02300769999999]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>Las conexiones no reflejan afinidad o colaboración funcional, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta de establecimientos de salud en la ciudad y su área metropolitana, y permite explorar su conectividad y la posible formación de conglomerados territoriales.</p>
+</section>
+<section id="grado-distribución-del-grado-y-componentes-conexos" class="level1">
+<h1>Grado, distribución del grado y Componentes conexos</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtener grados de cada nodo</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>deg <span class="ot">&lt;-</span> <span class="fu">degree</span>(G_hospitales)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Grado por nodo:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Grado por nodo:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(deg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                             Clínica del Occidente 
+                                                                12 
+                             Colombia National University Hospital 
+                                                                13 
+                                Hospital Universitario San Ignacio 
+                                                                11 
+                Clinica Infantil Santa Maria del Lago - Colsanitas 
+                                                                13 
+                                      Fundación Santa Fe de Bogotá 
+                                                                11 
+                                    Clínica Universitaria Colombia 
+                                                                13 
+                       University Children's Hospital of San José. 
+                                                                16 
+                                       Los Cobos Medical Center 👍 
+                                                                12 
+                                                            Méderi 
+                                                                12 
+                                          Hospital Militar Central 
+                                                                10 
+                                                Chapinero hospital 
+                                                                15 
+                                   Hospital de la Policia Nacional 
+                                                                11 
+              Sociedad de Cirugía de Bogotá - Hospital de San José 
+                                                                13 
+                                      Clinic Avidanti Ciudad Verde 
+                                                                10 
+                        Unidad de Servicios de Salud Simón Bolívar 
+                                                                10 
+                         Hospital Universitario Clinica San Rafael 
+                                                                14 
+                             Hospital Anti-Tuberculoso Santa Clara 
+                                                                17 
+                                               Hospital de Kennedy 
+                                                                14 
+                                               Suba Hospital Cafam 
+                                                                11 
+                           Mario Gaitan Yanguas Hospital in Soacha 
+                                                                 9 
+                                                      Marly Clinic 
+                                                                12 
+                                                 Engativa Hospital 
+                                                                11 
+                                             Clínica Nueva El Lago 
+                                                                13 
+                                          Hospital Fontibón E.S.E. 
+                                                                12 
+                                                 Hospital San Blas 
+                                                                14 
+                      Hospital Universitario Méderi Barrios Unidos 
+                                                                17 
+                                  Misericordia Foundation Hospital 
+                                                                13 
+                                                 Clínica La Colina 
+                                                                11 
+                                                     Clinica Nueva 
+                                                                11 
+                                         Hospital de Bosa Nivel IV 
+                                                                13 
+                                     Fundación Hospital San Carlos 
+                                                                14 
+                                         Centro de Salud El Carmen 
+                                                                11 
+                                                  Hospital de Suba 
+                                                                11 
+                                                  Hospital Meissen 
+                                                                12 
+                                                Samaritan Hospital 
+                                                                14 
+                          Hospital "La Misericordia" Bogotá (HoMi) 
+                                                                12 
+                                     Hospital Pediátrico El Tintal 
+                                                                13 
+                                                   Hospital Usaqun 
+                                                                11 
+                                     E.S.E. Hospital Santa Matilde 
+                                                                 9 
+                                               Instituto Roosevelt 
+                                                                 7 
+                     Hospital Nuestra Señora De Las Mercedes E.S.E 
+                                                                 9 
+                      Hospital Vista Hermosa, Public Health Office 
+                                                                12 
+                                 SOUTH TRINITY HOSPITAL CAMI GALAN 
+                                                                11 
+                                                      Shaio Clinic 
+                                                                15 
+                                    SAMU Alqueria Cruz Roja Bogotá 
+                                                                11 
+                                              Hospital La Victoria 
+                                                                12 
+                       Hospital Centro Oriente CAMI Samper Mendoza 
+                                                                13 
+                                                          LaCardio 
+                                                                12 
+                                               Hospital San Carlos 
+                                                                15 
+                                                     Usme Hospital 
+                                                                 6 
+                                                 Hospital El Tunal 
+                                                                14 
+                  Cardiovascular Hospital del Niño de Cundinamarca 
+                                                                 9 
+                                  Emaus Center - Engativa Hospital 
+                                                                13 
+                                 Hospital María Auxiliadora E.S.E. 
+                                                                 9 
+                                                 Clínica La Sabana 
+                                                                13 
+                                       Antiguo Hospital San Rafael 
+                                                                 7 
+                                               Clínica del Country 
+                                                                15 
+Colombian Cardiovascular Center - Clinica Santa Teresita Normandía 
+                                                                14 
+                                 Hospital Our Lady of Carmen Tabio 
+                                                                 6 
+                                                Chapinero Hospital 
+                                                                16 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convertir a vector numérico</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>grados <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(deg)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Grado medio:"</span>, <span class="fu">mean</span>(grados),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">" | Mediana:"</span>, <span class="fu">median</span>(grados),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">" | Máx:"</span>, <span class="fu">max</span>(grados), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Grado medio: 12  | Mediana: 12  | Máx: 17 </code></pre>
+</div>
+</div>
+<p>En la red de hospitales analizada se observa un grado medio de <span class="math inline">\(k \approx 12\)</span>, con mediana 12.5 y un rango que va de 6 a 17 vecinos por nodo. Esta configuración es consistente con el esquema de construcción por <span class="math inline">\(K\)</span>–vecinos más cercanos, que garantiza un número mínimo de conexiones por hospital y genera grados algo mayores en aquellos nodos que son vecinos simultáneos de varios hospitales. \</p>
+<p>En términos estructurales, estos resultados apuntan a una conectividad local relativamente alta y bastante homogénea: la mayoría de los hospitales se sitúan en torno al grado medio, sin presencia de hubs extremadamente dominantes. No obstante, algunos nodos alcanzan grados en el extremo superior del rango, lo que indica la existencia de puntos de mayor concentración de vínculos en el tejido urbano. Tales hospitales pueden interpretarse como pequeños centros de proximidad espacial, potencialmente relevantes para el acceso a servicios de salud y para la articulación entre diferentes subregiones de la ciudad.</p>
+</section>
+<section id="centralidades-grado-cercanía-y-betweenness" class="level1">
+<h1>Centralidades: grado, cercanía y betweenness</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Centralidad de grado</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>c_deg <span class="ot">&lt;-</span> <span class="fu">degree</span>(G_hospitales, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Centralidad de cercanía (closeness)</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Nota: en igraph, closeness está basada en la suma de distancias en el componente conexo</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>c_clo <span class="ot">&lt;-</span> <span class="fu">closeness</span>(G_hospitales, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Centralidad de intermediación (betweenness)</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>c_bet <span class="ot">&lt;-</span> <span class="fu">betweenness</span>(G_hospitales, <span class="at">normalized =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Mostrar resultados</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Centralidad de grado:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Centralidad de grado:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(c_deg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                             Clínica del Occidente 
+                                                         0.2033898 
+                             Colombia National University Hospital 
+                                                         0.2203390 
+                                Hospital Universitario San Ignacio 
+                                                         0.1864407 
+                Clinica Infantil Santa Maria del Lago - Colsanitas 
+                                                         0.2203390 
+                                      Fundación Santa Fe de Bogotá 
+                                                         0.1864407 
+                                    Clínica Universitaria Colombia 
+                                                         0.2203390 
+                       University Children's Hospital of San José. 
+                                                         0.2711864 
+                                       Los Cobos Medical Center 👍 
+                                                         0.2033898 
+                                                            Méderi 
+                                                         0.2033898 
+                                          Hospital Militar Central 
+                                                         0.1694915 
+                                                Chapinero hospital 
+                                                         0.2542373 
+                                   Hospital de la Policia Nacional 
+                                                         0.1864407 
+              Sociedad de Cirugía de Bogotá - Hospital de San José 
+                                                         0.2203390 
+                                      Clinic Avidanti Ciudad Verde 
+                                                         0.1694915 
+                        Unidad de Servicios de Salud Simón Bolívar 
+                                                         0.1694915 
+                         Hospital Universitario Clinica San Rafael 
+                                                         0.2372881 
+                             Hospital Anti-Tuberculoso Santa Clara 
+                                                         0.2881356 
+                                               Hospital de Kennedy 
+                                                         0.2372881 
+                                               Suba Hospital Cafam 
+                                                         0.1864407 
+                           Mario Gaitan Yanguas Hospital in Soacha 
+                                                         0.1525424 
+                                                      Marly Clinic 
+                                                         0.2033898 
+                                                 Engativa Hospital 
+                                                         0.1864407 
+                                             Clínica Nueva El Lago 
+                                                         0.2203390 
+                                          Hospital Fontibón E.S.E. 
+                                                         0.2033898 
+                                                 Hospital San Blas 
+                                                         0.2372881 
+                      Hospital Universitario Méderi Barrios Unidos 
+                                                         0.2881356 
+                                  Misericordia Foundation Hospital 
+                                                         0.2203390 
+                                                 Clínica La Colina 
+                                                         0.1864407 
+                                                     Clinica Nueva 
+                                                         0.1864407 
+                                         Hospital de Bosa Nivel IV 
+                                                         0.2203390 
+                                     Fundación Hospital San Carlos 
+                                                         0.2372881 
+                                         Centro de Salud El Carmen 
+                                                         0.1864407 
+                                                  Hospital de Suba 
+                                                         0.1864407 
+                                                  Hospital Meissen 
+                                                         0.2033898 
+                                                Samaritan Hospital 
+                                                         0.2372881 
+                          Hospital "La Misericordia" Bogotá (HoMi) 
+                                                         0.2033898 
+                                     Hospital Pediátrico El Tintal 
+                                                         0.2203390 
+                                                   Hospital Usaqun 
+                                                         0.1864407 
+                                     E.S.E. Hospital Santa Matilde 
+                                                         0.1525424 
+                                               Instituto Roosevelt 
+                                                         0.1186441 
+                     Hospital Nuestra Señora De Las Mercedes E.S.E 
+                                                         0.1525424 
+                      Hospital Vista Hermosa, Public Health Office 
+                                                         0.2033898 
+                                 SOUTH TRINITY HOSPITAL CAMI GALAN 
+                                                         0.1864407 
+                                                      Shaio Clinic 
+                                                         0.2542373 
+                                    SAMU Alqueria Cruz Roja Bogotá 
+                                                         0.1864407 
+                                              Hospital La Victoria 
+                                                         0.2033898 
+                       Hospital Centro Oriente CAMI Samper Mendoza 
+                                                         0.2203390 
+                                                          LaCardio 
+                                                         0.2033898 
+                                               Hospital San Carlos 
+                                                         0.2542373 
+                                                     Usme Hospital 
+                                                         0.1016949 
+                                                 Hospital El Tunal 
+                                                         0.2372881 
+                  Cardiovascular Hospital del Niño de Cundinamarca 
+                                                         0.1525424 
+                                  Emaus Center - Engativa Hospital 
+                                                         0.2203390 
+                                 Hospital María Auxiliadora E.S.E. 
+                                                         0.1525424 
+                                                 Clínica La Sabana 
+                                                         0.2203390 
+                                       Antiguo Hospital San Rafael 
+                                                         0.1186441 
+                                               Clínica del Country 
+                                                         0.2542373 
+Colombian Cardiovascular Center - Clinica Santa Teresita Normandía 
+                                                         0.2372881 
+                                 Hospital Our Lady of Carmen Tabio 
+                                                         0.1016949 
+                                                Chapinero Hospital 
+                                                         0.2711864 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Centralidad de cercanía:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Centralidad de cercanía:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(c_clo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                             Clínica del Occidente 
+                                                         0.3710692 
+                             Colombia National University Hospital 
+                                                         0.3511905 
+                                Hospital Universitario San Ignacio 
+                                                         0.2878049 
+                Clinica Infantil Santa Maria del Lago - Colsanitas 
+                                                         0.3554217 
+                                      Fundación Santa Fe de Bogotá 
+                                                         0.2864078 
+                                    Clínica Universitaria Colombia 
+                                                         0.3664596 
+                       University Children's Hospital of San José. 
+                                                         0.3532934 
+                                       Los Cobos Medical Center 👍 
+                                                         0.2622222 
+                                                            Méderi 
+                                                         0.2783019 
+                                          Hospital Militar Central 
+                                                         0.2878049 
+                                                Chapinero hospital 
+                                                         0.3189189 
+                                   Hospital de la Policia Nacional 
+                                                         0.3554217 
+              Sociedad de Cirugía de Bogotá - Hospital de San José 
+                                                         0.2850242 
+                                      Clinic Avidanti Ciudad Verde 
+                                                         0.3189189 
+                        Unidad de Servicios de Salud Simón Bolívar 
+                                                         0.2448133 
+                         Hospital Universitario Clinica San Rafael 
+                                                         0.2694064 
+                             Hospital Anti-Tuberculoso Santa Clara 
+                                                         0.3121693 
+                                               Hospital de Kennedy 
+                                                         0.3410405 
+                                               Suba Hospital Cafam 
+                                                         0.2906404 
+                           Mario Gaitan Yanguas Hospital in Soacha 
+                                                         0.2950000 
+                                                      Marly Clinic 
+                                                         0.2979798 
+                                                 Engativa Hospital 
+                                                         0.3072917 
+                                             Clínica Nueva El Lago 
+                                                         0.3241758 
+                                          Hospital Fontibón E.S.E. 
+                                                         0.3664596 
+                                                 Hospital San Blas 
+                                                         0.2694064 
+                      Hospital Universitario Méderi Barrios Unidos 
+                                                         0.3554217 
+                                  Misericordia Foundation Hospital 
+                                                         0.2864078 
+                                                 Clínica La Colina 
+                                                         0.2565217 
+                                                     Clinica Nueva 
+                                                         0.2878049 
+                                         Hospital de Bosa Nivel IV 
+                                                         0.3333333 
+                                     Fundación Hospital San Carlos 
+                                                         0.2706422 
+                                         Centro de Salud El Carmen 
+                                                         0.2920792 
+                                                  Hospital de Suba 
+                                                         0.2920792 
+                                                  Hospital Meissen 
+                                                         0.2744186 
+                                                Samaritan Hospital 
+                                                         0.2681818 
+                          Hospital "La Misericordia" Bogotá (HoMi) 
+                                                         0.2610619 
+                                     Hospital Pediátrico El Tintal 
+                                                         0.3575758 
+                                                   Hospital Usaqun 
+                                                         0.2669683 
+                                     E.S.E. Hospital Santa Matilde 
+                                                         0.3041237 
+                                               Instituto Roosevelt 
+                                                         0.2836538 
+                     Hospital Nuestra Señora De Las Mercedes E.S.E 
+                                                         0.3072917 
+                      Hospital Vista Hermosa, Public Health Office 
+                                                         0.2744186 
+                                 SOUTH TRINITY HOSPITAL CAMI GALAN 
+                                                         0.3532934 
+                                                      Shaio Clinic 
+                                                         0.3155080 
+                                    SAMU Alqueria Cruz Roja Bogotá 
+                                                         0.3450292 
+                                              Hospital La Victoria 
+                                                         0.2633929 
+                       Hospital Centro Oriente CAMI Samper Mendoza 
+                                                         0.2836538 
+                                                          LaCardio 
+                                                         0.2622222 
+                                               Hospital San Carlos 
+                                                         0.2706422 
+                                                     Usme Hospital 
+                                                         0.2500000 
+                                                 Hospital El Tunal 
+                                                         0.2935323 
+                  Cardiovascular Hospital del Niño de Cundinamarca 
+                                                         0.2950000 
+                                  Emaus Center - Engativa Hospital 
+                                                         0.3314607 
+                                 Hospital María Auxiliadora E.S.E. 
+                                                         0.3072917 
+                                                 Clínica La Sabana 
+                                                         0.2864078 
+                                       Antiguo Hospital San Rafael 
+                                                         0.3025641 
+                                               Clínica del Country 
+                                                         0.3105263 
+Colombian Cardiovascular Center - Clinica Santa Teresita Normandía 
+                                                         0.3597561 
+                                 Hospital Our Lady of Carmen Tabio 
+                                                         0.2554113 
+                                                Chapinero Hospital 
+                                                         0.3532934 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Centralidad de intermediación:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Centralidad de intermediación:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(c_bet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                             Clínica del Occidente 
+                                                      0.0825843081 
+                             Colombia National University Hospital 
+                                                      0.0256055620 
+                                Hospital Universitario San Ignacio 
+                                                      0.0146115004 
+                Clinica Infantil Santa Maria del Lago - Colsanitas 
+                                                      0.0787651708 
+                                      Fundación Santa Fe de Bogotá 
+                                                      0.0213039670 
+                                    Clínica Universitaria Colombia 
+                                                      0.0514844371 
+                       University Children's Hospital of San José. 
+                                                      0.0559582670 
+                                       Los Cobos Medical Center 👍 
+                                                      0.0020941939 
+                                                            Méderi 
+                                                      0.0341500430 
+                                          Hospital Militar Central 
+                                                      0.0091946784 
+                                                Chapinero hospital 
+                                                      0.1163220648 
+                                   Hospital de la Policia Nacional 
+                                                      0.0330686384 
+              Sociedad de Cirugía de Bogotá - Hospital de San José 
+                                                      0.0601337423 
+                                      Clinic Avidanti Ciudad Verde 
+                                                      0.0169970993 
+                        Unidad de Servicios de Salud Simón Bolívar 
+                                                      0.0046850351 
+                         Hospital Universitario Clinica San Rafael 
+                                                      0.0094747982 
+                             Hospital Anti-Tuberculoso Santa Clara 
+                                                      0.1396971188 
+                                               Hospital de Kennedy 
+                                                      0.0946813513 
+                                               Suba Hospital Cafam 
+                                                      0.0202474461 
+                           Mario Gaitan Yanguas Hospital in Soacha 
+                                                      0.0275291412 
+                                                      Marly Clinic 
+                                                      0.0786309007 
+                                                 Engativa Hospital 
+                                                      0.0268587125 
+                                             Clínica Nueva El Lago 
+                                                      0.0714690777 
+                                          Hospital Fontibón E.S.E. 
+                                                      0.1007765252 
+                                                 Hospital San Blas 
+                                                      0.0073232305 
+                      Hospital Universitario Méderi Barrios Unidos 
+                                                      0.0698606705 
+                                  Misericordia Foundation Hospital 
+                                                      0.0389938582 
+                                                 Clínica La Colina 
+                                                      0.0092673952 
+                                                     Clinica Nueva 
+                                                      0.0146115004 
+                                         Hospital de Bosa Nivel IV 
+                                                      0.0773790870 
+                                     Fundación Hospital San Carlos 
+                                                      0.0183528773 
+                                         Centro de Salud El Carmen 
+                                                      0.0169575738 
+                                                  Hospital de Suba 
+                                                      0.0284796018 
+                                                  Hospital Meissen 
+                                                      0.0230370612 
+                                                Samaritan Hospital 
+                                                      0.0104821807 
+                          Hospital "La Misericordia" Bogotá (HoMi) 
+                                                      0.0007068391 
+                                     Hospital Pediátrico El Tintal 
+                                                      0.0671902327 
+                                                   Hospital Usaqun 
+                                                      0.0038268466 
+                                     E.S.E. Hospital Santa Matilde 
+                                                      0.0043362922 
+                                               Instituto Roosevelt 
+                                                      0.0106309986 
+                     Hospital Nuestra Señora De Las Mercedes E.S.E 
+                                                      0.0056570241 
+                      Hospital Vista Hermosa, Public Health Office 
+                                                      0.0230370612 
+                                 SOUTH TRINITY HOSPITAL CAMI GALAN 
+                                                      0.0711675946 
+                                                      Shaio Clinic 
+                                                      0.0880231496 
+                                    SAMU Alqueria Cruz Roja Bogotá 
+                                                      0.1429294532 
+                                              Hospital La Victoria 
+                                                      0.0206988887 
+                       Hospital Centro Oriente CAMI Samper Mendoza 
+                                                      0.0896305569 
+                                                          LaCardio 
+                                                      0.0087842661 
+                                               Hospital San Carlos 
+                                                      0.0220729356 
+                                                     Usme Hospital 
+                                                      0.0001109118 
+                                                 Hospital El Tunal 
+                                                      0.0428760297 
+                  Cardiovascular Hospital del Niño de Cundinamarca 
+                                                      0.0275291412 
+                                  Emaus Center - Engativa Hospital 
+                                                      0.0941413617 
+                                 Hospital María Auxiliadora E.S.E. 
+                                                      0.0056570241 
+                                                 Clínica La Sabana 
+                                                      0.0245750105 
+                                       Antiguo Hospital San Rafael 
+                                                      0.0131188099 
+                                               Clínica del Country 
+                                                      0.0374665973 
+Colombian Cardiovascular Center - Clinica Santa Teresita Normandía 
+                                                      0.0668860112 
+                                 Hospital Our Lady of Carmen Tabio 
+                                                      0.0072078247 
+                                                Chapinero Hospital 
+                                                      0.0491390545 </code></pre>
+</div>
+</div>
+<p>Dado que la red de hospitales forma un único componente conexo, estas medidas son comparables en toda la estructura. La centralidad de grado toma valores entre <span class="math inline">\(0.10\)</span> y <span class="math inline">\(0.29\)</span>, con un promedio cercano a <span class="math inline">\(0.136\)</span>. Los nodos con mayores valores de grado, en particular los vértices 43, 16 y 25, representan hospitales con un número especialmente alto de vecinos geográficos inmediatos, lo que sugiere áreas de fuerte concentración de la oferta alrededor de estos establecimientos. \</p>
+<p>La centralidad de cercanía presenta valores entre aproximadamente <span class="math inline">\(0.245\)</span> y <span class="math inline">\(0.371\)</span>, con un promedio cercano a <span class="math inline">\(0.303\)</span>. Destacan, la Clínica del Occidente (0), la Clínica Universitaria Colombia (5), el Hospital Fontibón E.S.E. (23), el Hospital Pediátrico El Tintal (36) y la Clinica Santa Teresita Normandía (57), que se ubican a distancias geodésicas relativamente cortas del resto de la red. Estos hospitales pueden interpretarse como puntos de fácil acceso desde múltiples direcciones dentro del tejido urbano, al encontrarse “en medio” de la red en términos de distancia total acumulada.</p>
+</section>
+<section id="coeficiente-de-agrupamiento" class="level1">
+<h1>Coeficiente de agrupamiento</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Clustering local (coeficiente de agrupamiento por nodo)</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>clust_local <span class="ot">&lt;-</span> <span class="fu">transitivity</span>(G_hospitales, <span class="at">type =</span> <span class="st">"local"</span>, <span class="at">isolates =</span> <span class="st">"zero"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Clustering promedio (coeficiente global promedio)</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>clust_prom <span class="ot">&lt;-</span> <span class="fu">transitivity</span>(G_hospitales, <span class="at">type =</span> <span class="st">"average"</span>)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Clustering local:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Clustering local:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(clust_local)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                                             Clínica del Occidente 
+                                                         0.4642857 
+                             Colombia National University Hospital 
+                                                         0.7142857 
+                                Hospital Universitario San Ignacio 
+                                                         0.8666667 
+                Clinica Infantil Santa Maria del Lago - Colsanitas 
+                                                         0.4666667 
+                                      Fundación Santa Fe de Bogotá 
+                                                         0.6428571 
+                                    Clínica Universitaria Colombia 
+                                                         0.5277778 
+                       University Children's Hospital of San José. 
+                                                         0.5333333 
+                                       Los Cobos Medical Center 👍 
+                                                         0.7619048 
+                                                            Méderi 
+                                                         0.7333333 
+                                          Hospital Militar Central 
+                                                         0.8666667 
+                                                Chapinero hospital 
+                                                         0.4722222 
+                                   Hospital de la Policia Nacional 
+                                                         0.6071429 
+              Sociedad de Cirugía de Bogotá - Hospital de San José 
+                                                         0.6190476 
+                                      Clinic Avidanti Ciudad Verde 
+                                                         0.5238095 
+                        Unidad de Servicios de Salud Simón Bolívar 
+                                                         0.6666667 
+                         Hospital Universitario Clinica San Rafael 
+                                                         0.7142857 
+                             Hospital Anti-Tuberculoso Santa Clara 
+                                                         0.4909091 
+                                               Hospital de Kennedy 
+                                                         0.3777778 
+                                               Suba Hospital Cafam 
+                                                         0.6666667 
+                           Mario Gaitan Yanguas Hospital in Soacha 
+                                                         0.6000000 
+                                                      Marly Clinic 
+                                                         0.6666667 
+                                                 Engativa Hospital 
+                                                         0.6190476 
+                                             Clínica Nueva El Lago 
+                                                         0.5000000 
+                                          Hospital Fontibón E.S.E. 
+                                                         0.4444444 
+                                                 Hospital San Blas 
+                                                         0.7142857 
+                      Hospital Universitario Méderi Barrios Unidos 
+                                                         0.5272727 
+                                  Misericordia Foundation Hospital 
+                                                         0.6785714 
+                                                 Clínica La Colina 
+                                                         0.5714286 
+                                                     Clinica Nueva 
+                                                         0.8666667 
+                                         Hospital de Bosa Nivel IV 
+                                                         0.4666667 
+                                     Fundación Hospital San Carlos 
+                                                         0.6000000 
+                                         Centro de Salud El Carmen 
+                                                         0.6190476 
+                                                  Hospital de Suba 
+                                                         0.5714286 
+                                                  Hospital Meissen 
+                                                         0.5833333 
+                                                Samaritan Hospital 
+                                                         0.7142857 
+                          Hospital "La Misericordia" Bogotá (HoMi) 
+                                                         0.8095238 
+                                     Hospital Pediátrico El Tintal 
+                                                         0.4222222 
+                                                   Hospital Usaqun 
+                                                         0.7619048 
+                                     E.S.E. Hospital Santa Matilde 
+                                                         0.8666667 
+                                               Instituto Roosevelt 
+                                                         0.8000000 
+                     Hospital Nuestra Señora De Las Mercedes E.S.E 
+                                                         0.7619048 
+                      Hospital Vista Hermosa, Public Health Office 
+                                                         0.5833333 
+                                 SOUTH TRINITY HOSPITAL CAMI GALAN 
+                                                         0.5238095 
+                                                      Shaio Clinic 
+                                                         0.3461538 
+                                    SAMU Alqueria Cruz Roja Bogotá 
+                                                         0.4000000 
+                                              Hospital La Victoria 
+                                                         0.6111111 
+                       Hospital Centro Oriente CAMI Samper Mendoza 
+                                                         0.5000000 
+                                                          LaCardio 
+                                                         0.5714286 
+                                               Hospital San Carlos 
+                                                         0.6000000 
+                                                     Usme Hospital 
+                                                         0.9333333 
+                                                 Hospital El Tunal 
+                                                         0.6071429 
+                  Cardiovascular Hospital del Niño de Cundinamarca 
+                                                         0.6000000 
+                                  Emaus Center - Engativa Hospital 
+                                                         0.4222222 
+                                 Hospital María Auxiliadora E.S.E. 
+                                                         0.7619048 
+                                                 Clínica La Sabana 
+                                                         0.6428571 
+                                       Antiguo Hospital San Rafael 
+                                                         0.6666667 
+                                               Clínica del Country 
+                                                         0.5833333 
+Colombian Cardiovascular Center - Clinica Santa Teresita Normandía 
+                                                         0.4222222 
+                                 Hospital Our Lady of Carmen Tabio 
+                                                         0.6000000 
+                                                Chapinero Hospital 
+                                                         0.5555556 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Clustering promedio:</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Clustering promedio:</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(clust_prom)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6135458</code></pre>
+</div>
+</div>
+<p>En la red de hospitales, el local presenta valores que oscilan aproximadamente entre <span class="math inline">\(0.35\)</span> y <span class="math inline">\(0.93\)</span>, mientras que el coeficiente de agrupamiento promedio es</p>
+<p><span class="math inline">\(C \approx 0.61.\)</span></p>
+<p>Este valor puede considerarse moderadamente alto para una red de proximidad espacial, e indica que, en promedio, los vecinos de un hospital tienden a formar triángulos y pequeñas estructuras cuasi–cliqué. En términos urbanos, ello sugiere la existencia de microzonas de oferta hospitalaria, en las que varios establecimientos se encuentran mutuamente próximos y redundan como alternativas de atención dentro del mismo entorno barrial. \</p>
+</section>
+<section id="caminos-más-cortos-y-diámetro" class="level1">
+<h1>Caminos más cortos y diámetro</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtener el componente conectado más grande</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>comp <span class="ot">&lt;-</span> <span class="fu">components</span>(G_hospitales)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>largest_comp_nodes <span class="ot">&lt;-</span> <span class="fu">which</span>(comp<span class="sc">$</span>membership <span class="sc">==</span> <span class="fu">which.max</span>(comp<span class="sc">$</span>csize))</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>Gcc <span class="ot">&lt;-</span> <span class="fu">induced_subgraph</span>(G_hospitales, <span class="at">vids =</span> largest_comp_nodes)</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Longitud promedio de caminos más cortos</span></span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>asp <span class="ot">&lt;-</span> <span class="fu">mean_distance</span>(Gcc, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Diámetro del grafo</span></span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>diam <span class="ot">&lt;-</span> <span class="fu">diameter</span>(Gcc, <span class="at">directed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Longitud promedio de camino (ASP):"</span>, asp, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Longitud promedio de camino (ASP): 3.337853 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Diámetro (máx. distancia más corta):"</span>, diam, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Diámetro (máx. distancia más corta): 7 </code></pre>
+</div>
+</div>
+<p>Para el análisis de conectividad global se estudiaron la longitud promedio de los caminos mínimos (, ASP) y el diámetro de la red, calculados sobre el componente conexo principal. Dado que la red de hospitales es conexa, dicho componente incluye a los 60 nodos del grafo. La longitud promedio de los caminos más cortos fue</p>
+<p><span class="math inline">\(\text{ASP} \approx 3.34,\)</span></p>
+<p>lo que indica que, en promedio, es posible ir de un hospital a otro mediante tres o cuatro “saltos” a través de la red de proximidad. Una longitud de camino promedio reducida sugiere una red eficiente en términos de accesibilidad topológica: aunque las conexiones se basan únicamente en cercanía geográfica local, el conjunto de hospitales se mantiene relativamente “cerca” en el sentido de distancias en el grafo. Esta propiedad es coherente con la densidad intermedia y el alto coeficiente de agrupamiento observados. Por su parte, el diámetro, definido como la distancia geodésica máxima entre cualquier par de nodos, resultó igual a</p>
+<p><span class="math inline">\(\text{diam} = 7,\)</span></p>
+<p>es decir, los hospitales más alejados entre sí se conectan a través de una cadena de siete pasos. El valor del diámetro refleja, a su vez, la extensión espacial del área metropolitana estudiada: los pares de hospitales más distantes corresponden a establecimientos ubicados en extremos opuestos de la ciudad o en zonas periféricas. Si bien un diámetro de 7 no indica fragmentación, sí pone de relieve la existencia de trayectorias más largas en la periferia, donde la conectividad depende críticamente de unos pocos nodos puente. Desde una perspectiva de planificación urbana y de servicios de salud, esta configuración sugiere que, en general, la red facilita el encadenamiento de referencias o traslados entre instituciones, aunque las zonas más alejadas podrían enfrentar mayores costos de desplazamiento y depender de manera más fuerte de ciertos hospitales intermedios para mantener la integración del sistema.</p>
+</section>
+<section id="comunidades-y-modularidad" class="level1">
+<h1>Comunidades y modularidad</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Eliminar multi-edges y loops</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>G_simple <span class="ot">&lt;-</span> <span class="fu">simplify</span>(G_hospitales, <span class="at">remove.multiple =</span> <span class="cn">TRUE</span>, <span class="at">remove.loops =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Detectar comunidades con greedy modularity</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>coms <span class="ot">&lt;-</span> <span class="fu">cluster_fast_greedy</span>(G_simple)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Lista de nodos por comunidad</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>coms_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">communities</span>(coms), sort)</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Número de comunidades</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>num_coms <span class="ot">&lt;-</span> <span class="fu">length</span>(coms_list)</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Modularidad Q</span></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>Q <span class="ot">&lt;-</span> <span class="fu">modularity</span>(coms)</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Comunidades (greedy):</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Comunidades (greedy):</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(coms_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$`1`
+ [1] "Chapinero Hospital"                                
+ [2] "Clínica del Country"                               
+ [3] "Clinica Infantil Santa Maria del Lago - Colsanitas"
+ [4] "Clínica La Colina"                                 
+ [5] "Clínica La Sabana"                                 
+ [6] "Clínica Nueva El Lago"                             
+ [7] "Engativa Hospital"                                 
+ [8] "Fundación Santa Fe de Bogotá"                      
+ [9] "Hospital de Suba"                                  
+[10] "Hospital Our Lady of Carmen Tabio"                 
+[11] "Hospital Universitario Méderi Barrios Unidos"      
+[12] "Hospital Usaqun"                                   
+[13] "LaCardio"                                          
+[14] "Los Cobos Medical Center 👍"                       
+[15] "Shaio Clinic"                                      
+[16] "Suba Hospital Cafam"                               
+[17] "Unidad de Servicios de Salud Simón Bolívar"        
+[18] "University Children's Hospital of San José."       
+
+$`2`
+ [1] "Antiguo Hospital San Rafael"                                       
+ [2] "Cardiovascular Hospital del Niño de Cundinamarca"                  
+ [3] "Clinic Avidanti Ciudad Verde"                                      
+ [4] "Clínica del Occidente"                                             
+ [5] "Clínica Universitaria Colombia"                                    
+ [6] "Colombia National University Hospital"                             
+ [7] "Colombian Cardiovascular Center - Clinica Santa Teresita Normandía"
+ [8] "E.S.E. Hospital Santa Matilde"                                     
+ [9] "Emaus Center - Engativa Hospital"                                  
+[10] "Hospital de Bosa Nivel IV"                                         
+[11] "Hospital de Kennedy"                                               
+[12] "Hospital de la Policia Nacional"                                   
+[13] "Hospital Fontibón E.S.E."                                          
+[14] "Hospital María Auxiliadora E.S.E."                                 
+[15] "Hospital Nuestra Señora De Las Mercedes E.S.E"                     
+[16] "Hospital Pediátrico El Tintal"                                     
+[17] "Mario Gaitan Yanguas Hospital in Soacha"                           
+[18] "SAMU Alqueria Cruz Roja Bogotá"                                    
+[19] "SOUTH TRINITY HOSPITAL CAMI GALAN"                                 
+
+$`3`
+ [1] "Centro de Salud El Carmen"                           
+ [2] "Chapinero hospital"                                  
+ [3] "Clinica Nueva"                                       
+ [4] "Fundación Hospital San Carlos"                       
+ [5] "Hospital \"La Misericordia\" Bogotá (HoMi)"          
+ [6] "Hospital Anti-Tuberculoso Santa Clara"               
+ [7] "Hospital Centro Oriente CAMI Samper Mendoza"         
+ [8] "Hospital El Tunal"                                   
+ [9] "Hospital La Victoria"                                
+[10] "Hospital Meissen"                                    
+[11] "Hospital Militar Central"                            
+[12] "Hospital San Blas"                                   
+[13] "Hospital San Carlos"                                 
+[14] "Hospital Universitario Clinica San Rafael"           
+[15] "Hospital Universitario San Ignacio"                  
+[16] "Hospital Vista Hermosa, Public Health Office"        
+[17] "Instituto Roosevelt"                                 
+[18] "Marly Clinic"                                        
+[19] "Méderi"                                              
+[20] "Misericordia Foundation Hospital"                    
+[21] "Samaritan Hospital"                                  
+[22] "Sociedad de Cirugía de Bogotá - Hospital de San José"
+[23] "Usme Hospital"                                       </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">Número de comunidades:"</span>, num_coms, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Número de comunidades: 3 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"Modularidad Q:"</span>, Q, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Modularidad Q: 0.5309809 </code></pre>
+</div>
+</div>
+<p>En la red de hospitales se detectaron tres comunidades principales, con tamaños de 23, 19 y 18 hospitales, respectivamente, y una modularidad total de</p>
+<p><span class="math inline">\(Q \approx 0{,}53.\)</span></p>
+<p>Este valor indica una estructura comunitaria marcada, la red tiende a organizarse en bloques de hospitales densamente interconectados entre sí y más débilmente conectados con el resto. Dado que las aristas se construyen a partir de proximidad geográfica, estas comunidades pueden interpretarse como conglomerados territoriales de oferta hospitalaria, que corresponden de manera aproximada a subzonas de la ciudad y su área metropolitana; por ejemplo, sectores centrales frente a zonas más periféricas. \</p>
+</section>
+<section id="distribución-del-grado" class="level1">
+<h1>Distribución del grado</h1>
+<p>Finalmente, la distribución empírica de grados proporciona una síntesis de la heterogeneidad en la conectividad local de la red. El histograma de la Figura <span class="math inline">\(\ref{fig:Dist_grado}\)</span> muestra una forma claramente unimodal, con ligera cola hacia la derecha. La mayoría de los hospitales tienen entre 6 y 10 vecinos; aproximadamente el 75 % de los nodos presenta grados en ese rango y el grado medio y mediano coinciden en 8. Sólo unos pocos hospitales alcanzan valores más altos, 11 y 13 conexiones, lo que sugiere la presencia de locales pero sin llegar a una estructura fuertemente jerárquica o de tipo libre de escala. \</p>
+<p>Esta distribución es coherente con el procedimiento de construcción por <span class="math inline">\(K\)</span>–vecinos más cercanos, que garantiza un número mínimo de conexiones por nodo y genera grados algo mayores en aquellos hospitales que son vecinos simultáneos de varios establecimientos. En conjunto, la red resulta relativamente homogénea en términos de conectividad; la mayoría de los hospitales tiene un número de enlaces similar, mientras que un pequeño subconjunto concentra un mayor número de conexiones directas y puede considerarse estructuralmente más relevante.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Suponiendo que 'grados' es un vector numérico</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>bins <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(grados), <span class="fu">max</span>(grados) <span class="sc">+</span> <span class="dv">1</span>, <span class="at">by =</span> <span class="dv">1</span>)</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(</span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  grados,</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">breaks =</span> bins,</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">right =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">col =</span> <span class="st">"lightblue"</span>,</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Distribución de grado — Red de hospitales de Bogotá"</span>,</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">xlab =</span> <span class="st">"Grado (vecinos)"</span>,</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ylab =</span> <span class="st">"Frecuencia de cafés"</span></span>
+<span id="cb55-13"><a href="#cb55-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb55-14"><a href="#cb55-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-15"><a href="#cb55-15" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>(<span class="at">nx =</span> <span class="cn">NA</span>, <span class="at">ny =</span> <span class="cn">NULL</span>, <span class="at">col =</span> <span class="st">"gray"</span>, <span class="at">lty =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="descriptivo_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>La función de distribución acumulada (CDF) del grado, presentada en la Figura <span class="math inline">\(\ref{fig:CDF}\)</span>, complementa este análisis. La curva evidencia que cerca de la mitad de los hospitales tiene grado menor o igual que 8 y que alrededor del 95 % no supera las 10 conexiones, lo que confirma la ausencia de colas pesadas en la distribución. Esta representación resulta especialmente útil para comparar configuraciones alternativas del parámetro <span class="math inline">\(K\)</span>; al incrementar <span class="math inline">\(K\)</span>, la CDF se desplazaría hacia la derecha, reflejando un aumento general del grado medio y una red más densa, con implicaciones directas sobre la longitud de caminos, la redundancia local y la robustez global de la estructura.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">grados =</span> grados)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(grados)) <span class="sc">+</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_ecdf</span>(<span class="at">geom =</span> <span class="st">"step"</span>) <span class="sc">+</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Grado"</span>,</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Proporción acumulada"</span>,</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"CDF del grado — Red de hospitales"</span></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="descriptivo_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Avances_estadísticas_descriptivas.txt Mostrando Avances_estadísticas_descriptivas.txt.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>© Curso de Programación y Lenguajes Estadísticos</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

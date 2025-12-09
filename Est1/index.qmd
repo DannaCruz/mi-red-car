@@ -1,11 +1,7 @@
 ---
 title: "Red de Colegios Bogotá, Colombia:" 
 subtitle: "Ranking según prueba saber 11 año 2023"
-format: html
 author: Yésica Sepúlveda Cardona.
-css: styles.css
-execute: 
-  freeze: true
 ---
 
 ### **Introducción**
@@ -13,16 +9,21 @@ execute:
 
 Este proyecto de análisis de redes se enfoca en los resultados de la prueba estandarizada Saber 11 del ICFES, de las instituciones educativas de Bogotá, Colombia. El estudio se construye a partir del **Puntaje Global promedio** que obtuvieron algunos de los colegios oficiales y no oficiales de la ciudad en la **prueba Saber 11 del año 2023**.
 
+-   Cargué mis datos
+-   Analicé grados y centralidades
+-   Encontré comunidades
+-   Hice visualizaciones
+=======
 Utilizando la **Teoría de Grafos** y el análisis geoespacial, el proyecto tiene tres objetivos principales:
 
 * **Modelar la Vecindad:** Construir una **red de $k$-vecinos cercanos** ($k$-NN) donde las aristas representan la proximidad geográfica (distancia Haversine) entre las instituciones.
 * **Clasificar el Rendimiento:** Clasificar los colegios en niveles (Alto, Promedio, Bajo) basados en métricas estadísticas (media y desviación estándar) de sus puntajes.
 * **Validar la Hipótesis:** Emplear métricas de centralidad (Grado, Betweenness) y el **Análisis de Varianza** para determinar si la ubicación estratégica o la división en zonas geográficas amplias influye significativamente en el desempeño académico.
 
-```{r}
-# Acá irá mi código de análisis para la red del Estudiante 1
-```
 
+
+![](escuela.png)
+=======
 ![](colegios_bta.jpg){width=60% .center-img}
 
 ### **Metodología y Resultados Clave**
@@ -47,7 +48,7 @@ La integración y depuración de diferentes bases de datos mediante Python permi
 
 **Métrica y Estructura**
 Una vez organizada la información, se exploran las propiedades de la red de $k$-vecinos cercanos. Se determina el grado promedio ($\approx 8.23$) y la densidad ($\approx 0.19$). El análisis de centralidad de Betweenness mostró qué colegios actúan como "puentes" clave entre los clusters geográficos de la ciudad de Bogotá, Colombia.
-[Ver más →](metricas.qmd){.btn-vermas}
+[Ver más →](descriptiva.qmd){.btn-vermas}
 :::
 
 ::: {.card .mis-card}
@@ -56,7 +57,7 @@ Una vez organizada la información, se exploran las propiedades de la red de $k$
 
 **Visualización de la Hipótesis**
 A partir de la depuración inicial, se clasificaron 44 colegios sobre el mapa de la ciudad de Bogotá, evidenciando su nivel de desempeño en la prueba Saber 11 del año 2023: Alto, Promedio y Bajo. Estos niveles se asignaron utilizando la media y la desviación estándar, estableciendo los umbrales en torno a la media ± 0.5σ. Al visualizar el mapa resultante en Folium, se observa una tendencia en la distribución geográfica: los colegios de alto rendimiento (marcados en verde) tienden a concentrarse en el norte de la ciudad.
-[Ver más →](hipotesis.qmd){.btn-vermas}
+[Ver más →](bayesian.qmd){.btn-vermas}
 :::
 
 ::: {.card .mis-card}
@@ -73,4 +74,8 @@ Se hace Analysis of Variance (ANOVA) para validar si la diferencia de puntajes e
 
 
 
+=======
+![](colegios.png)
+
+Mi primer cambio (imagen)
 

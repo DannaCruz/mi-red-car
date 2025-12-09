@@ -6,8 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Andres Felipe Arevalo Arevalo">
 
-<title>Análisis de mi Red — aarevaloa – Proyecto — Mi Red CAR</title>
+<title>Red de hospitales de Bogotá y su área metropolitana – Proyecto — Mi Red CAR</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +21,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -65,6 +31,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -102,7 +70,65 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -134,8 +160,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-estudiantes">    
         <li>
+    <a class="dropdown-item" href="../Est14/Intro.html">
+ <span class="dropdown-text">Red de Barberias</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../Est1/index.html">
- <span class="dropdown-text">Estudiante 1</span></a>
+ <span class="dropdown-text">Red de Colegios Bogotá</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../Est2/index.html">
@@ -203,7 +233,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#mi-análisis" id="toc-mi-análisis" class="nav-link active" data-scroll-target="#mi-análisis">🧩 Mi análisis</a></li>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#metodología" id="toc-metodología" class="nav-link" data-scroll-target="#metodología">Metodología</a></li>
   </ul>
 </nav>
     </div>
@@ -212,13 +243,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Análisis de mi Red — aarevaloa</h1>
+<h1 class="title">Red de hospitales de Bogotá y su área metropolitana</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Andres Felipe Arevalo Arevalo </p>
+          </div>
+  </div>
     
   
     
@@ -229,47 +266,64 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="mi-análisis" class="level1">
-<h1>🧩 Mi análisis</h1>
-<p>Aquí presento mi red personal del curso.</p>
-<ul>
-<li>Cargué mis datos</li>
-<li>Analicé grados y centralidades</li>
-<li>Encontré comunidades</li>
-<li>Hice visualizaciones</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>hospitales <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"hospitales.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 60 Columns: 9
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr (4): place_id, nombre, address, types
-dbl (4): rating, reseñas, lat, lon
-lgl (1): price_level
+<section id="abstract" class="level1">
+<h1>Abstract</h1>
+<p>El acceso oportuno a servicios de salud de mediana y alta complejidad depende no sólo del número de instituciones disponibles, sino también de su distribución espacial y de la forma en que se articulan dentro del territorio urbano. En este trabajo se presenta un análisis estructural de la red de hospitales de Bogotá y su área metropolitana a partir de datos abiertos de opinión en Google. Se recopilaron 60 instituciones hospitalarias con información de localización geográfica, nombre, calificación promedio y número de reseñas. Con estos datos se construyó un grafo geográfico no dirigido mediante un modelo de <span class="math inline">\(k\)</span> vecinos más cercanos (<span class="math inline">\(k=6\)</span>) sobre la métrica haversine, en el que los nodos representan hospitales y las aristas indican proximidad espacial. \</p>
+<p>Sobre esta red se calcularon medidas clásicas de teoría de grafos; distribución de grados, centralidades de grado, cercanía e intermediación, coeficiente de agrupamiento, longitud promedio de caminos mínimos y diámetro. Se aplicó además un algoritmo de maximización de modularidad para detectar comunidades espaciales y se evaluó la robustez estructural frente a la remoción de hospitales clave, así como la relación entre estructura y calidad percibida. Los resultados muestran una red conexa, moderadamente densa y con alto agrupamiento local, cercana a un patrón , organizada en tres comunidades territoriales con modularidad elevada (<span class="math inline">\(Q \approx 0.53\)</span>) y una homofilia leve–moderada en la calificación promedio. La red es resiliente ante fallos aislados de hospitales puente, aunque su eliminación aumenta las distancias promedio. En conjunto, el estudio ilustra cómo el análisis de redes basado en datos de plataformas digitales puede aportar insumos cuantitativos para la planificación, coordinación y evaluación de la oferta hospitalaria en contextos urbanos.</p>
+</section>
+<section id="metodología" class="level1">
+<h1>Metodología</h1>
+<p>Se utilizó un conjunto de datos conformado por 60 instituciones hospitalarias ubicadas en Bogotá y su área metropolitana, obtenido a partir de las opiniones de usuarios en Google. Para cada hospital se dispone de un identificador de lugar, nombre, calificación promedio reportada por los usuarios y número de reseñas asociadas. Adicionalmente, el conjunto incluye información de localización geográfica (latitud y longitud), dirección y categorías de servicio según Google, lo que permite caracterizar simultáneamente la reputación en línea y la distribución espacial de la oferta hospitalaria en la ciudad. \</p>
+<p>Previa construcción de la red, se filtraron los registros con información incompleta de georreferenciación, de manera que sólo se consideraron hospitales con coordenadas válidas. A partir de esta base depurada se construyó un grafo simple no dirigido en el que cada nodo representa un hospital y conserva como atributos su nombre y calificación promedio en Google. \</p>
+<p>La estructura de adyacencia se definió mediante un esquema de <span class="math inline">\(K\)</span>–vecinos más cercanos, conectando cada hospital con sus seis hospitales geográficamente más próximos. La vecindad se determinó a partir de las coordenadas de latitud y longitud empleando la métrica de Haversine. De esta forma, las aristas representan proximidad espacial entre instituciones, y el grafo resultante modela la red de oferta hospitalaria como una estructura que captura tanto la organización geográfica local como posibles patrones de concentración territorial. Sobre esta red se calcularon posteriormente métricas estructurales de grado, densidad, componentes conexas, entre otras que permiten describir su conectividad y estudiar la formación de conglomerados de hospitales en el espacio urbano.</p>
 
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">"Red_hospitales.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Red_hospitales.png" class="img-fluid figure-img" width="300"></p>
-</figure>
-</div>
-</div>
-</div>
 
 
 </section>
 
-</main> <!-- /main -->
+<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
+<div class="list grid quarto-listing-cols-3">
+<div class="g-col-1" data-index="0" data-listing-file-modified-sort="1764979912724" data-listing-reading-time-sort="11" data-listing-word-count-sort="2140">
+<a href="../Est5/descriptivo.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<p class="card-img-top"><img src="descriptivo_files/figure-html/unnamed-chunk-1-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+descriptivo
+</h5>
+<div class="card-text listing-description delink">
+A partir del grafo construido se obtiene una red no dirigida de 60 nodos y 240 aristas, con un grado medio de 8 (mediana 8, rango entre 6 y 13). Esta configuración implica…<span class="math inline"></span>
+</div>
+<div class="card-attribution card-text-small start">
+<div class="listing-author">
+
+</div>
+</div>
+</div>
+</div></a>
+</div>
+<div class="g-col-1" data-index="1" data-listing-file-modified-sort="1764979912722" data-listing-reading-time-sort="1" data-listing-word-count-sort="4">
+<a href="../Est5/Análisis_Bayesiano.html" class="quarto-grid-link">
+<div class="quarto-grid-item card h-100 card-left">
+<div class="listing-item-img-placeholder card-img-top" style="height: 150px;">&nbsp;</div>
+<div class="card-body post-contents">
+<h5 class="no-anchor card-title listing-title">
+Análisis Bayesiano
+</h5>
+<div class="card-text listing-description delink">
+Aca va lo Bayesiano
+</div>
+<div class="card-attribution card-text-small start">
+<div class="listing-author">
+Andrés Arévalo
+</div>
+</div>
+</div>
+</div></a>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

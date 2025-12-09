@@ -1,0 +1,129 @@
+---
+title: "Descriptivo"
+author: "ACMR"
+format: html
+editor: visual
+---
+
+## Análisis descriptivo
+
+```{r}
+#| echo: false
+df_moteles <- read.csv("Moteles_Final.csv")
+coords_completo <- as.matrix(
+  na.omit(df_moteles[, c("lat", "lon")]) * pi / 180
+)
+
+```
+
+### Histogramas
+
+#### **Distribución de rating.**
+
+```{r}
+#| echo: false
+library(ggplot2)
+ggplot(df_moteles, aes(x = rating)) +
+  geom_histogram(bins = 20, fill = "#1f78b4", color = "white") +
+  labs(
+    title = "Distribución de rating",
+    x = "Rating",
+    y = "Frecuencia"
+  )
+
+```
+
+El histograma evidencia que la mayoría de los moteles en Bogotá se concentran en un nivel de calificación entre **3.7 y 4.3**, lo cual indica una percepción general de buena calidad por parte de los usuarios. Se observan pocos casos con ratings bajos cercanos a **3.0**, lo cual indica que las experiencias negativas son poco comunes. Del mismo modo, los valores muy altos alrededor de **5.0** aparecen como casos aislados, posiblemente asociados a establecimientos con un alto nivel de satisfacción o con un volumen reducido de evaluaciones.
+
+#### Distribución de reseñas
+
+```{r}
+#| echo: false
+
+ggplot(df_moteles, aes(x = reseñas)) +
+  geom_histogram(bins = 60, fill = "#33a02c", color = "white") +
+  labs(
+    title = "Distribución de reseñas",
+    x = "Número de reseñas",
+    y = "Frecuencia"
+  )
+```
+
+El histograma muestra que la mayoría de los moteles tienen **muy pocas reseñas**, concentrándose principalmente entre 0 y 100. Esto indica baja participación de usuarios en muchos establecimientos. También se observan algunos valores aislados con varios cientos o más de 1.000 reseñas, lo que sugiere que solo unos pocos moteles logran una alta visibilidad y volumen de opiniones. En conjunto, la distribución es muy dispersa y con fuerte sesgo a la izquierda, evidenciando una marcada desigualdad en la cantidad de reseñas recibidas por los establecimientos.
+
+#### Versión log 10 para reseñas
+
+```{r}
+#| echo: false
+ggplot(df_moteles, aes(x = reseñas)) +
+  geom_histogram(bins = 30, fill = "#b2df8a", color = "black") +
+  scale_x_log10() +
+  labs(
+    title = "Distribución de reseñas (escala log10)",
+    x = "Número de reseñas (log10)",
+    y = "Frecuencia"
+  )
+```
+
+El histograma en escala log10 muestra una distribución mucho más equilibrada del número de reseñas entre los moteles, permitiendo observar patrones que la escala lineal ocultaba. Al transformar los datos, se evidencia que la mayoría de los establecimientos se agrupan entre decenas y cientos de reseñas, mientras que unos pocos alcanzan valores en el orden de miles. Esto revela una estructura más continua y menos dispersa de lo que parecía inicialmente, destacando que la participación de usuarios no es tan desigual cuando se analiza en términos relativos. En conjunto, la transformación logarítmica facilita comparar moteles con diferente nivel de visibilidad y muestra una distribución más homogénea en la intensidad de reseñas.
+
+### Relación entre raiting y número de reseñas
+
+```{r}
+#| echo: false
+ggplot(df_moteles, aes(x = reseñas, y = rating)) +
+  geom_point(color = "#1f78b4", alpha = 0.7, size = 3) +
+  scale_x_log10() +
+  labs(
+    title = "Relación entre rating y número de reseñas",
+    x = "Número de reseñas (log10)",
+    y = "Rating"
+  )
+```
+
+El diagrama muestra que, aunque existe una ligera tendencia a que los moteles con más reseñas tiendan a tener ratings algo más estables y cercanos al promedio, la relación general es débil. Se observan moteles con pocos comentarios que alcanzan valoraciones muy altas, mientras que entre los establecimientos con mayor volumen de reseñas el rating se concentra principalmente entre 4.0 y 4.3. Esto sugiere que un mayor número de reseñas aporta consistencia a la calificación, pero no necesariamente implica un mejor desempeño, reflejando una relación positiva muy moderada.
+
+### Moteles en Bogotá
+
+Veamos ahora la distribución geográfica de los moteles en Bogotá
+
+```{r}
+#| echo: false
+library(leaflet)
+
+# Opcional: filtrar solo registros con coordenadas válidas
+df_moteles_mapa <- df_moteles[!is.na(df_moteles$lat) & !is.na(df_moteles$lon), ]
+
+# Mapa interactivo de Bogotá con los moteles
+leaflet(df_moteles_mapa) %>%
+  # Fondo de mapa (puedes cambiar el proveedor si quieres otro estilo)
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  
+  # Centrar vista en Bogotá
+  setView(lng = -74.1, lat = 4.65, zoom = 11) %>%
+  
+  # Marcadores (círculos) con popup
+  addCircleMarkers(
+    lng = ~lon,
+    lat = ~lat,
+    radius = ~ifelse(is.na(rating), 5, 4 + (rating - min(rating, na.rm = TRUE)) * 3), # tamaño según rating
+    color = "#1f78b4",
+    fillColor = "#1f78b4",
+    fillOpacity = 0.7,
+    stroke = TRUE,
+    weight = 1,
+    popup = ~paste0(
+      "<b>", nombre, "</b><br>",
+      "Rating: ", rating, "<br>",
+      "Reseñas: ", reseñas, "<br>",
+      "Tipo: ", tipo, "<br>",
+      "Estado: ", estado_negocio
+    ),
+    clusterOptions = markerClusterOptions()  # agrupa puntos cuando hay muchos
+  )
+
+```
+
+
+
+

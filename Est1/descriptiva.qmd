@@ -1,0 +1,226 @@
+---
+title: "Clonar"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code-overflow: scroll
+---
+
+![](colegios_bta.jpg){width=60% .center-img}
+
+
+
+
+```{r, message=FALSE, echo=FALSE, warning=FALSE}
+library(readr)
+library(dplyr)
+
+df <- read_csv("resultados_final.csv")
+
+df$PUNT_GLOBAL_2024 <- ifelse(
+  is.na(df$PUNT_GLOBAL_2024),
+  df$PUNT_GLOBAL_2023,
+  df$PUNT_GLOBAL_2024
+)
+
+df$PUNT_GLOBAL_2025 <- ifelse(
+  is.na(df$PUNT_GLOBAL_2025),
+  df$PUNT_GLOBAL_2024,  # usar 2024 como predictor natural
+  df$PUNT_GLOBAL_2025
+)
+
+
+df <- df %>%
+    filter(!is.na(PUNT_GLOBAL_2024), !is.na(PUNT_GLOBAL_2025), !is.na(PUNT_GLOBAL_2023))
+
+library(sf)
+
+df <- df %>% filter(!is.na(lat) & !is.na(lon))
+
+
+colegios_sf <- st_as_sf(
+  df,
+  coords = c("lon", "lat"),
+  crs = 4326,     # WGS84
+  remove = FALSE  # NO borra lat/lon originales
+)
+
+library(tidygraph)
+library(igraph)
+
+# Matriz de coordenadas
+coords <- df %>% select(lon, lat)
+
+# Número de vecinos (ajusta según quieras)
+k <- 10
+
+nn <- RANN::nn2(coords, k = k + 1)  # +1 porque incluye el mismo punto
+df$id <- seq_len(nrow(df))
+
+
+edges <- data.frame(
+  from = rep(1:nrow(df), each = k),
+  to   = as.vector(nn$nn.idx[, 2:(k+1)])  # eliminamos el self-match
+)
+
+
+df_clean <- df %>%
+    mutate(name = as.character(row_number())) %>%
+    select(name, everything())  # name debe ser la primera columna
+
+edges_clean <- edges %>%
+    mutate(
+        from = as.character(from),
+        to   = as.character(to)
+    )
+
+g <- graph_from_data_frame(edges_clean, directed = FALSE, vertices = df_clean)
+
+
+
+```
+
+
+
+# 🟦 **1. Convertir tus coordenadas a sf**
+
+```{r}
+library(sf)
+library(ggraph)
+library(ggplot2)
+library(viridis)
+library(tidygraph)
+
+# Convertir df a sf
+df_sf <- st_as_sf(df, coords = c("lon", "lat"), crs = 4326, remove = FALSE)
+```
+
+---
+
+# 🟩 **2. Convertir grafo a tidygraph y luego a ggraph**
+
+```{r}
+library(sf)
+library(dplyr)
+library(leaflet)
+library(viridisLite)
+library(purrr)
+
+# Nodos a sf
+nodes_sf <- st_as_sf(df, coords = c("lon", "lat"), crs = 4326, remove = FALSE)
+
+
+g_tidy <- as_tbl_graph(g)
+
+# Añadir coordenadas al grafo
+g_tidy <- g_tidy %>%
+  activate(nodes) %>%
+  mutate(
+    lon = df$lon,
+    lat = df$lat
+  )
+
+edges_df <- igraph::as_data_frame(g, what = "edges")
+df$id <- as.character(seq_len(nrow(df)))
+
+edges_df <- edges_df %>%
+  mutate(
+    lon_from = df$lon[as.numeric(from)],
+    lat_from = df$lat[as.numeric(from)],
+    lon_to   = df$lon[as.numeric(to)],
+    lat_to   = df$lat[as.numeric(to)]
+  )
+
+nodes_sf <- st_as_sf(df, coords = c("lon", "lat"), crs = 4326, remove = FALSE)
+
+edges_sf <- edges_df %>%
+  mutate(
+    geometry = pmap(
+      list(lon_from, lat_from, lon_to, lat_to),
+      ~ st_linestring(matrix(c(..1, ..2, ..3, ..4), ncol = 2, byrow = TRUE))
+    )
+  ) %>%
+  st_as_sf(crs = 4326)
+
+
+
+```
+```{r}
+pal2023 <- colorNumeric(palette = "plasma", domain = df$PUNT_GLOBAL_2023)
+pal2024 <- colorNumeric(palette = "plasma", domain = df$PUNT_GLOBAL_2024)
+pal2025 <- colorNumeric(palette = "plasma", domain = df$PUNT_GLOBAL_2025)
+
+map_red <- function(nodes, edges, var_color, palette_fun, titulo) {
+  
+  leaflet() %>%
+    addProviderTiles(providers$CartoDB.Positron) %>%  # mapa limpio
+    
+    # Aristas
+    addPolylines(
+      data = edges,
+      color = "#636363",
+      weight = 1,
+      opacity = 0.4
+    ) %>%
+    
+    # Nodos
+    addCircleMarkers(
+      data = nodes,
+      lng = ~lon,
+      lat = ~lat,
+      radius = 5,
+      stroke = FALSE,
+      fillOpacity = 0.9,
+      color = ~palette_fun(nodes[[var_color]]),
+      popup = ~paste0(
+        "<b>", nombre_google, "</b><br/>",
+        "Puntaje: ", nodes[[var_color]], "<br/>",
+        "Dirección: ", direccion, "<br/>",
+        "DANE: ", DANE
+      )
+    ) %>%
+    
+    # Leyenda
+    addLegend(
+      "bottomright",
+      pal = palette_fun,
+      values = nodes[[var_color]],
+      title = titulo
+    )
+}
+
+```
+
+
+```{r}
+map_2023 <- map_red(
+  nodes_sf, edges_sf,
+  "PUNT_GLOBAL_2023", pal2023,
+  "Puntaje Global 2023"
+)
+map_2023
+
+```
+
+```{r}
+map_2024 <- map_red(
+  nodes_sf, edges_sf,
+  "PUNT_GLOBAL_2024", pal2024,
+  "Puntaje Global 2024"
+)
+map_2024
+
+```
+
+
+```{r}
+map_2025 <- map_red(
+  nodes_sf, edges_sf,
+  "PUNT_GLOBAL_2025", pal2025,
+  "Puntaje Global 2025"
+)
+map_2025
+
+```
+

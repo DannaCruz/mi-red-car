@@ -1,10 +1,13 @@
 ---
 title: "Red de hospitales de Bogotá y su área metropolitana" 
 format: html
-author: Yésica Sepúlveda Cardona.
-css: styles.css
-execute: 
-  freeze: true
+author: Andres Felipe Arevalo Arevalo
+listing:
+  type: grid
+  sort: none
+  contents:
+    - descriptivo.qmd
+    - Análisis_Bayesiano.qmd
 ---
 
 # Abstract
@@ -19,6 +22,7 @@ Se utilizó un conjunto de datos conformado por 60 instituciones hospitalarias u
 
 Previa construcción de la red, se filtraron los registros con información incompleta de georreferenciación, de manera que sólo se consideraron hospitales con coordenadas válidas. A partir de esta base depurada se construyó un grafo simple no dirigido en el que cada nodo representa un hospital y conserva como atributos su nombre y calificación promedio en Google. \\
 
+<<<<<<< HEAD
 La estructura de adyacencia se definió mediante un esquema de $K$–vecinos más cercanos, conectando cada hospital con sus seis hospitales geográficamente más próximos. La vecindad se determinó a partir de las coordenadas de latitud y longitud empleando la métrica de Haversine. De esta forma, las aristas representan proximidad espacial entre instituciones, y el grafo resultante modela la red de oferta hospitalaria como una estructura que captura tanto la organización geográfica local como posibles patrones de concentración territorial. Sobre esta red se calcularon posteriormente métricas estructurales de grado, densidad, componentes conexas, entre otras que permiten describir su conectividad y estudiar la formación de conglomerados de hospitales en el espacio urbano.
 
 # Análisis estructural de la red
@@ -336,3 +340,17 @@ ggplot(df, aes(grados)) +
 ```
 
 Avances_estadísticas_descriptivas.txt Mostrando Avances_estadísticas_descriptivas.txt.
+=======
+La estructura de adyacencia se definió mediante un esquema de
+$K$–vecinos más cercanos, conectando cada hospital con sus seis
+hospitales geográficamente más próximos. La vecindad se determinó a
+partir de las coordenadas de latitud y longitud empleando la métrica de
+Haversine. De esta forma, las aristas representan proximidad espacial
+entre instituciones, y el grafo resultante modela la red de oferta
+hospitalaria como una estructura que captura tanto la organización
+geográfica local como posibles patrones de concentración territorial.
+Sobre esta red se calcularon posteriormente métricas estructurales de
+grado, densidad, componentes conexas, entre otras que permiten describir
+su conectividad y estudiar la formación de conglomerados de hospitales
+en el espacio urbano.
+>>>>>>> 7b1a7ab3ae0cf7ae11b16e6630ca10e0d0bf25a6
