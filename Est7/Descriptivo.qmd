@@ -9,7 +9,7 @@ editor: visual
 
 ```{r}
 #| echo: false
-df_moteles <- read_csv("Moteles_Final.csv")
+df_moteles <- read.csv("Moteles_Final.csv")
 coords_completo <- as.matrix(
   na.omit(df_moteles[, c("lat", "lon")]) * pi / 180
 )
@@ -120,4 +120,5 @@ leaflet(df_moteles_mapa) %>%
   )
 
 ```
+
 
