@@ -1,33 +1,162 @@
 ---
-title: "Análisis de mi Red de hoteles"
+title: "Red de hoteles de Bogotá" 
 format: html
+author: Leonardo Andres Rodriguez Valenzuela
 listing:
   type: grid
   sort: none
   contents:
-    - Analisis_descriptivo_de_mi_red.qmd
+    - descriptivo.qmd
+    - Análisis_Bayesiano.qmd
 ---
 
-# 🧩 Mi análisis
+# Abstract
 
-Aquí presento mi red personal del curso.
+Este proyecto analiza la estructura espacial de la red de hoteles en la ciudad de Bogotá mediante herramientas de teoría de redes complejas. A partir de datos geográficos y calificaciones promedio de los establecimientos, se construyó un grafo no dirigido utilizando el modelo de k vecinos más cercanos (k-NN) con distancia de Haversine como métrica de proximidad. Sobre esta red se evaluaron métricas de conectividad local y global, centralidades, estructura comunitaria, eficiencia en rutas mínimas, resiliencia estructural y patrones de homofilia por calidad.
 
--   Cargué mis datos
--   Analicé grados y centralidades
--   Encontré comunidades
--   Hice visualizaciones
+Los resultados muestran una red cohesionada, con grado medio intermedio, una única componente gigante y una estructura modular bien definida (Q ≈ 0.62), evidenciando la organización de la oferta hotelera en clusters urbanos coherentes con la geografía de la ciudad. El análisis de centralidades identifica hoteles estratégicos que actúan como nodos puente entre diferentes zonas, cuya eliminación puede fragmentar la red. Asimismo, la longitud promedio de los caminos y el diámetro indican una conectividad eficiente a escala urbana. La asortatividad por calificación revela una homofilia leve, sugiriendo una segmentación suave por calidad sin aislamiento extremo entre comunidades.
 
-```{r}
-# Acá irá mi código de análisis para la red del Estudiante 2
-```
+En conjunto, el estudio caracteriza la red hotelera de Bogotá como un sistema policéntrico, eficiente y moderadamente jerarquizado, donde la proximidad geográfica y la estructura urbana determinan los patrones de conectividad. El enfoque propuesto constituye una aproximación cuantitativa útil para el análisis de sistemas urbanos y puede extenderse a estudios temporales, comparativos entre ciudades o integrados con variables socioeconómicas.
 
-Esta es mi primera prueba usando Git y Quarto dentro del proyecto.
+#Metodología
 
-Aqui voy a cargar mis datos csv de mi red de hoteles 
+La red se modela como un grafo no dirigido $G=(V,E)$ donde los vértices representan las unidades de análisis y las aristas indican relaciones de proximidad, interacción o similitud.\
+A continuación se describen los pasos analíticos seguidos.
+
+#Analisis estructural de la red
+
+La red analizada se construyó a partir de un conjunto de datos recopilado mediante la plataforma Google Places o Yelp, exportado en formato \texttt{hotel\_bogota.csv}. Cada registro corresponde a un establecimiento tipo café e incluye su nombre, coordenadas geográficas (latitud y longitud), calificación promedio (\emph{rating}) y número de reseñas reportadas por los usuarios.\\
+
+A partir de esta información se definió un grafo no dirigido $G=(V,E)$ en el que cada nodo representa un café y cada arista une a dos cafés espacialmente próximos. La relación de vecindad se determinó mediante el modelo de \emph{$k$ vecinos más cercanos} (k-NN), empleando la distancia haversine (en radianes) como métrica de proximidad. El parámetro $k$ controla la densidad del grafo: valores mayores generan más enlaces y, por tanto, una red más densa y conectada.\\
 
 ```{r}
 library(readr)
-hotel_bogota <- read_csv("hotel_bogota.csv")
+library(igraph)
+
+df <- read_csv("hotel_bogota.csv")
+df2 <- df[!is.na(df$lat) & !is.na(df$lon), ]
+
+coords_deg <- as.matrix(df2[, c("lat", "lon")])
+coords <- coords_deg * pi/180  # radianes como en Python
+k <- 7
+n <- nrow(coords)
+
+
+# -------------------------
+# Haversine EXACTA como scikit-learn
+# -------------------------
+haversine <- function(a, b) {
+  R <- 6371
+  dlat <- b[,1] - a[1]
+  dlon <- b[,2] - a[2]
+
+  h <- sin(dlat/2)^2 +
+       cos(a[1]) * cos(b[,1]) * sin(dlon/2)^2
+
+  2 * R * asin(pmin(1, sqrt(h)))
+}
+
+# matriz de distancias km
+dist_km <- matrix(0, n, n)
+for (i in 1:n) {
+  dist_km[i, ] <- haversine(coords[i, ], coords)
+}
+
+# obtener vecinos igual que sklearn
+idx <- apply(dist_km, 1, function(row) {
+  order(row, seq_along(row))  # desempate por índice
+})
+
+idx <- idx[1:(k+1), ]
+dist <- apply(dist_km, 1, sort)[1:(k+1), ]
+
+# -------------------------
+# Grafo
+# -------------------------
+G_hoteles <- graph.empty(directed = FALSE)
+
+G_hoteles <- add_vertices(
+  G_hoteles, n,
+  name = df2$nombre,
+  rating = df2$rating,
+  lat = df2$lat,
+  lon = df2$lon
+)
+
+# aristas idénticas a Python
+for (i in 1:n) {
+  vecinos <- idx[2:(k+1), i]    # omitir uno mismo
+  for (j in vecinos) {
+    G_hospitales <- add_edges(G_hospitales, c(i, j))
+  }
+}
+
+# layout geográfico igual que Python
+x <- (df2$lon - min(df2$lon)) / (max(df2$lon) - min(df2$lon))
+y <- (df2$lat - min(df2$lat)) / (max(df2$lat) - min(df2$lat))
+layout <- cbind(x, y)
+
+# plot
+plot(
+  G_hoteles,
+  layout = layout,
+  vertex.size = 4,
+  vertex.color = "tomato",
+  edge.color = "gray80",
+  vertex.label = NA, 
+  axes = FALSE,
+  xlab = "",
+  ylab = "",
+  main = "Red de hoteles (k vecinos más cercanos)"
+)
+
+
+```
+
+las conexiones no reflejan afinidad o colaboración, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta cafetera en la ciudad y permite explorar su conectividad y posibles conglomerados.\\
+
+```{r}
+library(leaflet)
+library(dplyr)
+
+# 1️⃣ Crear mapa centrado en Bogotá
+m <- leaflet() %>%
+  addTiles() %>%
+  setView(lng = -74.07, lat = 4.65, zoom = 12)
+
+# 2️⃣ Función para asignar color según rating
+color_rating <- function(rating) {
+  if (rating >= 4.5) {
+    return("green")       # excelente
+  } else if (rating >= 3.5) {
+    return("orange")      # bueno
+  } else {
+    return("red")         # bajo
+  }
+}
+
+# 3️⃣ Agregar cada hotel como marcador circular
+for (i in 1:nrow(df)) {
+  r <- df[i, ]
+
+  m <- m %>%
+    addCircleMarkers(
+      lng = r$lon,
+      lat = r$lat,
+      radius = 6,
+      color = color_rating(r$rating),         # borde
+      fillColor = color_rating(r$rating),     # interior
+      fillOpacity = 0.85,
+      popup = paste0(
+        r$nombre, " ⭐", r$rating,
+        " (", r$reseñas, " reseñas)"
+      )
+    )
+}
+
+# Mostrar mapa
+m
+
 ```
 
 ![](hotel.jpg)
