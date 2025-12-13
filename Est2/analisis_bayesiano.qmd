@@ -1,0 +1,6 @@
+---
+title: "Analisis Bayesiano - Red de hoteles de Bogotá"
+author: "Leonardo Andrés Rodriguez Valenzuela"
+format: hmtl
+editor: visual
+---
