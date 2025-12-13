@@ -15,6 +15,8 @@ library(data.table)   # rápido cuando convenga
 library(ggraph)
 ```
 
+# Construccion grafo de proximidad
+
 ```{r, message = FALSE}
 # -------------------------
 # 1) Cargar datos (ajusta el path si hace falta)
@@ -62,6 +64,9 @@ knn_dist_m <- t(knn_dist_m) # n x k
 
 ```
 
+
+
+
 ```{r}
 # -------------------------
 # 4) Construcción del grafo (no dirigido), con peso = distancia en km
@@ -105,6 +110,7 @@ cat("Nodos:", vcount(G), "Aristas:", ecount(G), "\n")
 
 ```
 
+
 ```{r}
 # -------------------------
 # 5) Estadísticas básicas y centralidades
@@ -144,6 +150,21 @@ metrics_tbl %>% slice_head(n = 10)
 
 ```
 
+Interpretación. La red cuenta con 30 nodos y 112 aristas, que generan una densidad moderada
+de 0.26. El grado medio de 7.47 indica que, en promedio, cada nodo se conecta con alrededor de 7
+vecinos cercanos, mientras que algunos nodos alcanzan hasta 10 conexiones, actuando como pequeños
+hubs. La mediana de 7, al ser cercana a la media, muestra una distribución relativamente homogénea.
+
+# Visualizacion del grafo 
+Para ilustrar la distribución espacial de los nodos, se generó un mapa con la biblioteca
+Folium en Python, centrado en Bogotá. Cada nodo se representa mediante un marcador circular cuyo color
+indica la calificación promedio: verde para ≥ 4.5, naranja para 3.5–4.5 y rojo para valores menores.
+Además, cada marcador muestra el nombre del establecimiento y el número de reseñas. Esta visual-
+ización permite identificar zonas de alta concentración antes de analizar métricas de conectividad.
+
+![Foto de un cine](figs/mapafolium.png)
+
+
 ```{r}
 # -------------------------
 # 6) Componentes, clustering, caminos
@@ -166,6 +187,9 @@ clust_prom <- transitivity(G, type = "global")
 cat("Clustering promedio:", clust_prom, "\n")
 
 ```
+En la red de cines, el clustering promedio es de 0.6, lo que indica que la mayoría de cines están
+conectados entre sí, pero se forman clusters o microzonas de cohesión más local.
+
 
 ```{r}
 # -------------------------
@@ -191,6 +215,10 @@ cat("Comunidades:", length(sizes(com)), "| Modularidad Q:", Q, "\n")
 metrics_tbl <- metrics_tbl %>% mutate(community = membership)
 
 ```
+Se detectaron 5 comunidades principales con un valor de Q = 0.6, lo que indica una estructura
+comunitaria relativamente bien definida. Cada grupo refleja zonas de proximidad o cines que com-
+parten mayor conectividad entre sí que con el resto de la red, evidenciando subestructuras locales
+dentro de la red urbana de cines.
 
 ```{r}
 library(knitr)
@@ -203,6 +231,10 @@ kable(top_bet, caption = "Top-10 nodos por betweenness")
 
 
 ```
+
+Aquellos con elevada centralidad de intermediación (betweenness) actúan como nodos puente que
+conectan distintas regiones o clusters de la red. Estos nodos son críticos para la conectividad general:
+su eliminación podría fragmentar la red o aumentar las distancias promedio entre cines.
 
 ```{r}
 # -------------------------

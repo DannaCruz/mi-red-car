@@ -1,21 +1,31 @@
 ---
 title: "Análisis de una red de cines — Julian Barros Hernandez"
 format: html
+author: Julian Barros Hernandez
 listing: 
   type: grid
   sort: none
   contents:
-    Est6-descriptiva.qmd
-    Est6-bayesiana.qmd
+    - Est6-descriptiva.qmd
+    - Est6-bayesiana.qmd
 ---
 
 
 # Mi red de datos
 
-Este sitio resume el análisis que realicé sobre una red de cines.  
-Se muestra carga de datos, construccion de la red, calculo de medidas como grados y centralidades, identificacion de comunidades y generacion de visualizaciones.  
 
-Puedes navegar a cada parte del análisis desde el menú.
+Este artículo presenta el análisis estructural de una red empírica mediante métricas de teoría de grafos y algoritmos de detección de comunidades. Se estudia la conectividad, las centralidades, la modularidad y la homofilia entre nodos, además de explorar rutas óptimas, subgrafos por atributos y sensibilidad estructural. Los datos corresponden a un conjunto de cines en Bogotá, incluyendo información sobre su ubicación geográfica, calificación y número de reseñas.
+
+El análisis de redes permite representar interacciones complejas entre entidades, en este caso, salas de
+cine, mediante nodos y aristas.
 
 
-![Foto de un cine](figs/cinema.png){width=70%}
+![Foto de un cine](figs/cinema.png){width=100%}
+# Metodologia
+
+La red se modela como un grafo no dirigido G = (V, E), donde los vértices representan las unidades
+de análisis y las aristas indican relaciones de proximidad, interacción o similitud. A continuación se
+describen los pasos analíticos seguidos.
+
+
+
