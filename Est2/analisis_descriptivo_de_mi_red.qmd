@@ -4,23 +4,336 @@ format: html
 editor: visual
 ---
 
-## Quarto
+# Análisis estructural de la red
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+A partir del grafo construido se obtiene una red no dirigida de 60 nodos y aproximadamente 360 aristas, con un grado medio de 12 (mediana 12, con valores que oscilan entre 6 y 16). Esta configuración implica una densidad aproximada de 0.20, lo que indica una red considerablemente más densa que una estructura puramente dispersa. En promedio, cada hotel mantiene vínculos con un número elevado de establecimientos cercanos, reflejando una fuerte proximidad local y una alta concentración espacial de la oferta hotelera en el entorno urbano de Bogotá
 
 ```{r}
-1 + 1
+library(readr)
+library(igraph)
+
+df <- read_csv("hotel_bogota.csv")
+df2 <- df[!is.na(df$lat) & !is.na(df$lon), ]
+
+coords_deg <- as.matrix(df2[, c("lat", "lon")])
+coords <- coords_deg * pi/180  # radianes como en Python
+k <- 6
+n <- nrow(coords)
+
+
+# -------------------------
+# Haversine EXACTA como scikit-learn
+# -------------------------
+haversine <- function(a, b) {
+  R <- 6371
+  dlat <- b[,1] - a[1]
+  dlon <- b[,2] - a[2]
+
+  h <- sin(dlat/2)^2 +
+       cos(a[1]) * cos(b[,1]) * sin(dlon/2)^2
+
+  2 * R * asin(pmin(1, sqrt(h)))
+}
+
+# matriz de distancias km
+dist_km <- matrix(0, n, n)
+for (i in 1:n) {
+  dist_km[i, ] <- haversine(coords[i, ], coords)
+}
+
+# obtener vecinos igual que sklearn
+idx <- apply(dist_km, 1, function(row) {
+  order(row, seq_along(row))  # desempate por índice
+})
+
+idx <- idx[1:(k+1), ]
+dist <- apply(dist_km, 1, sort)[1:(k+1), ]
+
+# -------------------------
+# Grafo
+# -------------------------
+G_hoteles <- graph.empty(directed = FALSE)
+
+G_hoteles <- add_vertices(
+  G_hoteles, n,
+  name = df2$nombre,
+  rating = df2$rating,
+  lat = df2$lat,
+  lon = df2$lon
+)
+
+# aristas idénticas a Python
+for (i in 1:n) {
+  vecinos <- idx[2:(k+1), i]    # omitir uno mismo
+  for (j in vecinos) {
+    G_hoteles <- add_edges(G_hoteles, c(i, j))
+  }
+}
+
+# layout geográfico igual que Python
+x <- (df2$lon - min(df2$lon)) / (max(df2$lon) - min(df2$lon))
+y <- (df2$lat - min(df2$lat)) / (max(df2$lat) - min(df2$lat))
+layout <- cbind(x, y)
+
+# plot
+plot(
+  G_hoteles,
+  layout = layout,
+  vertex.size = 4,
+  vertex.color = "tomato",
+  edge.color = "gray80",
+  vertex.label = NA, 
+  axes = FALSE,
+  xlab = "",
+  ylab = "",
+  main = "Red de hoteles (k vecinos más cercanos)"
+)
+
+
 ```
 
-You can add options to executable code like this
+En términos de conectividad global, la red hotelera conforma un único componente conexo, sin presencia de hoteles aislados ni subgrupos desconectados. La combinación de un grado medio elevado y un diámetro reducido indica una estructura altamente integrada, donde cualquier hotel puede alcanzarse desde otro mediante un número muy pequeño de intermediaciones. La existencia de nodos con grados y centralidades superiores sugiere la presencia de hubs locales de proximidad, que refuerzan la cohesión del sistema y facilitan la accesibilidad entre distintas zonas urbanas.
+
+Las conexiones representadas en la red no reflejan relaciones funcionales o comerciales entre hoteles, sino cercanía geográfica dentro del tejido urbano. En este sentido, el grafo modela la estructura espacial de la oferta hotelera de Bogotá, permitiendo analizar patrones de concentración territorial, conectividad urbana y la organización de los establecimientos en corredores y zonas de alta densidad turística.\
 
 ```{r}
-#| echo: false
-2 * 2
+library(leaflet)
+library(dplyr)
+
+# 1️⃣ Crear mapa centrado en Bogotá
+m <- leaflet() %>%
+  addTiles() %>%
+  setView(lng = -74.07, lat = 4.65, zoom = 12)
+
+# 2️⃣ Función para asignar color según rating
+color_rating <- function(rating) {
+  if (rating >= 4.5) {
+    return("green")       # excelente
+  } else if (rating >= 3.5) {
+    return("orange")      # bueno
+  } else {
+    return("red")         # bajo
+  }
+}
+
+# 3️⃣ Agregar cada hotel como marcador circular
+for (i in 1:nrow(df)) {
+  r <- df[i, ]
+
+  m <- m %>%
+    addCircleMarkers(
+      lng = r$lon,
+      lat = r$lat,
+      radius = 6,
+      color = color_rating(r$rating),         # borde
+      fillColor = color_rating(r$rating),     # interior
+      fillOpacity = 0.85,
+      popup = paste0(
+        r$nombre, " ⭐", r$rating,
+        " (", r$reseñas, " reseñas)"
+      )
+    )
+}
+
+# Mostrar mapa
+m
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Las conexiones no reflejan afinidad o colaboración, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta cafetera en la ciudad y permite explorar su conectividad y posibles conglomerados.
+
+# Grado, distribución del grado y Componentes conexos 
+
+```{r}
+# Obtener grados de cada nodo
+deg <- degree(G_hoteles)
+
+cat("Grado por nodo:\n")
+print(deg)
+
+# Convertir a vector numérico
+grados <- as.numeric(deg)
+
+cat("Grado medio:", mean(grados),
+    " | Mediana:", median(grados),
+    " | Máx:", max(grados), "\n")
+
+```
+
+En esta red, el grado medio es de $\bar{k} = 12$, lo que indica que, en promedio, cada hotel se conecta con alrededor de doce vecinos. Este resultado es consistente con una red de proximidad relativamente más densa, donde las conexiones locales son abundantes y la accesibilidad topológica aumenta.
+
+La mediana de 12 sugiere que la distribución del grado está centrada y que una fracción amplia de hoteles comparte un nivel de conectividad similar. No obstante, se observan nodos con grados de hasta 16, lo cual apunta a zonas de alta concentración hotelera o corredores urbanos estratégicos. Estos establecimientos operan como hubs locales, reforzando la cohesión interna de sus áreas y facilitando la conectividad entre subzonas cercanas.
+
+#  Centralidades: grado, cercanía y betweenness
+
+```{r}
+# Centralidad de grado
+c_deg <- degree(G_hoteles, normalized = TRUE)
+
+# Centralidad de cercanía (closeness)
+# Nota: en igraph, closeness está basada en la suma de distancias en el componente conexo
+c_clo <- closeness(G_hoteles, normalized = TRUE)
+
+# Centralidad de intermediación (betweenness)
+c_bet <- betweenness(G_hoteles, normalized = TRUE)
+
+# Mostrar resultados
+cat("Centralidad de grado:\n")
+print(c_deg)
+
+cat("\nCentralidad de cercanía:\n")
+print(c_clo)
+
+cat("\nCentralidad de intermediación:\n")
+print(c_bet)
+```
+
+La estructura de la red se analizó mediante tres medidas de centralidad complementarias, las cuales permiten identificar distintos roles funcionales de los hoteles dentro del sistema urbano representado:
+
+Centralidad de grado, que cuantifica el nivel de conectividad local de cada hotel, es decir, cuántos vecinos directos posee dentro de la red.
+
+Centralidad de cercanía (closeness), que mide la accesibilidad promedio de un nodo al resto de la red y refleja qué tan rápidamente puede alcanzarse desde otros hoteles.
+
+Centralidad de intermediación (betweenness), que identifica hoteles que actúan como nodos puente al aparecer con alta frecuencia en los caminos más cortos que conectan distintas partes del grafo.
+
+En términos de centralidad de grado, se observa que varios hoteles alcanzan valores elevados, lo que indica una alta densidad de conexiones locales. Entre ellos destacan Salvio Parque 93, Ramada Bogotá Parque 93, Novotel Bogotá Parque 93, Grand Hyatt Bogotá y Hilton Garden Inn Bogota Airport. Estos establecimientos se ubican en zonas con fuerte concentración hotelera y turística, lo que incrementa la probabilidad de proximidad geográfica y, por ende, de conexión dentro del modelo k-NN. Su alto grado sugiere que funcionan como núcleos locales de conectividad.
+
+La centralidad de cercanía refuerza esta lectura espacial. Hoteles como Hotel El Campín, Grace Chapinero, HAB Hotel, JW Marriott Hotel Bogotá y EM Budget Hotel presentan valores elevados de closeness, lo que indica que ocupan posiciones relativamente centrales dentro de la red global. Desde estos nodos es posible alcanzar al resto de los hoteles en un número reducido de pasos, lo que los convierte en puntos estratégicos en términos de accesibilidad urbana.
+
+Por su parte, la centralidad de intermediación revela de forma más clara los hoteles que desempeñan un rol estructural crítico. Los valores más altos de betweenness se concentran en Hotel El Campín, EM Budget Hotel, Grand Hyatt Bogotá, JW Marriott Hotel Bogotá, Hotel Silver Javeriana By Hospedium Bogotá y Novotel Bogotá Parque 93. Estos hoteles aparecen con frecuencia en las rutas más cortas que conectan distintos sectores de la red, actuando como verdaderos nodos puente entre corredores urbanos diferenciados.
+
+En conjunto, el análisis de centralidades muestra una red hotelera jerarquizada, donde coexisten hoteles altamente conectados a nivel local, nodos centrales en términos de accesibilidad global y establecimientos estratégicos que articulan distintas zonas de la ciudad. Esta combinación refuerza la interpretación de la red como un sistema urbano policéntrico, en el cual ciertos hoteles desempeñan un papel clave en la cohesión y eficiencia espacial del conjunto.\
+
+# Coeficiente de agrupamiento 
+
+```{r}
+# Clustering local (coeficiente de agrupamiento por nodo)
+clust_local <- transitivity(G_hoteles, type = "local", isolates = "zero")
+
+# Clustering promedio (coeficiente global promedio)
+clust_prom <- transitivity(G_hoteles, type = "average")
+
+cat("Clustering local:\n")
+print(clust_local)
+
+cat("\nClustering promedio:\n")
+print(clust_prom)
+```
+
+El coeficiente de clustering mide el nivel de agrupamiento local de la red, evaluando la probabilidad de que los vecinos de un nodo estén también conectados entre sí. Valores altos indican la presencia de estructuras locales densas y microzonas urbanas bien cohesionadas.
+
+En la red hotelera analizada, el clustering promedio es 0.733, lo que evidencia una alta cohesión local. La mayoría de los hoteles presenta valores elevados de clustering, y algunos alcanzan valores cercanos a 1, indicando vecindarios completamente interconectados.
+
+Estos resultados sugieren que la oferta hotelera se organiza en agrupamientos espaciales compactos, coherentes con corredores turísticos y zonas de alta densidad urbana. En conjunto, el clustering elevado refuerza la interpretación de una red estructurada en microzonas bien definidas, con fuerte conectividad interna.
+
+#  Caminos más cortos y diámetro
+
+```{r}
+# Obtener el componente conectado más grande
+comp <- components(G_hoteles)
+largest_comp_nodes <- which(comp$membership == which.max(comp$csize))
+Gcc <- induced_subgraph(G_hospitales, vids = largest_comp_nodes)
+
+# Longitud promedio de caminos más cortos
+asp <- mean_distance(Gcc, directed = FALSE)
+
+# Diámetro del grafo
+diam <- diameter(Gcc, directed = FALSE)
+
+cat("Longitud promedio de camino (ASP):", asp, "\n")
+cat("Diámetro (máx. distancia más corta):", diam, "\n")
+```
+
+Para la componente gigante se estimaron la longitud promedio de los caminos mínimos (ASP) y el diámetro de la red. El ASP obtenido fue de 1.69, lo que indica una conectividad global muy alta: en promedio, cualquier hotel puede alcanzarse desde otro en menos de dos saltos.
+
+El diámetro de la red es 3, lo que implica que incluso los pares de hoteles más alejados están separados por un número reducido de intermediaciones. Este resultado sugiere una estructura altamente compacta, sin evidencias de fragmentación o aislamiento topológico.
+
+En conjunto, estos indicadores reflejan una red hotelera eficiente en términos de accesibilidad, donde la proximidad geográfica y la densidad de conexiones facilitan recorridos cortos y una fuerte integración espacial.\
+
+# Comunidades y modularidad 
+
+```{r}
+# Eliminar multi-edges y loops
+G_simple <- simplify(G_hoteles, remove.multiple = TRUE, remove.loops = TRUE)
+
+# Detectar comunidades con greedy modularity
+coms <- cluster_fast_greedy(G_simple)
+
+# Lista de nodos por comunidad
+coms_list <- lapply(communities(coms), sort)
+
+# Número de comunidades
+num_coms <- length(coms_list)
+
+# Modularidad Q
+Q <- modularity(coms)
+
+cat("Comunidades (greedy):\n")
+print(coms_list)
+
+cat("\nNúmero de comunidades:", num_coms, "\n")
+cat("Modularidad Q:", Q, "\n")
+
+```
+
+Para identificar agrupamientos estructurales dentro de la red se aplicó el algoritmo de maximización de modularidad (greedy modularity). La modularidad cuantifica qué tan densas son las conexiones internas de los grupos en comparación con los enlaces entre comunidades.
+
+En la red hotelera analizada se identificaron cuatro comunidades principales, con un valor de modularidad Q = 0.677, lo cual indica una estructura comunitaria bien definida. Este valor sugiere que los hoteles tienden a agruparse en subconjuntos con mayor conectividad interna de la que se esperaría al azar.
+
+Las comunidades detectadas corresponden de manera aproximada a zonas urbanas diferenciadas. Un grupo concentra hoteles del centro histórico y su entorno inmediato; otro agrupa establecimientos del corredor norte y Parque 93; un tercero reúne hoteles asociados a zonas empresariales y aeroportuarias; y una cuarta comunidad se organiza alrededor del sector de Chapinero y áreas universitarias.
+
+En conjunto, estos resultados confirman que la red hotelera de Bogotá presenta una segmentación espacial coherente, en la cual la proximidad geográfica y la estructura urbana favorecen la formación de comunidades bien delimitadas, sin perder la conectividad global del sistema.\
+\
+
+# Distribución del grado 
+
+\
+La distribución empírica de grados permite caracterizar el patrón de conectividad local de la red hotelera:\
+
+```{r}
+# Suponga 'grados' es un vector numérico
+
+bins <- seq(min(grados), max(grados) + 1, by = 1)
+
+hist(
+  grados,
+  breaks = bins,
+  right = FALSE,
+  col = "lightblue",
+  main = "Distribución de grado — Red de hoteles de Bogotá",
+  xlab = "Grado (vecinos)",
+  ylab = "Frecuencia de hoteles"
+)
+
+grid(nx = NA, ny = NULL, col = "gray", lty = 3)
+
+```
+
+El histograma muestra una distribución unimodal, con la mayor concentración de hoteles en valores de grado entre 10 y 14 vecinos, lo que indica una conectividad local alta y relativamente homogénea.
+
+Se observa además una cola derecha moderada, con algunos hoteles alcanzando grados de hasta 16, los cuales funcionan como hubs locales dentro de la red. Estos establecimientos altamente conectados suelen ubicarse en zonas urbanas con elevada densidad hotelera y turística, donde la proximidad geográfica favorece múltiples conexiones directas.
+
+En conjunto, la distribución sugiere una red densa y bien integrada, donde la mayoría de los hoteles comparte un nivel similar de conectividad, pero coexisten nodos estructuralmente relevantes que concentran un mayor número de enlaces y refuerzan la cohesión de la infraestructura hotelera urbana.
+
+```{r}
+library(ggplot2)
+
+df <- data.frame(grados = grados)
+
+ggplot(df, aes(grados)) +
+  stat_ecdf(geom = "step") +
+  labs(
+    x = "Grado",
+    y = "Proporción acumulada",
+    title = "CDF del grado — Red de hoteles"
+  ) +
+  theme_minimal() +
+  theme(panel.grid.minor = element_blank())
+
+```
+
+La función de distribución acumulada del grado confirma el patrón observado en el histograma. Aproximadamente la mitad de los hoteles presenta un grado menor o igual a 12, lo que indica que la conectividad local se concentra en un rango relativamente estrecho.
+
+La curva muestra un crecimiento rápido entre los grados 10 y 14, reflejando que una proporción significativa de nodos comparte niveles similares de conectividad. A partir de este rango, la CDF se aproxima rápidamente a 1, evidenciando que solo unos pocos hoteles alcanzan grados más elevados (hasta 16).
+
+En conjunto, la forma de la CDF sugiere una red densa y homogénea, donde la mayoría de los hoteles presenta conectividad comparable, sin una separación marcada entre nodos altamente conectados y nodos periféricos.
