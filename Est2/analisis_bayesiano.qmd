@@ -1,7 +1,7 @@
 ---
 title: "Analisis Bayesiano - Red de hoteles de Bogotá"
 author: "Leonardo Andrés Rodriguez Valenzuela"
-format: hmtl
+format: html
 editor: visual
 mathjax: true
 ---
@@ -163,7 +163,7 @@ theta_hat <- apply(modelo$samples$phi, 2, mean)  # columnas = áreas
 shape_bogota$theta_hat <- theta_hat
 
 library(ggplot2)
-
+png("distribucion_espacial.png", width = 2000, height = 2000, res = 300)
 ggplot(shape_bogota) +
   geom_sf(
     aes(fill = theta_hat),
@@ -176,6 +176,7 @@ ggplot(shape_bogota) +
     fill = "phi (media)"
   ) +
   theme_minimal()
+dev.off()
 ```
 
 ### Construcción de la red de hoteles

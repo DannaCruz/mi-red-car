@@ -189,21 +189,21 @@ cat("\nCentralidad de intermediación:\n")
 print(c_bet)
 ```
 
-La estructura de la red se analizó mediante tres medidas de centralidad complementarias, las cuales permiten identificar distintos roles funcionales de los hoteles dentro del sistema urbano representado:
+La estructura de la red se analizó mediante tres medidas de centralidad complementarias:
 
-Centralidad de grado, que cuantifica el nivel de conectividad local de cada hotel, es decir, cuántos vecinos directos posee dentro de la red.
+-   Centralidad de grado, que cuantifica la conectividad local (número de vecinos directos).
 
-Centralidad de cercanía (closeness), que mide la accesibilidad promedio de un nodo al resto de la red y refleja qué tan rápidamente puede alcanzarse desde otros hoteles.
+-   Centralidad de cercanía (closeness), que resume la accesibilidad promedio al resto de la red.
 
-Centralidad de intermediación (betweenness), que identifica hoteles que actúan como nodos puente al aparecer con alta frecuencia en los caminos más cortos que conectan distintas partes del grafo.
+-   Centralidad de intermediación (betweenness), que identifica nodos puente al aparecer con frecuencia en rutas mínimas entre pares de hoteles.
 
-En términos de centralidad de grado, se observa que varios hoteles alcanzan valores elevados, lo que indica una alta densidad de conexiones locales. Entre ellos destacan Salvio Parque 93, Ramada Bogotá Parque 93, Novotel Bogotá Parque 93, Grand Hyatt Bogotá y Hilton Garden Inn Bogota Airport. Estos establecimientos se ubican en zonas con fuerte concentración hotelera y turística, lo que incrementa la probabilidad de proximidad geográfica y, por ende, de conexión dentro del modelo k-NN. Su alto grado sugiere que funcionan como núcleos locales de conectividad.
+En centralidad de grado (normalizada), los valores más altos corresponden a hoteles con mayor cantidad de vecinos cercanos dentro del esquema kkk-NN. En particular, se observan nodos con grado relativamente mayor en zonas de alta concentración hotelera (por ejemplo, corredores turísticos y de negocios), lo cual es consistente con la proximidad espacial como criterio de enlace.
 
-La centralidad de cercanía refuerza esta lectura espacial. Hoteles como Hotel El Campín, Grace Chapinero, HAB Hotel, JW Marriott Hotel Bogotá y EM Budget Hotel presentan valores elevados de closeness, lo que indica que ocupan posiciones relativamente centrales dentro de la red global. Desde estos nodos es posible alcanzar al resto de los hoteles en un número reducido de pasos, lo que los convierte en puntos estratégicos en términos de accesibilidad urbana.
+La cercanía (closeness) destaca hoteles que ocupan posiciones más centrales dentro de la red, ya que desde ellos se alcanza al resto con menos pasos promedio. En los resultados, hoteles como *Hotel El Campín*, *Grace Chapinero* y *HAB Hotel* muestran valores de cercanía superiores, sugiriendo una ubicación estratégica en términos de accesibilidad topológica.
 
-Por su parte, la centralidad de intermediación revela de forma más clara los hoteles que desempeñan un rol estructural crítico. Los valores más altos de betweenness se concentran en Hotel El Campín, EM Budget Hotel, Grand Hyatt Bogotá, JW Marriott Hotel Bogotá, Hotel Silver Javeriana By Hospedium Bogotá y Novotel Bogotá Parque 93. Estos hoteles aparecen con frecuencia en las rutas más cortas que conectan distintos sectores de la red, actuando como verdaderos nodos puente entre corredores urbanos diferenciados.
+La intermediación (betweenness) permite identificar los hoteles con rol más estructural como conectores. Se destacan *Hotel El Campín* (≈0.479), *EM Budget Hotel* (≈0.444) y *Grand Hyatt Bogotá* (≈0.308), entre otros. Es importante notar que algunos de estos nodos no necesariamente tienen el mayor grado, pero sí aparecen con alta frecuencia en rutas mínimas, lo que los caracteriza como nodos puente entre subzonas de la red.
 
-En conjunto, el análisis de centralidades muestra una red hotelera jerarquizada, donde coexisten hoteles altamente conectados a nivel local, nodos centrales en términos de accesibilidad global y establecimientos estratégicos que articulan distintas zonas de la ciudad. Esta combinación refuerza la interpretación de la red como un sistema urbano policéntrico, en el cual ciertos hoteles desempeñan un papel clave en la cohesión y eficiencia espacial del conjunto.\
+En conjunto, el análisis de centralidades sugiere una red hotelera con conectividad local moderadamente homogénea, pero con nodos estratégicos que concentran rutas y articulan sectores urbanos diferenciados, lo cual refuerza la interpretación de una estructura policéntrica.\
 
 # Coeficiente de agrupamiento
 
@@ -245,11 +245,11 @@ cat("Longitud promedio de camino (ASP):", asp, "\n")
 cat("Diámetro (máx. distancia más corta):", diam, "\n")
 ```
 
-Para la componente gigante se estimaron la longitud promedio de los caminos mínimos (ASP) y el diámetro de la red. El ASP obtenido fue de 1.69, lo que indica una conectividad global muy alta: en promedio, cualquier hotel puede alcanzarse desde otro en menos de dos saltos.
+El valor obtenido para el ASP fue de 5.37, lo que indica que, en promedio, cualquier hotel puede alcanzarse desde otro mediante alrededor de cinco a seis intermediaciones. Este resultado sugiere una conectividad global moderada: aunque la red es completamente conexa, los recorridos entre hoteles no siempre son cortos, reflejando la extensión espacial de la ciudad y la heterogeneidad en la distribución geográfica de los establecimientos.
 
-El diámetro de la red es 3, lo que implica que incluso los pares de hoteles más alejados están separados por un número reducido de intermediaciones. Este resultado sugiere una estructura altamente compacta, sin evidencias de fragmentación o aislamiento topológico.
+El diámetro de la red es 13, lo que corresponde al mayor número de pasos requeridos para conectar el par de hoteles más alejados en términos topológicos. Este valor, aunque elevado, es consistente con una red urbana extensa basada en proximidad geográfica, donde existen hoteles ubicados en sectores periféricos que requieren múltiples intermediaciones para conectarse con zonas centrales.
 
-En conjunto, estos indicadores reflejan una red hotelera eficiente en términos de accesibilidad, donde la proximidad geográfica y la densidad de conexiones facilitan recorridos cortos y una fuerte integración espacial.\
+En conjunto, estos indicadores describen una red hotelera conectada pero no compacta, en la cual la accesibilidad global está garantizada, aunque con diferencias claras entre zonas centrales y periféricas. La estructura resultante no presenta fragmentación, pero sí evidencia trayectorias largas entre ciertos pares de nodos, lo que es coherente con la escala metropolitana de Bogotá y con el uso de un criterio de vecindad espacial fija (k-NN) para la construcción del grafo.\
 
 # Comunidades y modularidad
 
@@ -295,7 +295,7 @@ La distribución empírica de grados permite caracterizar el patrón de conectiv
 # Suponga 'grados' es un vector numérico
 
 bins <- seq(min(grados), max(grados) + 1, by = 1)
-
+png("histograma_hoteles.png", width = 2000, height = 2000, res = 300)
 hist(
   grados,
   breaks = bins,
@@ -307,7 +307,7 @@ hist(
 )
 
 grid(nx = NA, ny = NULL, col = "gray", lty = 3)
-
+dev.off()
 ```
 
 El histograma muestra una distribución unimodal, con la mayor concentración de hoteles en valores de grado entre 10 y 14 vecinos, lo que indica una conectividad local alta y relativamente homogénea.
@@ -320,7 +320,7 @@ En conjunto, la distribución sugiere una red densa y bien integrada, donde la m
 library(ggplot2)
 
 df <- data.frame(grados = grados)
-
+png("cdf_grado.png", width = 2000, height = 2000, res = 300)
 ggplot(df, aes(grados)) +
   stat_ecdf(geom = "step") +
   labs(
@@ -330,7 +330,7 @@ ggplot(df, aes(grados)) +
   ) +
   theme_minimal() +
   theme(panel.grid.minor = element_blank())
-
+dev.off()
 ```
 
 La función de distribución acumulada del grado confirma el patrón observado en el histograma. Aproximadamente la mitad de los hoteles presenta un grado menor o igual a 12, lo que indica que la conectividad local se concentra en un rango relativamente estrecho.
