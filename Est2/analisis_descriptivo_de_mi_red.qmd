@@ -75,6 +75,7 @@ x <- (df2$lon - min(df2$lon)) / (max(df2$lon) - min(df2$lon))
 y <- (df2$lat - min(df2$lat)) / (max(df2$lat) - min(df2$lat))
 layout <- cbind(x, y)
 
+png("red_hoteles_knn.png", width = 2000, height = 2000, res = 300)
 # plot
 plot(
   G_hoteles,
@@ -89,7 +90,7 @@ plot(
   main = "Red de hoteles (k vecinos más cercanos)"
 )
 
-
+dev.off()
 ```
 
 En términos de conectividad global, la red hotelera conforma un único componente conexo, sin presencia de hoteles aislados ni subgrupos desconectados. La combinación de un grado medio elevado y un diámetro reducido indica una estructura altamente integrada, donde cualquier hotel puede alcanzarse desde otro mediante un número muy pequeño de intermediaciones. La existencia de nodos con grados y centralidades superiores sugiere la presencia de hubs locales de proximidad, que refuerzan la cohesión del sistema y facilitan la accesibilidad entre distintas zonas urbanas.
@@ -140,7 +141,7 @@ m
 
 ```
 
-Las conexiones no reflejan afinidad o colaboración, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta cafetera en la ciudad y permite explorar su conectividad y posibles conglomerados.
+Las conexiones no reflejan afinidad o colaboración, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta hotelera en la ciudad y permite explorar su conectividad y posibles conglomerados.
 
 # Grado, distribución del grado y Componentes conexos
 
