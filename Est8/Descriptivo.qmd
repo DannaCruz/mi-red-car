@@ -1,0 +1,286 @@
+---
+title: "Descriptivo"
+format: html
+editor: visual
+---
+
+## Introducción
+
+Esta sección presenta el **análisis descriptivo** de la red espacial de estaciones de\
+gasolina en Bogotá, con énfasis en su relación con la movilidad urbana y la\
+infraestructura vial. El objetivo no es formular inferencias estadísticas ni\
+modelos predictivos, sino **describir la estructura de los datos**, la red\
+construida y las métricas fundamentales utilizadas posteriormente en el análisis\
+estructural y en la definición del Índice de Impacto Vehicular (IIV).
+
+Los resultados aquí mostrados sirven como **soporte técnico y reproducible**\
+del análisis presentado en el documento académico principal.
+
+## Datos y preparación
+
+El conjunto de datos utilizado corresponde al archivo `resultados_movilidad_trafico.csv`, el cual integra información geográfica de las\
+estaciones de servicio junto con variables derivadas del análisis de la red vial.
+
+Cada fila representa una estación de gasolina en Bogotá, y las columnas incluyen\
+información sobre su localización espacial, atributos viales y métricas de red\
+necesarias para el análisis de movilidad.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE
+)
+
+library(tidyverse)
+library(igraph)
+library(FNN)
+library(knitr)
+library(readr)
+
+gas <- read_csv("resultados_movilidad_trafico.csv")
+
+```
+
+### Selección de variables relevantes
+
+Aunque el archivo original contiene información adicional, en este análisis se\
+trabaja exclusivamente con las variables que están **alineadas con el enfoque\
+teórico del estudio** y con el documento principal. En particular, se excluyen\
+variables comerciales o de calificación que no forman parte del análisis de\
+movilidad urbana.
+
+```{r}
+gas <- gas %>%
+  select(
+    place_id, nombre, lat, lon,
+    nearest_node, betweenness_vial,
+    tipo_via, distancia_via, peso_tipo_via,
+    IIV, dist_norm, bet_norm, peso_norm
+  )
+```
+
+Las variables seleccionadas pueden agruparse de la siguiente manera:
+
+-   **Identificación y localización:** `place_id`, `nombre`, `lat`, `lon`.
+
+-   **Información vial:** `tipo_via`, `distancia_via`, `peso_tipo_via`.
+
+-   **Métricas estructurales:** `betweenness_vial`.
+
+-   **Índice compuesto de movilidad:** `IIV` y sus componentes normalizados.
+
+## Exploración descriptiva inicial
+
+A continuación se presenta una vista preliminar de los datos, con algunas\
+variables clave relacionadas con movilidad y estructura vial.
+
+```{r}
+gas %>%
+  select(nombre, tipo_via, distancia_via, betweenness_vial, IIV) %>%
+  slice_head(n = 5) %>%
+  kable(
+    caption = "Primeras cinco estaciones y variables clave de movilidad"
+  )
+
+```
+
+Esta tabla permite observar cómo las estaciones difieren en su proximidad a vías\
+principales, en la jerarquía vial asociada y en su impacto vehicular estimado.
+
+## Construcción de la red de proximidad
+
+La red espacial se construye a partir de un modelo de **\$k\$ vecinos más cercanos\
+(k-NN)**, donde cada estación se conecta con sus estaciones geográficamente más\
+próximas. Este enfoque captura relaciones locales de proximidad sin imponer\
+conexiones arbitrarias a larga distancia.
+
+En esta etapa se asume que la relación de vecindad ya ha sido calculada\
+previamente y almacenada en el conjunto de datos a través de la variable\
+`nearest_node`.
+
+```{r}
+library(readr)
+library(igraph)
+
+gas <- read_csv("resultados_movilidad_trafico.csv", show_col_types = FALSE)
+
+coords <- as.matrix(gas[, c("lat", "lon")])
+k <- 6
+n <- nrow(coords)
+
+edge_list <- matrix(NA, n * k, 2)
+row <- 1
+
+for (i in 1:n) {
+  dists <- sqrt((coords[,1] - coords[i,1])^2 + (coords[,2] - coords[i,2])^2)
+  nn <- order(dists)[2:(k+1)]
+  for (j in nn) {
+    edge_list[row, ] <- c(i, j)
+    row <- row + 1
+  }
+}
+
+edges <- as.data.frame(edge_list)
+colnames(edges) <- c("from", "to")
+
+g <- graph_from_data_frame(edges, directed = FALSE)
+
+x <- (gas$lon - min(gas$lon)) / (max(gas$lon) - min(gas$lon))
+y <- (gas$lat - min(gas$lat)) / (max(gas$lat) - min(gas$lat))
+layout_geo <- cbind(x, y)
+
+plot(
+  g,
+  layout = layout_geo,
+  vertex.size = 6,
+  vertex.color = "tomato",
+  vertex.label = NA,
+  edge.color = "gray70",
+  edge.width = 0.8,
+  main = "Red espacial de estaciones de gasolina en Bogotá (k = 6)"
+)
+
+
+
+```
+
+El grafo resultante es no dirigido y representa la estructura espacial básica del sistema de estaciones dentro del tejido urbano de la ciudad.
+
+## Características generales de la red
+
+Antes de analizar métricas más específicas, se describen algunas propiedades globales del grafo que permiten caracterizar su estructura general. En particular, se examinan el número de nodos y aristas, la conectividad global y el grado medio, con el fin de verificar que el sistema se comporta como una red espacial urbana integrada.
+
+```{r}
+# Número de nodos y aristas
+num_nodos <- vcount(g)
+num_aristas <- ecount(g)
+
+# Grado medio
+grado_medio <- mean(degree(g))
+
+# Componentes conexas
+num_componentes <- components(g)$no
+
+# Mostrar resultados
+data.frame(
+  Nodos = num_nodos,
+  Aristas = num_aristas,
+  Grado_medio = round(grado_medio, 2),
+  Componentes_conexas = num_componentes
+)
+
+
+```
+
+Estas características permiten verificar el tamaño de la red y su conectividad,\
+confirmando que el sistema se comporta como una red espacial urbana integrada.
+
+## Métricas estructurales de la red
+
+Para caracterizar el rol estructural de cada estación dentro de la red se\
+calculan métricas clásicas de teoría de grafos.
+
+```{r}
+V(g)$degree <- degree(g)
+V(g)$closeness <- closeness(g, normalized = TRUE)
+V(g)$betweenness <- betweenness(g, normalized = TRUE)
+```
+
+### Grado
+
+El grado de un nodo representa el número de estaciones vecinas directamente\
+conectadas.
+
+```{r}
+summary(V(g)$degree)
+
+```
+
+Valores elevados de grado indican estaciones ubicadas en zonas con alta densidad espacial de estaciones, generalmente asociadas a corredores urbanos importantes.
+
+### Intermediación (betweenness)
+
+La centralidad de intermediación identifica estaciones que actúan como puentes\
+en los caminos más cortos de la red.
+
+```{r}
+summary(V(g)$betweenness)
+
+```
+
+## Índice de Impacto Vehicular (IIV)
+
+El Índice de Impacto Vehicular (IIV) sintetiza información sobre la proximidad a\
+vías principales, la jerarquía vial y la relevancia estructural dentro de la red.
+
+```{r}
+summary(gas$IIV)
+
+```
+
+Distribución del IIV
+
+```{r}
+ggplot(gas, aes(IIV)) +
+  geom_histogram(bins = 15) +
+  labs(
+    title = "Distribución del Índice de Impacto Vehicular (IIV)",
+    x = "IIV",
+    y = "Frecuencia"
+  )
+```
+
+La distribución del IIV muestra una diferenciación clara entre estaciones con bajo impacto vehicular, típicamente asociadas a vías secundarias o terciarias, y aquellas con mayor influencia potencial sobre el tráfico urbano.
+
+## Relación entre estructura vial e impacto vehicular
+
+Una de las preguntas centrales del análisis es cómo se relaciona la estructura\
+de la red vial con el impacto vehicular estimado.
+
+```{r}
+
+ggplot(gas, aes(betweenness_vial, IIV)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "Relación entre intermediación vial e IIV",
+    x = "Intermediación vial",
+    y = "Índice de Impacto Vehicular"
+  )
+
+```
+
+```{r}
+cor(gas$betweenness_vial, gas$IIV, use = "complete.obs")
+
+```
+
+Esta relación sugiere que estaciones ubicadas en nodos viales estructuralmente\
+relevantes tienden a presentar mayores valores de impacto vehicular, reforzando\
+la coherencia entre el índice propuesto y la estructura de la red.
+
+## Estaciones con mayor impacto vehicular
+
+Finalmente, se identifican las estaciones con mayores valores del IIV.
+
+```{r}
+gas %>%
+  arrange(desc(IIV)) %>%
+  select(nombre, tipo_via, distancia_via, betweenness_vial, IIV) %>%
+  slice_head(n = 10) %>%
+  kable(
+    caption = "Estaciones con mayor Índice de Impacto Vehicular"
+  )
+
+```
+
+Estas estaciones pueden interpretarse como nodos sensibles dentro del sistema de movilidad urbana, ya que combinan alta accesibilidad vial con posiciones estructurales relevantes dentro de la red.
+
+## Cierre
+
+El análisis descriptivo desarrollado en esta sección establece una base empírica y\
+metodológica sólida para la interpretación estructural de la red espacial de\
+estaciones de servicio en Bogotá. La integración de información geográfica,\
+atributos asociados a la infraestructura vial y métricas propias de la teoría de\
+redes permite caracterizar de manera consistente la organización espacial del\
+sistema y su relación con la movilidad urbana.

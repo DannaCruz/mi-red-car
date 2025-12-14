@@ -1,0 +1,15 @@
+{
+  "hash": "5a486a8cd1d062743a8750b0c6bbb916",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Análisis de redes espaciales de estaciones de gasolina en Bogotá mediante teoría de grafos\"\n\nformat: html\nauthor: Samuel A. Moreno Lascarro\nlisting:\n  type: grid\n  sort: none\n  contents:\n    - Descriptivo.qmd\n    - Bayesiano.qmd\n---\n\n# 🧩 Mi análisis\n\nAquí presento mi red personal del curso.\n\n- Cargué mis datos\n- Analicé grados y centralidades\n- Encontré comunidades\n- Hice visualizaciones\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# Acá irá mi código de análisis para la red del Estudiante 8\n```\n:::\n\n![](Gas.jpg)",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Análisis de redes espaciales de estaciones de gasolina en Bogotá mediante teoría de grafos",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 8\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDescriptivo\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBayesiano\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "Bayesiano.html",
+    "href": "Bayesiano.html",
+    "title": "Bayesiano",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "Bayesiano.html#quarto",
+    "href": "Bayesiano.html#quarto",
+    "title": "Bayesiano",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "Bayesiano.html#running-code",
+    "href": "Bayesiano.html#running-code",
+    "title": "Bayesiano",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
+  },
+  {
+    "objectID": "Descriptivo.html",
+    "href": "Descriptivo.html",
+    "title": "Descriptivo",
+    "section": "",
+    "text": "When you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n\nEsta sección presenta el análisis descriptivo de la red espacial de estaciones de\ngasolina en Bogotá, con énfasis en su relación con la movilidad urbana y la\ninfraestructura vial. El objetivo no es formular inferencias estadísticas ni\nmodelos predictivos, sino describir la estructura de los datos, la red\nconstruida y las métricas fundamentales utilizadas posteriormente en el análisis\nestructural y en la definición del Índice de Impacto Vehicular (IIV).\nLos resultados aquí mostrados sirven como soporte técnico y reproducible\ndel análisis presentado en el documento académico principal."
+  },
+  {
+    "objectID": "Descriptivo.html#running-code",
+    "href": "Descriptivo.html#running-code",
+    "title": "Descriptivo",
+    "section": "",
+    "text": "When you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n\nEsta sección presenta el análisis descriptivo de la red espacial de estaciones de\ngasolina en Bogotá, con énfasis en su relación con la movilidad urbana y la\ninfraestructura vial. El objetivo no es formular inferencias estadísticas ni\nmodelos predictivos, sino describir la estructura de los datos, la red\nconstruida y las métricas fundamentales utilizadas posteriormente en el análisis\nestructural y en la definición del Índice de Impacto Vehicular (IIV).\nLos resultados aquí mostrados sirven como soporte técnico y reproducible\ndel análisis presentado en el documento académico principal."
+  },
+  {
+    "objectID": "Descriptivo.html#datos-y-preparación",
+    "href": "Descriptivo.html#datos-y-preparación",
+    "title": "Descriptivo",
+    "section": "Datos y preparación",
+    "text": "Datos y preparación\nEl conjunto de datos utilizado corresponde al archivo resultados_movilidad_trafico.csv, el cual integra información geográfica de las\nestaciones de servicio junto con variables derivadas del análisis de la red vial.\nCada fila representa una estación de gasolina en Bogotá, y las columnas incluyen\ninformación sobre su localización espacial, atributos viales y métricas de red\nnecesarias para el análisis de movilidad.\n\nSelección de variables relevantes\nAunque el archivo original contiene información adicional, en este análisis se\ntrabaja exclusivamente con las variables que están alineadas con el enfoque\nteórico del estudio y con el documento principal. En particular, se excluyen\nvariables comerciales o de calificación que no forman parte del análisis de\nmovilidad urbana.\n\ngas &lt;- gas %&gt;%\n  select(\n    place_id, nombre, lat, lon,\n    nearest_node, betweenness_vial,\n    tipo_via, distancia_via, peso_tipo_via,\n    IIV, dist_norm, bet_norm, peso_norm\n  )\n\nLas variables seleccionadas pueden agruparse de la siguiente manera:\n\nIdentificación y localización: place_id, nombre, lat, lon.\nInformación vial: tipo_via, distancia_via, peso_tipo_via.\nMétricas estructurales: betweenness_vial.\nÍndice compuesto de movilidad: IIV y sus componentes normalizados."
+  },
+  {
+    "objectID": "Descriptivo.html#exploración-descriptiva-inicial",
+    "href": "Descriptivo.html#exploración-descriptiva-inicial",
+    "title": "Descriptivo",
+    "section": "Exploración descriptiva inicial",
+    "text": "Exploración descriptiva inicial\nA continuación se presenta una vista preliminar de los datos, con algunas\nvariables clave relacionadas con movilidad y estructura vial.\n\ngas %&gt;%\n  select(nombre, tipo_via, distancia_via, betweenness_vial, IIV) %&gt;%\n  slice_head(n = 5) %&gt;%\n  kable(\n    caption = \"Primeras cinco estaciones y variables clave de movilidad\"\n  )\n\n\nPrimeras cinco estaciones y variables clave de movilidad\n\n\n\n\n\n\n\n\n\nnombre\ntipo_via\ndistancia_via\nbetweenness_vial\nIIV\n\n\n\n\nMariana Terpel\ntrunk\n45.38454\n0.0000000\n0.3086236\n\n\nCombuscol Texaco La Floresta\nprimary\n23.68282\n0.0280381\n0.3444841\n\n\nEDS Terpel La Juana\nprimary\n17.82417\n0.0022410\n0.2315022\n\n\nTerpel Gazel Villa Alsacia\ntrunk\n27.66403\n0.0121149\n0.3693821\n\n\nTerpel Las Palmas\nprimary\n10.20440\n0.0327107\n0.3853565\n\n\n\n\n\nEsta tabla permite observar cómo las estaciones difieren en su proximidad a vías\nprincipales, en la jerarquía vial asociada y en su impacto vehicular estimado."
+  },
+  {
+    "objectID": "Descriptivo.html#construcción-de-la-red-de-proximidad",
+    "href": "Descriptivo.html#construcción-de-la-red-de-proximidad",
+    "title": "Descriptivo",
+    "section": "Construcción de la red de proximidad",
+    "text": "Construcción de la red de proximidad\nLa red espacial se construye a partir de un modelo de $k$ vecinos más cercanos\n(k-NN), donde cada estación se conecta con sus estaciones geográficamente más\npróximas. Este enfoque captura relaciones locales de proximidad sin imponer\nconexiones arbitrarias a larga distancia.\nEn esta etapa se asume que la relación de vecindad ya ha sido calculada\npreviamente y almacenada en el conjunto de datos a través de la variable\nnearest_node.\n\nlibrary(readr)\nlibrary(igraph)\n\ngas &lt;- read_csv(\"resultados_movilidad_trafico.csv\", show_col_types = FALSE)\n\ncoords &lt;- as.matrix(gas[, c(\"lat\", \"lon\")])\nk &lt;- 6\nn &lt;- nrow(coords)\n\nedge_list &lt;- matrix(NA, n * k, 2)\nrow &lt;- 1\n\nfor (i in 1:n) {\n  dists &lt;- sqrt((coords[,1] - coords[i,1])^2 + (coords[,2] - coords[i,2])^2)\n  nn &lt;- order(dists)[2:(k+1)]\n  for (j in nn) {\n    edge_list[row, ] &lt;- c(i, j)\n    row &lt;- row + 1\n  }\n}\n\nedges &lt;- as.data.frame(edge_list)\ncolnames(edges) &lt;- c(\"from\", \"to\")\n\ng &lt;- graph_from_data_frame(edges, directed = FALSE)\n\nx &lt;- (gas$lon - min(gas$lon)) / (max(gas$lon) - min(gas$lon))\ny &lt;- (gas$lat - min(gas$lat)) / (max(gas$lat) - min(gas$lat))\nlayout_geo &lt;- cbind(x, y)\n\nplot(\n  g,\n  layout = layout_geo,\n  vertex.size = 6,\n  vertex.color = \"tomato\",\n  vertex.label = NA,\n  edge.color = \"gray70\",\n  edge.width = 0.8,\n  main = \"Red espacial de estaciones de gasolina en Bogotá (k = 6)\"\n)\n\n\n\n\n\n\n\n\nEl grafo resultante es no dirigido y representa la estructura espacial básica del sistema de estaciones dentro del tejido urbano de la ciudad."
+  },
+  {
+    "objectID": "Descriptivo.html#características-generales-de-la-red",
+    "href": "Descriptivo.html#características-generales-de-la-red",
+    "title": "Descriptivo",
+    "section": "Características generales de la red",
+    "text": "Características generales de la red\nAntes de analizar métricas más específicas, se describen algunas propiedades globales del grafo que permiten caracterizar su estructura general. En particular, se examinan el número de nodos y aristas, la conectividad global y el grado medio, con el fin de verificar que el sistema se comporta como una red espacial urbana integrada.\n\n# Número de nodos y aristas\nnum_nodos &lt;- vcount(g)\nnum_aristas &lt;- ecount(g)\n\n# Grado medio\ngrado_medio &lt;- mean(degree(g))\n\n# Componentes conexas\nnum_componentes &lt;- components(g)$no\n\n# Mostrar resultados\ndata.frame(\n  Nodos = num_nodos,\n  Aristas = num_aristas,\n  Grado_medio = round(grado_medio, 2),\n  Componentes_conexas = num_componentes\n)\n\n  Nodos Aristas Grado_medio Componentes_conexas\n1    60     360          12                   1\n\n\nEstas características permiten verificar el tamaño de la red y su conectividad,\nconfirmando que el sistema se comporta como una red espacial urbana integrada."
+  },
+  {
+    "objectID": "Descriptivo.html#métricas-estructurales-de-la-red",
+    "href": "Descriptivo.html#métricas-estructurales-de-la-red",
+    "title": "Descriptivo",
+    "section": "Métricas estructurales de la red",
+    "text": "Métricas estructurales de la red\nPara caracterizar el rol estructural de cada estación dentro de la red se\ncalculan métricas clásicas de teoría de grafos.\n\nV(g)$degree &lt;- degree(g)\nV(g)$closeness &lt;- closeness(g, normalized = TRUE)\nV(g)$betweenness &lt;- betweenness(g, normalized = TRUE)\n\n\nGrado\nEl grado de un nodo representa el número de estaciones vecinas directamente\nconectadas.\n\nsummary(V(g)$degree)\n\n   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. \n      7      11      12      12      13      15 \n\n\nValores elevados de grado indican estaciones ubicadas en zonas con alta densidad espacial de estaciones, generalmente asociadas a corredores urbanos importantes.\n\n\nIntermediación (betweenness)\nLa centralidad de intermediación identifica estaciones que actúan como puentes\nen los caminos más cortos de la red.\n\nsummary(V(g)$betweenness)\n\n     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. \n0.0007259 0.0166033 0.0345644 0.0423437 0.0559195 0.1453119"
+  },
+  {
+    "objectID": "Descriptivo.html#índice-de-impacto-vehicular-iiv",
+    "href": "Descriptivo.html#índice-de-impacto-vehicular-iiv",
+    "title": "Descriptivo",
+    "section": "Índice de Impacto Vehicular (IIV)",
+    "text": "Índice de Impacto Vehicular (IIV)\nEl Índice de Impacto Vehicular (IIV) sintetiza información sobre la proximidad a\nvías principales, la jerarquía vial y la relevancia estructural dentro de la red.\n\nsummary(gas$IIV)\n\n     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. \n0.0004926 0.1439710 0.2495833 0.2427713 0.3406042 0.4985185 \n\n\nDistribución del IIV\n\nggplot(gas, aes(IIV)) +\n  geom_histogram(bins = 15) +\n  labs(\n    title = \"Distribución del Índice de Impacto Vehicular (IIV)\",\n    x = \"IIV\",\n    y = \"Frecuencia\"\n  )\n\n\n\n\n\n\n\n\nLa distribución del IIV muestra una diferenciación clara entre estaciones con bajo impacto vehicular, típicamente asociadas a vías secundarias o terciarias, y aquellas con mayor influencia potencial sobre el tráfico urbano."
+  },
+  {
+    "objectID": "Descriptivo.html#relación-entre-estructura-vial-e-impacto-vehicular",
+    "href": "Descriptivo.html#relación-entre-estructura-vial-e-impacto-vehicular",
+    "title": "Descriptivo",
+    "section": "Relación entre estructura vial e impacto vehicular",
+    "text": "Relación entre estructura vial e impacto vehicular\nUna de las preguntas centrales del análisis es cómo se relaciona la estructura\nde la red vial con el impacto vehicular estimado.\n\nggplot(gas, aes(betweenness_vial, IIV)) +\n  geom_point() +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  labs(\n    title = \"Relación entre intermediación vial e IIV\",\n    x = \"Intermediación vial\",\n    y = \"Índice de Impacto Vehicular\"\n  )\n\n\n\n\n\n\n\n\n\ncor(gas$betweenness_vial, gas$IIV, use = \"complete.obs\")\n\n[1] 0.6176694\n\n\nEsta relación sugiere que estaciones ubicadas en nodos viales estructuralmente\nrelevantes tienden a presentar mayores valores de impacto vehicular, reforzando\nla coherencia entre el índice propuesto y la estructura de la red."
+  },
+  {
+    "objectID": "Descriptivo.html#estaciones-con-mayor-impacto-vehicular",
+    "href": "Descriptivo.html#estaciones-con-mayor-impacto-vehicular",
+    "title": "Descriptivo",
+    "section": "Estaciones con mayor impacto vehicular",
+    "text": "Estaciones con mayor impacto vehicular\nFinalmente, se identifican las estaciones con mayores valores del IIV.\n\ngas %&gt;%\n  arrange(desc(IIV)) %&gt;%\n  select(nombre, tipo_via, distancia_via, betweenness_vial, IIV) %&gt;%\n  slice_head(n = 10) %&gt;%\n  kable(\n    caption = \"Estaciones con mayor Índice de Impacto Vehicular\"\n  )\n\n\nEstaciones con mayor Índice de Impacto Vehicular\n\n\n\n\n\n\n\n\n\nnombre\ntipo_via\ndistancia_via\nbetweenness_vial\nIIV\n\n\n\n\nService station Terpel Pontevedra\ntrunk\n20.554313\n0.0393344\n0.4985185\n\n\nEstación de Servicio Terpel Av Boyaca\ntrunk\n21.230608\n0.0340794\n0.4739117\n\n\nREDH PRIMAX AV QUITO\ntrunk\n12.969057\n0.0251879\n0.4438729\n\n\nTerpel Avenida Carrera 28\nsecondary\n9.574834\n0.0655717\n0.4378257\n\n\nEstación de Servicio Biomax\ntrunk\n17.029803\n0.0212614\n0.4194596\n\n\nTexaco Antares\ntrunk\n53.036525\n0.0210038\n0.4034977\n\n\nCalle 49 Terpel Service Station\ntrunk\n13.610019\n0.0164976\n0.4028574\n\n\nPetrobras Normandía\ntrunk\n8.160167\n0.0109850\n0.3939252\n\n\nTerpel Las Palmas\nprimary\n10.204397\n0.0327107\n0.3853565\n\n\nEDS Terpel Compostela y GAZEL\ntrunk\n35.999815\n0.0140607\n0.3751404\n\n\n\n\n\nEstas estaciones pueden interpretarse como nodos sensibles dentro del sistema de movilidad urbana, ya que combinan alta accesibilidad vial con posiciones estructurales relevantes dentro de la red."
+  },
+  {
+    "objectID": "Descriptivo.html#cierre",
+    "href": "Descriptivo.html#cierre",
+    "title": "Descriptivo",
+    "section": "Cierre",
+    "text": "Cierre\nEl análisis descriptivo presentado en esta sección proporciona una base sólida\npara la interpretación estructural y urbana del sistema de estaciones de\nservicio en Bogotá. La combinación de información geográfica, atributos viales y\nmétricas de red permite una lectura integrada del impacto potencial de estas\ninfraestructuras sobre la movilidad urbana.\nEsta sección cumple un rol técnico y documental, asegurando la reproducibilidad\ndel análisis y la coherencia con el marco metodológico del estudio principal."
+  }
+]
