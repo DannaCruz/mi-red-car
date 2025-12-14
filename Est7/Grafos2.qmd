@@ -1,13 +1,14 @@
 ---
-title: "Grafos"
+title: "Grafos2"
 format: html
 editor: visual
 ---
 
 ```{r}
 #| echo: false
+#| warning: false
 library(ggplot2)
-df_moteles <- read.csv("C:/Users/Andrea/Downloads/Moteles_Final.csv")
+df_moteles <- read.csv("Moteles_Final.csv")
 coords_completo <- as.matrix(
   na.omit(df_moteles[, c("lat", "lon")]) * pi / 180
 )
@@ -30,9 +31,11 @@ El grafo se construye mediante un modelo de vecindad geográfica bajo la técnic
 
 Para escoger el $k$ adecuado en el que se garantice redes conectadas con suficiente variación estructural, se realizaron 3 pruebas ($k = 4$, $6$ y $8$). A continuación se muestra cómo varía cada uno de los grafos dependiendo del $k$ escogido:
 
+#### Grafo k = 4
+
 ```{r}
 #| echo: false
-
+#| warning: false
 library(geosphere)  # para distancias Haversine
 library(igraph)     # para la red
 
@@ -110,8 +113,11 @@ plot(
 
 ```
 
+#### Grafo k = 6
+
 ```{r}
 #| echo: false
+#| warning: false
 # Número de vecinos cercanos
 k <- 6
 # Filtrar moteles con coordenadas válidas (equivalente a dropna y reset_index)
@@ -187,8 +193,11 @@ plot(
 
 ```
 
+#### Grafo k = 8
+
 ```{r}
 #| echo: false
+#| warning: false
 # Número de vecinos cercanos
 k <- 8
 
@@ -276,7 +285,9 @@ La red de moteles constituye el primer objeto de análisis en este estudio, perm
 
 La red de moteles se compone de $59$ nodos y $225$ aristas resultantes de la aplicación del modelo de vecindad geográfica con $k = 6$. Esta estructura inicial permite identificar un sistema moderadamente conectado, donde la densidad, calculada como la proporción de aristas existentes frente a todas las posibles:
 
+$$
 \[ \Delta\_m = \frac{m}{n(n-1)/2} = \frac{2m}{n(n-1)} = \frac{2*(255)}{59*(58)} \approx 0,13 \]
+$$
 
 Se mantiene en valores bajos, lo cual es natural para redes espaciales donde los enlaces están restringidos por proximidad física.
 
@@ -302,13 +313,13 @@ A continuación se muestran los top $5$ en cada categoría:
 
 ![](Top5CentMotel.jpg)
 
-Los establecimientos con mayor centralidad de grado, como se ve en la Figura \ref{fig:CentGradMot}, entre ellos: Motel Blue Sea, Las Camelias Motel, Motel Safari y Motel El Encanto Vip, corresponden a nodos con un elevado número de conexiones directas, reflejando su ubicación en zonas urbanas de alta densidad de moteles (Fig: \ref{fig:centgrad}. La centralidad de grado muestra una fuerte relación con indicadores de reputación digital: estos establecimientos concentran un volumen significativamente mayor de reseñas y presentan calificaciones altas en Google.
+Los establecimientos con mayor centralidad de grado, como se ve en la figura, entre ellos: Motel Blue Sea, Las Camelias Motel, Motel Safari y Motel El Encanto Vip, corresponden a nodos con un elevado número de conexiones directas, reflejando su ubicación en zonas urbanas de alta densidad de moteles (Fig: \ref{fig:centgrad}. La centralidad de grado muestra una fuerte relación con indicadores de reputación digital: estos establecimientos concentran un volumen significativamente mayor de reseñas y presentan calificaciones altas en Google.
 
 ![](Asornoseque.jpg)
 
 Los moteles con mayor centralidad de cercanía (Fig: \ref{fig:CenCercMot}) como lo son el Motel Sueños, Motel Amoblados Palace y Motel Four Point, presentan la menor distancia promedio al resto de la red. Esto indica que se encuentran ubicados en posiciones estratégicamente centrales, desde las cuales es posible alcanzar a la mayoría de los establecimientos con un número reducido de pasos. Su localización geográfica y relacional los convierte en puntos de referencia internos, conformando nodos que favorecen la eficiencia de comunicación dentro del grafo. Es relevante observar que Motel Amoblados Palace y Motel Four Point aparecen también en el top de betweenness, lo que sugiere que combinan una posición globalmente central con un rol de intermediación clave.
 
-De la Figura \ref{fig:CenBetwMot} podemos inferir que los establecimientos con mayor centralidad de betweenness, encabezados por Amoblados El Romance, Motel Amoblados Palace y Motel Four Point, actúan como intermediarios críticos en la red. Su importancia radica en que concentran una proporción relevante de los caminos más cortos entre otros nodos, cumpliendo la función de puentes que conectan diferentes zonas o subredes de moteles. Aunque no son los establecimientos con mayor número de reseñas ni los de mayor conectividad directa, sí representan puntos estructuralmente sensibles: su ausencia aumentaría las distancias entre sectores de la red e incluso podría fragmentarla. Estos resultados sugieren que ocupan posiciones de transición en áreas urbanas donde la oferta se distribuye de manera dispersa.
+De la figura de los betweenns de los moteles, podemos inferir que los establecimientos con mayor centralidad de betweenness, encabezados por Amoblados El Romance, Motel Amoblados Palace y Motel Four Point, actúan como intermediarios críticos en la red. Su importancia radica en que concentran una proporción relevante de los caminos más cortos entre otros nodos, cumpliendo la función de puentes que conectan diferentes zonas o subredes de moteles. Aunque no son los establecimientos con mayor número de reseñas ni los de mayor conectividad directa, sí representan puntos estructuralmente sensibles: su ausencia aumentaría las distancias entre sectores de la red e incluso podría fragmentarla. Estos resultados sugieren que ocupan posiciones de transición en áreas urbanas donde la oferta se distribuye de manera dispersa.
 
 ![Nodos que se encuentran como los más representativos para puentes en el grafo](Betweensnodos.jpg)
 
@@ -318,11 +329,11 @@ El coeficiente de clustering promedio refleja la tendencia de los moteles a orga
 
 ![Coeficiente de clustering por nodo.](CoefiClusterMot.jpg)
 
-La Figura \ref{fig:CoefiClusterMot} muestra la distribución del coeficiente de clustering para los moteles incluidos en la componente gigante de la red. En términos generales, el comportamiento observado indica que la red presenta niveles de clustering consistentemente altos, con valores que oscilan aproximadamente entre $0.55$ y $1.0$, lo cual es inusual para redes espaciales k-NN y revela patrones de agrupación fuertes.
+La imagen dónde se muestra el cluster muestra la distribución del coeficiente de clustering para los moteles incluidos en la componente gigante de la red. En términos generales, el comportamiento observado indica que la red presenta niveles de clustering consistentemente altos, con valores que oscilan aproximadamente entre $0.55$ y $1.0$, lo cual es inusual para redes espaciales k-NN y revela patrones de agrupación fuertes.
 
 Para aquellos establecimientos que cuentan con un clustering entre $0.9$ y $1$, podemos decir que tienen vecinos que también están conectados entre sí, es decir que existe una redundancia estructural elevada, típica de zonas donde la oferta se concentra en zonas específicas.
 
-Los establecimientos con valores intermedios (entre $0,65 - 0,8$) indican estructuras donde algunos vecinos están conectados entre sí, pero no todos, probablemente zonas donde los moteles se encuentran cercanos, pero no tan densos como en el primer grupo. A continuación (Fig: \ref{fig:mapacluster}) encontramos los establecimientos coloreados depende su coeficiente de clustering: en verde cluster alto, en amarillo, intermedio, y en rojo, cluster bajo.
+Los establecimientos con valores intermedios (entre $0,65 - 0,8$) indican estructuras donde algunos vecinos están conectados entre sí, pero no todos, probablemente zonas donde los moteles se encuentran cercanos, pero no tan densos como en el primer grupo. A continuación encontramos los establecimientos coloreados depende su coeficiente de clustering: en verde cluster alto, en amarillo, intermedio, y en rojo, cluster bajo.
 
 ![Mapa coeficiente de clustering](MapaCluster.jpg)
 
@@ -350,7 +361,7 @@ Podemos ver en la figura anterior que el recorrido para llegar del Motel Kancun 
 
 Recogiendo cuatro moteles que sirven como puentes, para recorrer una distancia total de $31 km$ o $0.00487$ radianes.
 
-El diámetro de la componente gigante es 8, es decir, el par de moteles más distante requiere ocho pasos para conectarse a través de la red. Comparado con el ASP, este valor sugiere que los trayectos extremos son poco frecuentes y que la mayor parte de la red se organiza en distancias significativamente menores, con periferias que se conectan al ‘cuerpo’ principal de la red sin quedar completamente aisladas. La Figura \ref{fig:diametromotel} muestra el par de moteles que definen el diámetro de la componente gigante, ubicados en extremos opuestos del tejido urbano
+El diámetro de la componente gigante es 8, es decir, el par de moteles más distante requiere ocho pasos para conectarse a través de la red. Comparado con el ASP, este valor sugiere que los trayectos extremos son poco frecuentes y que la mayor parte de la red se organiza en distancias significativamente menores, con periferias que se conectan al ‘cuerpo’ principal de la red sin quedar completamente aisladas. La figura muestra el par de moteles que definen el diámetro de la componente gigante, ubicados en extremos opuestos del tejido urbano
 
 ![Diámetro de la red de moteles](diametromotel.jpg){#diametromotel}
 
@@ -376,7 +387,7 @@ El coeficiente de asortatividad por rating fue de $r = –0.0422$, indicando una
 
 ### Subgrafos inducidos por atributos
 
-El subgrafo inducido por los moteles con más de 50 reseñas agrupa un total de 27 establecimientos, todos pertenecientes a una única componente gigante, lo que revela un conjunto altamente conectado dentro del sistema general de la red. En este subgrupo, la densidad observada es de 0.239, un valor superior al del grafo completo, lo cual indica que los moteles con mayor volumen de reseñas tienden a formar un tejido más cohesionado y con mayor proximidad estructural. El grado promedio de este subgrafo es 6.22, coherente con una red espacial construida mediante k-NN, pero ligeramente superior al promedio global, sugiriendo que estos moteles mantienen un número de conexiones algo mayor con sus vecinos. El clustering promedio, de 0.756, confirma la presencia de una transitividad relevante: muchos de los moteles con altas reseñas forman triángulos y microestructuras densas, lo que evidencia que este grupo se ubica en sectores donde los establecimientos se encuentran próximos (Observe la Figura: \ref{fig:subgrafo}. En cuanto a las métricas de distancia, el subgrafo presenta un ASP de 3.23, bastante cercano al valor global, lo que implica que la accesibilidad estructural entre estos moteles es eficiente y que no existen trayectorias excesivamente largas. Finalmente, el diámetro de 7 sugiere que, aunque este conjunto es compacto, aún existen nodos que ocupan posiciones relativamente periféricas dentro del subgrupo, pero que se mantienen conectados sin generar fragmentación. En conjunto, estas métricas muestran que los moteles con mayor volumen de reseñas conforman un segmento estructuralmente más cohesionado, denso y transitivo, lo que podría reflejar su localización en corredores urbanos de alta actividad o en zonas consolidadas de oferta.
+El subgrafo inducido por los moteles con más de 50 reseñas agrupa un total de 27 establecimientos, todos pertenecientes a una única componente gigante, lo que revela un conjunto altamente conectado dentro del sistema general de la red. En este subgrupo, la densidad observada es de 0.239, un valor superior al del grafo completo, lo cual indica que los moteles con mayor volumen de reseñas tienden a formar un tejido más cohesionado y con mayor proximidad estructural. El grado promedio de este subgrafo es 6.22, coherente con una red espacial construida mediante k-NN, pero ligeramente superior al promedio global, sugiriendo que estos moteles mantienen un número de conexiones algo mayor con sus vecinos. El clustering promedio, de 0.756, confirma la presencia de una transitividad relevante: muchos de los moteles con altas reseñas forman triángulos y microestructuras densas, lo que evidencia que este grupo se ubica en sectores donde los establecimientos se encuentran próximos (Observe en el subgrafo que en cuanto a las métricas de distancia, el subgrafo presenta un ASP de 3.23, bastante cercano al valor global, lo que implica que la accesibilidad estructural entre estos moteles es eficiente y que no existen trayectorias excesivamente largas. Finalmente, el diámetro de 7 sugiere que, aunque este conjunto es compacto, aún existen nodos que ocupan posiciones relativamente periféricas dentro del subgrupo, pero que se mantienen conectados sin generar fragmentación. En conjunto, estas métricas muestran que los moteles con mayor volumen de reseñas conforman un segmento estructuralmente más cohesionado, denso y transitivo, lo que podría reflejar su localización en corredores urbanos de alta actividad o en zonas consolidadas de oferta.
 
 ![Subgrafo](Subgrafo.jpg){#Figura .subgrafo}
 
@@ -409,3 +420,4 @@ Los resultados muestran que la red presenta una componente gigante bien definida
 La detección de comunidades mostró una red segmentada en subzonas claras, coherentes con patrones de localización urbana, y una modularidad considerable que confirma agrupamientos internos bien definidos. El análisis de sensibilidad evidenció diferencias marcadas en la importancia estructural de ciertos nodos: mientras algunos moteles son críticos para mantener la conectividad global, otros desempeñan un rol más local y su ausencia no afecta la estructura general.
 
 En conjunto, el estudio demuestra que los moteles conforman una red espacialmente coherente, con patrones de interacción determinados fundamentalmente por la proximidad geográfica. La organización interna observada, las comunidades detectadas y la resiliencia estructural del sistema confirman que las redes urbanas —incluso aquellas asociadas a actividades tabú— pueden analizarse con rigor científico mediante modelos de grafos, permitiendo extraer conclusiones útiles sobre su funcionamiento y estructura territorial. Este trabajo sienta una base sólida para futuras investigaciones que deseen ampliar el análisis incorporando temporalidad, segmentaciones urbanas o comparaciones con otros servicios de la ciudad.
+
