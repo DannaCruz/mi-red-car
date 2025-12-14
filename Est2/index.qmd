@@ -113,7 +113,9 @@ plot(
 
 ```
 
-las conexiones no reflejan afinidad o colaboración, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta cafetera en la ciudad y permite explorar su conectividad y posibles conglomerados.\\
+En términos de conectividad global, la red hotelera conforma un único componente conexo, sin presencia de hoteles aislados ni subgrupos desconectados. La combinación de un grado medio elevado y un diámetro reducido indica una estructura altamente integrada, donde cualquier hotel puede alcanzarse desde otro mediante un número muy pequeño de intermediaciones. La existencia de nodos con grados y centralidades superiores sugiere la presencia de hubs locales de proximidad, que refuerzan la cohesión del sistema y facilitan la accesibilidad entre distintas zonas urbanas.
+
+Las conexiones representadas en la red no reflejan relaciones funcionales o comerciales entre hoteles, sino cercanía geográfica dentro del tejido urbano. En este sentido, el grafo modela la estructura espacial de la oferta hotelera de Bogotá, permitiendo analizar patrones de concentración territorial, conectividad urbana y la organización de los establecimientos en corredores y zonas de alta densidad turística.
 
 ```{r}
 library(leaflet)
@@ -255,7 +257,7 @@ Estos resultados sugieren que la oferta hotelera se organiza en agrupamientos es
 # Obtener el componente conectado más grande
 comp <- components(G_hoteles)
 largest_comp_nodes <- which(comp$membership == which.max(comp$csize))
-Gcc <- induced_subgraph(G_hospitales, vids = largest_comp_nodes)
+Gcc <- induced_subgraph(G_hoteles, vids = largest_comp_nodes)
 
 # Longitud promedio de caminos más cortos
 asp <- mean_distance(Gcc, directed = FALSE)
@@ -266,11 +268,11 @@ diam <- diameter(Gcc, directed = FALSE)
 cat("Longitud promedio de camino (ASP):", asp, "\n")
 cat("Diámetro (máx. distancia más corta):", diam, "\n")
 ```
-Para la componente gigante se estimaron la longitud promedio de los caminos mínimos (ASP) y el diámetro de la red. El ASP obtenido fue de 1.69, lo que indica una conectividad global muy alta: en promedio, cualquier hotel puede alcanzarse desde otro en menos de dos saltos.
+Para la componente gigante se estimaron la longitud promedio de los caminos mínimos (ASP) y el diámetro de la red. El valor obtenido para el ASP fue de aproximadamente 3.07, lo que indica una conectividad global elevada: en promedio, cualquier hotel puede alcanzarse desde otro mediante alrededor de tres saltos. Aunque este valor es mayor que en configuraciones más densas, sigue siendo bajo en relación con el tamaño de la red, lo que refleja una estructura razonablemente eficiente en términos de accesibilidad.
 
-El diámetro de la red es 3, lo que implica que incluso los pares de hoteles más alejados están separados por un número reducido de intermediaciones. Este resultado sugiere una estructura altamente compacta, sin evidencias de fragmentación o aislamiento topológico.
+El diámetro de la red es 6, correspondiente al par de hoteles más alejados en términos topológicos. Este resultado sugiere que, incluso en los casos extremos, la separación entre establecimientos no es excesiva y no se observan patrones de fragmentación o aislamiento estructural.
 
-En conjunto, estos indicadores reflejan una red hotelera eficiente en términos de accesibilidad, donde la proximidad geográfica y la densidad de conexiones facilitan recorridos cortos y una fuerte integración espacial.
+En conjunto, estos indicadores describen una red hotelera bien integrada, donde la proximidad geográfica y el esquema de vecindad utilizado permiten mantener recorridos relativamente cortos entre nodos, garantizando una conectividad global adecuada dentro del sistema urbano.
 
 # Comunidades y modularidad
 
@@ -297,13 +299,13 @@ cat("\nNúmero de comunidades:", num_coms, "\n")
 cat("Modularidad Q:", Q, "\n")
 
 ```
-Para identificar agrupamientos estructurales dentro de la red se aplicó el algoritmo de maximización de modularidad (greedy modularity). La modularidad cuantifica qué tan densas son las conexiones internas de los grupos en comparación con los enlaces entre comunidades.
+Para identificar agrupamientos estructurales dentro de la red se aplicó el algoritmo de maximización de modularidad (greedy modularity). La modularidad cuantifica el contraste entre la densidad de conexiones internas de cada grupo y los enlaces que conectan nodos de distintas comunidades.
 
-En la red hotelera analizada se identificaron cuatro comunidades principales, con un valor de modularidad Q = 0.677, lo cual indica una estructura comunitaria bien definida. Este valor sugiere que los hoteles tienden a agruparse en subconjuntos con mayor conectividad interna de la que se esperaría al azar.
+En la red analizada se identificaron tres comunidades principales, con un valor de modularidad Q = 0.53. Este valor indica la presencia de una estructura comunitaria moderada: las comunidades presentan una conectividad interna mayor que la esperada bajo un esquema aleatorio, aunque con fronteras menos marcadas que en configuraciones altamente modulares.
 
-Las comunidades detectadas corresponden de manera aproximada a zonas urbanas diferenciadas. Un grupo concentra hoteles del centro histórico y su entorno inmediato; otro agrupa establecimientos del corredor norte y Parque 93; un tercero reúne hoteles asociados a zonas empresariales y aeroportuarias; y una cuarta comunidad se organiza alrededor del sector de Chapinero y áreas universitarias.
+Las comunidades detectadas agrupan establecimientos de salud que, en términos generales, corresponden a zonas urbanas contiguas o funcionalmente relacionadas. Un primer grupo concentra hospitales y clínicas ubicados principalmente en sectores del norte y noroccidente de la ciudad, caracterizados por alta densidad de oferta y presencia de instituciones de alta complejidad. Un segundo grupo reúne establecimientos del suroccidente y municipios cercanos, mientras que el tercer conjunto agrupa hospitales del centro y sur de Bogotá, muchos de ellos asociados a servicios públicos y atención especializada.
 
-En conjunto, estos resultados confirman que la red hotelera de Bogotá presenta una segmentación espacial coherente, en la cual la proximidad geográfica y la estructura urbana favorecen la formación de comunidades bien delimitadas, sin perder la conectividad global del sistema.
+En conjunto, estos resultados sugieren que la red hospitalaria presenta una segmentación espacial clara pero no extrema, donde la proximidad geográfica y la organización territorial influyen en la formación de comunidades, al tiempo que se preserva una conectividad global que integra el sistema de salud urbano.
 
 # Distribución del grado
 
