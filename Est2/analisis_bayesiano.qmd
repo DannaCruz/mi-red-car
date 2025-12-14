@@ -3,4 +3,203 @@ title: "Analisis Bayesiano - Red de hoteles de Bogotá"
 author: "Leonardo Andrés Rodriguez Valenzuela"
 format: hmtl
 editor: visual
+mathjax: true
 ---
+
+```{r}
+# -------------------------
+# Paquetes
+# -------------------------
+library(spdep)
+library(readr)
+library(sf)
+library(mapview)
+library(dplyr)
+library(igraph)
+library(CARBayes)
+```
+
+```{r}
+shape_bogota <- st_read("shapefiles\\loca files Bogota\\Loca.shp")
+shp_bogota <- as(shape_bogota, "Spatial")
+vecinos <- poly2nb(shp_bogota)               # lista de vecinos
+W  <- nb2mat(vecinos, style = "B")           # matriz binaria
+
+```
+
+```{r}
+# -------------------------
+# Esta es mi red de hoteles 
+# -------------------------
+df <- read_csv("hotel_bogota.csv")
+df2 <- df[!is.na(df$lat) & !is.na(df$lon), ]
+
+coords_deg <- as.matrix(df2[, c("lat", "lon")])
+coords <- coords_deg * pi/180  # radianes como en Python
+k <- 7
+n <- nrow(coords)
+
+
+# -------------------------
+# Haversine EXACTA como scikit-learn
+# -------------------------
+haversine <- function(a, b) {
+  R <- 6371
+  dlat <- b[,1] - a[1]
+  dlon <- b[,2] - a[2]
+
+  h <- sin(dlat/2)^2 +
+       cos(a[1]) * cos(b[,1]) * sin(dlon/2)^2
+
+  2 * R * asin(pmin(1, sqrt(h)))
+}
+
+# matriz de distancias km
+dist_km <- matrix(0, n, n)
+for (i in 1:n) {
+  dist_km[i, ] <- haversine(coords[i, ], coords)
+}
+
+# obtener vecinos igual que sklearn
+idx <- apply(dist_km, 1, function(row) {
+  order(row, seq_along(row))  # desempate por índice
+})
+
+idx <- idx[1:(k+1), ]
+dist <- apply(dist_km, 1, sort)[1:(k+1), ]
+
+# -------------------------
+# Grafo
+# -------------------------
+G_hoteles <- graph.empty(directed = FALSE)
+
+G_hoteles <- add_vertices(
+  G_hoteles, n,
+  name = df2$nombre,
+  rating = df2$rating,
+  lat = df2$lat,
+  lon = df2$lon
+)
+
+# aristas idénticas a Python
+for (i in 1:n) {
+  vecinos <- idx[2:(k+1), i]    # omitir uno mismo
+  for (j in vecinos) {
+    G_hoteles <- add_edges(G_hospitales, c(i, j))
+  }
+}
+
+# layout geográfico igual que Python
+x <- (df2$lon - min(df2$lon)) / (max(df2$lon) - min(df2$lon))
+y <- (df2$lat - min(df2$lat)) / (max(df2$lat) - min(df2$lat))
+layout <- cbind(x, y)
+
+# plot
+plot(
+  G_hoteles,
+  layout = layout,
+  vertex.size = 4,
+  vertex.color = "tomato",
+  edge.color = "gray80",
+  vertex.label = NA, 
+  axes = FALSE,
+  xlab = "",
+  ylab = "",
+  main = "Red de hoteles (k vecinos más cercanos)"
+)
+```
+
+```{r}
+# -------------------------
+# Agregado de hoteles
+# -------------------------
+# Puntos de hoteles como sf
+hosp_sf <- st_as_sf(df2, coords = c("lon", "lat"), crs = 4326)
+shape_bogota <- st_transform(shape_bogota, 4326)
+
+# A cada hotel le asigno su localidad
+hosp_loc <- st_join(hosp_sf, shape_bogota)  # agrega columnas de la localidad a cada hospital
+
+# Agregar por localidad: media del rating
+rating_loc <- hosp_loc |>
+  st_drop_geometry() |>
+  group_by(LocNombre) |>
+  summarise(rating_mean = mean(rating, na.rm = TRUE), .groups = "drop")
+
+# Unir la media de rating al shapefile de localidades
+shp_bogota_sf <- shape_bogota |>
+  left_join(rating_loc, by = "LocNombre")
+
+shp_bogota <- as(shp_bogota_sf, "Spatial")
+
+# Verifica que la nueva variable existe y que coincide la dimensión con W
+nrow(shp_bogota@data)
+dim(W)          # debería ser n_localidades x n_localidades
+names(shp_bogota@data)   # deberías ver "rating_mean"
+
+```
+
+```{r}
+modelo <- S.CARleroux(
+  formula = rating_mean ~ 1,
+  family  = "gaussian",
+  data    = shp_bogota@data,
+  W       = W,
+  burnin  = 10,
+  n.sample = 100,
+  thin     = 1
+)
+```
+
+```{r}
+summary(modelo)
+```
+
+```{r}
+# medias posteriores de los efectos espaciales phi
+theta_hat <- apply(modelo$samples$phi, 2, mean)  # columnas = áreas
+
+# añadirlos al shapefile (sf)
+shape_bogota$theta_hat <- theta_hat
+
+library(ggplot2)
+
+ggplot(shape_bogota) +
+  geom_sf(
+    aes(fill = theta_hat),
+    color = "white",
+    linewidth = 0.002   # ← más pequeño = borde más delgado
+  ) +
+  scale_fill_viridis_c() +
+  labs(
+    title = "Efectos espaciales estimados (CARBayes)",
+    fill = "phi (media)"
+  ) +
+  theme_minimal()
+```
+
+### Construcción de la red de hoteles
+
+A partir del archivo `hotel_bogota.csv` se construyó una red espacial de establecimientos hoteleros en Bogotá, en la cual cada nodo representa un hotel georreferenciado mediante sus coordenadas de latitud y longitud. Las aristas se definieron empleando el criterio de *k vecinos más cercanos* (k-NN), con k=7k$ = $7k=7, utilizando la distancia geodésica de Haversine como medida de proximidad. Este procedimiento garantiza que cada hotel se conecte con los siete establecimientos más cercanos en términos geográficos, capturando la estructura local de vecindad dentro del tejido urbano.
+
+La red resultante es no dirigida y presenta una conectividad suficiente para el análisis estructural y espacial, evitando tanto el aislamiento de nodos como una saturación excesiva de enlaces. La visualización del grafo, dispuesta según un *layout* geográfico normalizado, evidencia una concentración de nodos y conexiones en las zonas centrales y del norte de la ciudad, coherente con la distribución real de la oferta hotelera.
+
+### Modelo espacial y matriz de adyacencia
+
+Para el análisis bayesiano espacial se empleó un modelo CAR (Conditional Autoregressive), en el cual la estructura de dependencia espacial no se definió a partir del grafo de hoteles, sino a partir de las unidades administrativas de la ciudad. En particular, se utilizó un *shapefile* de las localidades de Bogotá, compuesto por 20 polígonos, cada uno correspondiente a una localidad.
+
+A partir de este *shapefile* se construyó una matriz de adyacencia W basada en contigüidad espacial, donde dos localidades se consideran vecinas si comparten frontera. Esta matriz binaria captura la estructura espacial subyacente del territorio y constituye el insumo fundamental del modelo CAR.
+
+### Variable de interés y agregación espacial
+
+Los hoteles fueron asignados a sus respectivas localidades mediante una unión espacial entre los puntos (hoteles) y los polígonos (localidades). Con base en esta asignación se construyó, para cada localidad, una variable agregada que resume la información hotelera, como el número de hoteles o el promedio de la calificación (*rating*). Esta variable constituye la respuesta del modelo espacial y permite analizar patrones de concentración o déficit hotelero a nivel territorial.
+
+### Resultados del modelo CAR
+
+El modelo CAR fue estimado mediante el paquete *CARBayes*, utilizando simulación MCMC. Los resultados muestran la presencia de efectos espaciales latentes \$\\phi_i\$ ​ asociados a cada localidad, los cuales capturan la variación espacial residual no explicada por el modelo base. La estimación posterior de estos efectos indica diferencias sistemáticas entre localidades, sugiriendo que la distribución hotelera presenta patrones espaciales estructurados y no aleatorios.
+
+El mapa de efectos espaciales estimados (media posterior de ϕ\phiϕ) evidencia la existencia de zonas con efectos positivos y negativos, lo que puede interpretarse como áreas con mayor o menor intensidad hotelera relativa, una vez controlada la estructura de vecindad. Este resultado respalda la pertinencia de incorporar dependencia espacial en el análisis y confirma que la localización geográfica juega un papel central en la organización de la red hotelera urbana.
+
+### Interpretación general
+
+En conjunto, el análisis muestra que la red de hoteles de Bogotá presenta una estructura espacial claramente definida, tanto a nivel local —capturada por el grafo k-NN de proximidad entre hoteles— como a nivel agregado —modelada mediante el CAR sobre localidades. Mientras el grafo de hoteles describe relaciones de cercanía inmediata entre establecimientos, el modelo CAR permite identificar patrones territoriales más amplios asociados a la organización urbana. Esta combinación de enfoques proporciona una visión integral del sistema hotelero, integrando conectividad local y dependencia espacial a escala administrativa.
