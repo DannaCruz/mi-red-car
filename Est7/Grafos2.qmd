@@ -286,16 +286,16 @@ La red de moteles constituye el primer objeto de análisis en este estudio, perm
 La red de moteles se compone de $59$ nodos y $225$ aristas resultantes de la aplicación del modelo de vecindad geográfica con $k = 6$. Esta estructura inicial permite identificar un sistema moderadamente conectado, donde la densidad, calculada como la proporción de aristas existentes frente a todas las posibles:
 
 $$
-\[ \Delta\_m = \frac{m}{n(n-1)/2} = \frac{2m}{n(n-1)} = \frac{2*(255)}{59*(58)} \approx 0,13 \]
+ \Delta\_m = \frac{m}{n(n-1)/2} = \frac{2m}{n(n-1)} = \frac{2*(255)}{59*(58)} \approx 0,13 
 $$
 
 Se mantiene en valores bajos, lo cual es natural para redes espaciales donde los enlaces están restringidos por proximidad física.
 
 El análisis de conectividad muestra la existencia de $3$ componentes conexos, aunque uno de ellos domina claramente la estructura: la componente gigante, que agrupa la mayor parte de los moteles ($37$ de los $59$ nodos se encuentran en este componente) y concentra la conectividad urbana principal. Los componentes restantes son grupos o nodos aislados localizados en zonas aisladas, lo que implica que sus $6$ vecinos más cercanos se encuentran adyacentes a ellos.
 
-![](GradoMoteles.jpg)
+![Histograma grado de los moteles](GradoMoteles.jpg)
 
-![](MapaGrafoMoteles.jpg)
+![Mapa clasificado por grado de los moteles](MapaGrafoMoteles.jpg)
 
 Ahora bien, la distribución de grado revela cómo se distribuye el número de conexiones entre los moteles. En esta red, la mayor parte de los nodos tiene un grado $6$, lo cuál nos puede indicar que los moteles se contruyen en comunidades relativamente pequeñas y cercanas. Los grados $10$, $11$, y $12$ son puntos geográficamente densos, es decir, zonas en las que la oferta esta concentrada y ese nodo se vuelve un punto de referencia espacial (zonas cómo Teusaquillo, Chapinero, Kennedy o Puente Aranda), podemos ver con más claridad estos puntos en la gráfica dónde el color celeste y amarillo presentan nodos con un mayor grado.
 
@@ -307,15 +307,15 @@ El análisis de centralidades permite identificar los establecimientos que desem
 
 A continuación se muestran los top $5$ en cada categoría:
 
-![](Top5CercMotel.jpg)
+![Centralidad de grado](Top5CercMotel.jpg)
 
-![](Top5BetwMotel.jpg)
+![centralidad de cercanía](Top5BetwMotel.jpg)
 
-![](Top5CentMotel.jpg)
+![centralidad de puente](Top5CentMotel.jpg)
 
 Los establecimientos con mayor centralidad de grado, como se ve en la figura, entre ellos: Motel Blue Sea, Las Camelias Motel, Motel Safari y Motel El Encanto Vip, corresponden a nodos con un elevado número de conexiones directas, reflejando su ubicación en zonas urbanas de alta densidad de moteles (Fig: \ref{fig:centgrad}. La centralidad de grado muestra una fuerte relación con indicadores de reputación digital: estos establecimientos concentran un volumen significativamente mayor de reseñas y presentan calificaciones altas en Google.
 
-![](Asornoseque.jpg)
+![Grafo de nodos por centralidad de grado](Asornoseque.jpg)
 
 Los moteles con mayor centralidad de cercanía (Fig: \ref{fig:CenCercMot}) como lo son el Motel Sueños, Motel Amoblados Palace y Motel Four Point, presentan la menor distancia promedio al resto de la red. Esto indica que se encuentran ubicados en posiciones estratégicamente centrales, desde las cuales es posible alcanzar a la mayoría de los establecimientos con un número reducido de pasos. Su localización geográfica y relacional los convierte en puntos de referencia internos, conformando nodos que favorecen la eficiencia de comunicación dentro del grafo. Es relevante observar que Motel Amoblados Palace y Motel Four Point aparecen también en el top de betweenness, lo que sugiere que combinan una posición globalmente central con un rol de intermediación clave.
 
@@ -383,7 +383,7 @@ La Comunidad 1, con 13 nodos, muestra la segunda densidad más alta (0.65) y un 
 
 El coeficiente de asortatividad por rating fue de $r = –0.0422$, indicando una ligera heterofilia en la red: los moteles no tienden a conectarse preferentemente con establecimientos de calificación similar, y las conexiones entre moteles de distinto nivel de rating son incluso levemente más frecuentes que las conexiones entre moteles con el mismo nivel (Fig: \ref{fig:asor}). Este valor, cercano a cero, sugiere que el rating no es un atributo estructurador de la red y que la organización espacial de los moteles no refleja patrones de homofilia reputacional.
 
-![](Asornoseque.jpg){#asor .Figura}
+![Asortatividad por rating](Asornoseque.jpg){#asor .Figura}
 
 ### Subgrafos inducidos por atributos
 
@@ -420,4 +420,11 @@ Los resultados muestran que la red presenta una componente gigante bien definida
 La detección de comunidades mostró una red segmentada en subzonas claras, coherentes con patrones de localización urbana, y una modularidad considerable que confirma agrupamientos internos bien definidos. El análisis de sensibilidad evidenció diferencias marcadas en la importancia estructural de ciertos nodos: mientras algunos moteles son críticos para mantener la conectividad global, otros desempeñan un rol más local y su ausencia no afecta la estructura general.
 
 En conjunto, el estudio demuestra que los moteles conforman una red espacialmente coherente, con patrones de interacción determinados fundamentalmente por la proximidad geográfica. La organización interna observada, las comunidades detectadas y la resiliencia estructural del sistema confirman que las redes urbanas —incluso aquellas asociadas a actividades tabú— pueden analizarse con rigor científico mediante modelos de grafos, permitiendo extraer conclusiones útiles sobre su funcionamiento y estructura territorial. Este trabajo sienta una base sólida para futuras investigaciones que deseen ampliar el análisis incorporando temporalidad, segmentaciones urbanas o comparaciones con otros servicios de la ciudad.
+
+
+
+
+
+
+
 
