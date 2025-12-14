@@ -20,17 +20,18 @@ library(ggplot2)
 ```
 
 ```{r}
-shape_bogota <- st_read("Est6/local/Loca.shp")
+shape_bogota <- st_read("local\\Loca.shp")
 shp_bogota <- as(shape_bogota, "Spatial")
 vecinos <- poly2nb(shp_bogota)               # lista de vecinos
 W  <- nb2mat(vecinos, style = "B")           # matriz binaria
 ```
+El archivo Loca.shp fue cargado exitosamente utilizando el paquete sf. Este shapefile contiene la delimitación geográfica de las 20 localidades de Bogotá, representadas como polígonos, junto con sus atributos administrativos. El sistema de referencia de coordenadas corresponde a MAGNA-SIRGAS, que es el estándar oficial para datos geográficos en Colombia. La colección espacial cuenta con 20 entidades, lo cual coincide con el número esperado de localidades, y presenta una geometría de tipo POLYGON en dos dimensiones (XY). El bounding box obtenido confirma que la extensión espacial cubre el área urbana y metropolitana de Bogotá.
 
 ```{r}
-
+# -------------------------
 # Red de hospitales 
 
-df <- read_csv("cines.csv")
+df <- read_csv("cine_data.csv")
 df2 <- df |> filter(!is.na(lat), !is.na(lon))
 
 
@@ -139,6 +140,8 @@ names(shp_bogota@data)   # deberías ver "rating_mean"
 
 ```
 
+A partir del shapefile, se construyó la matriz de adyacencia espacial 𝑊 W, basada en la contigüidad entre localidades. Se verificó que la dimensión de dicha matriz es 20 × 20, coincidiendo exactamente con el número de unidades espaciales del shapefile. Asimismo, se confirmó la presencia de la variable rating_mean en la tabla de atributos, la cual corresponde al valor agregado de interés por localidad y será utilizada como variable respuesta en el modelo bayesiano. Esta verificación garantiza la consistencia estructural requerida para la estimación de modelos espaciales tipo CAR.
+
 ```{r}
 modelo <- S.CARleroux(
   formula = rating_mean ~ 1,
@@ -154,6 +157,8 @@ modelo <- S.CARleroux(
 ```{r}
 summary(modelo)
 ```
+Se estimó un modelo CAR de Leroux mediante el paquete CARBayes, utilizando una estructura espacial definida por la matriz 𝑊 W. El proceso de inferencia se realizó mediante simulación MCMC, generando muestras posteriores después del período de burn-in y aplicando thinning para reducir autocorrelación. El modelo produjo resultados de forma eficiente, obteniendo estimaciones para los efectos espaciales, valores ajustados y medidas de ajuste del modelo. La estructura del objeto resultante incluye las muestras posteriores, valores ajustados, residuos y estadísticas de aceptación, lo que permite un análisis completo de la dependencia espacial presente entre las localidades.
+
 
 ```{r}
 # medias posteriores de los efectos espaciales phi
@@ -170,3 +175,4 @@ ggplot(shape_bogota) +
   labs(title = "Efectos espaciales estimados (CARBayes)",
        fill = "phi (media)") +
   theme_minimal()
+```
