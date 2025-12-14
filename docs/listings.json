@@ -23,5 +23,12 @@
   {
     "listing": "/Est2/index.html",
     "items": []
+  },
+  {
+    "listing": "/Est8/index.html",
+    "items": [
+      "/Est8/Descriptivo.html",
+      "/Est8/Bayesiano.html"
+    ]
   }
 ]
