@@ -196,9 +196,9 @@ Los hoteles fueron asignados a sus respectivas localidades mediante una unión e
 
 ### Resultados del modelo CAR
 
-El modelo CAR fue estimado mediante el paquete *CARBayes*, utilizando simulación MCMC. Los resultados muestran la presencia de efectos espaciales latentes \$\\phi_i\$ ​ asociados a cada localidad, los cuales capturan la variación espacial residual no explicada por el modelo base. La estimación posterior de estos efectos indica diferencias sistemáticas entre localidades, sugiriendo que la distribución hotelera presenta patrones espaciales estructurados y no aleatorios.
+El modelo CAR fue estimado mediante el paquete *CARBayes*, utilizando simulación MCMC. Los resultados muestran la presencia de efectos espaciales latentes $\phi_i$ ​ asociados a cada localidad, los cuales capturan la variación espacial residual no explicada por el modelo base. La estimación posterior de estos efectos indica diferencias sistemáticas entre localidades, sugiriendo que la distribución hotelera presenta patrones espaciales estructurados y no aleatorios.
 
-El mapa de efectos espaciales estimados (media posterior de ϕ\phiϕ) evidencia la existencia de zonas con efectos positivos y negativos, lo que puede interpretarse como áreas con mayor o menor intensidad hotelera relativa, una vez controlada la estructura de vecindad. Este resultado respalda la pertinencia de incorporar dependencia espacial en el análisis y confirma que la localización geográfica juega un papel central en la organización de la red hotelera urbana.
+El mapa de efectos espaciales estimados (media posterior de $\phi$) evidencia la existencia de zonas con efectos positivos y negativos, lo que puede interpretarse como áreas con mayor o menor intensidad hotelera relativa, una vez controlada la estructura de vecindad. Este resultado respalda la pertinencia de incorporar dependencia espacial en el análisis y confirma que la localización geográfica juega un papel central en la organización de la red hotelera urbana.
 
 ### Interpretación general
 
