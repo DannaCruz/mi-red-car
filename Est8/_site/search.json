@@ -1,45 +1,17 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Análisis de redes espaciales de estaciones de gasolina en Bogotá mediante teoría de grafos",
-    "section": "",
-    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 8\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDescriptivo\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBayesiano\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "Bayesiano.html",
-    "href": "Bayesiano.html",
-    "title": "Bayesiano",
-    "section": "",
-    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
-  },
-  {
-    "objectID": "Bayesiano.html#quarto",
-    "href": "Bayesiano.html#quarto",
-    "title": "Bayesiano",
-    "section": "",
-    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
-  },
-  {
-    "objectID": "Bayesiano.html#running-code",
-    "href": "Bayesiano.html#running-code",
-    "title": "Bayesiano",
-    "section": "Running Code",
-    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
-  },
-  {
     "objectID": "Descriptivo.html",
     "href": "Descriptivo.html",
     "title": "Descriptivo",
     "section": "",
-    "text": "When you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n\nEsta sección presenta el análisis descriptivo de la red espacial de estaciones de\ngasolina en Bogotá, con énfasis en su relación con la movilidad urbana y la\ninfraestructura vial. El objetivo no es formular inferencias estadísticas ni\nmodelos predictivos, sino describir la estructura de los datos, la red\nconstruida y las métricas fundamentales utilizadas posteriormente en el análisis\nestructural y en la definición del Índice de Impacto Vehicular (IIV).\nLos resultados aquí mostrados sirven como soporte técnico y reproducible\ndel análisis presentado en el documento académico principal."
+    "text": "Esta sección presenta el análisis descriptivo de la red espacial de estaciones de\ngasolina en Bogotá, con énfasis en su relación con la movilidad urbana y la\ninfraestructura vial. El objetivo no es formular inferencias estadísticas ni\nmodelos predictivos, sino describir la estructura de los datos, la red\nconstruida y las métricas fundamentales utilizadas posteriormente en el análisis\nestructural y en la definición del Índice de Impacto Vehicular (IIV).\nLos resultados aquí mostrados sirven como soporte técnico y reproducible\ndel análisis presentado en el documento académico principal."
   },
   {
-    "objectID": "Descriptivo.html#running-code",
-    "href": "Descriptivo.html#running-code",
+    "objectID": "Descriptivo.html#introducción",
+    "href": "Descriptivo.html#introducción",
     "title": "Descriptivo",
     "section": "",
-    "text": "When you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n\nEsta sección presenta el análisis descriptivo de la red espacial de estaciones de\ngasolina en Bogotá, con énfasis en su relación con la movilidad urbana y la\ninfraestructura vial. El objetivo no es formular inferencias estadísticas ni\nmodelos predictivos, sino describir la estructura de los datos, la red\nconstruida y las métricas fundamentales utilizadas posteriormente en el análisis\nestructural y en la definición del Índice de Impacto Vehicular (IIV).\nLos resultados aquí mostrados sirven como soporte técnico y reproducible\ndel análisis presentado en el documento académico principal."
+    "text": "Esta sección presenta el análisis descriptivo de la red espacial de estaciones de\ngasolina en Bogotá, con énfasis en su relación con la movilidad urbana y la\ninfraestructura vial. El objetivo no es formular inferencias estadísticas ni\nmodelos predictivos, sino describir la estructura de los datos, la red\nconstruida y las métricas fundamentales utilizadas posteriormente en el análisis\nestructural y en la definición del Índice de Impacto Vehicular (IIV).\nLos resultados aquí mostrados sirven como soporte técnico y reproducible\ndel análisis presentado en el documento académico principal."
   },
   {
     "objectID": "Descriptivo.html#datos-y-preparación",
@@ -102,6 +74,34 @@
     "href": "Descriptivo.html#cierre",
     "title": "Descriptivo",
     "section": "Cierre",
-    "text": "Cierre\nEl análisis descriptivo presentado en esta sección proporciona una base sólida\npara la interpretación estructural y urbana del sistema de estaciones de\nservicio en Bogotá. La combinación de información geográfica, atributos viales y\nmétricas de red permite una lectura integrada del impacto potencial de estas\ninfraestructuras sobre la movilidad urbana.\nEsta sección cumple un rol técnico y documental, asegurando la reproducibilidad\ndel análisis y la coherencia con el marco metodológico del estudio principal."
+    "text": "Cierre\nEl análisis descriptivo desarrollado en esta sección establece una base empírica y\nmetodológica sólida para la interpretación estructural de la red espacial de\nestaciones de servicio en Bogotá. La integración de información geográfica,\natributos asociados a la infraestructura vial y métricas propias de la teoría de\nredes permite caracterizar de manera consistente la organización espacial del\nsistema y su relación con la movilidad urbana."
+  },
+  {
+    "objectID": "Bayesiano.html",
+    "href": "Bayesiano.html",
+    "title": "Bayesiano",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "Bayesiano.html#quarto",
+    "href": "Bayesiano.html#quarto",
+    "title": "Bayesiano",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "Bayesiano.html#running-code",
+    "href": "Bayesiano.html#running-code",
+    "title": "Bayesiano",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Análisis de redes espaciales de estaciones de gasolina en Bogotá mediante teoría de grafos",
+    "section": "",
+    "text": "🧩 Mi análisis\nAquí presento mi red personal del curso.\n\nCargué mis datos\nAnalicé grados y centralidades\nEncontré comunidades\nHice visualizaciones\n\n\n# Acá irá mi código de análisis para la red del Estudiante 8\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDescriptivo\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nBayesiano\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]
