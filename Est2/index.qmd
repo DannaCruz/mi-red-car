@@ -8,6 +8,7 @@ listing:
   contents:
     - descriptivo.qmd
     - Análisis_Bayesiano.qmd
+    - Proyecto_redes_hoteles.pdf
 ---
 
 # Abstract
