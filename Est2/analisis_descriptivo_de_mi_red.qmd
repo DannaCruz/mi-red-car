@@ -142,7 +142,7 @@ m
 
 Las conexiones no reflejan afinidad o colaboración, sino cercanía geográfica dentro del tejido urbano. De este modo, la red modela la estructura espacial de la oferta cafetera en la ciudad y permite explorar su conectividad y posibles conglomerados.
 
-# Grado, distribución del grado y Componentes conexos 
+# Grado, distribución del grado y Componentes conexos
 
 ```{r}
 # Obtener grados de cada nodo
@@ -164,7 +164,7 @@ En esta red, el grado medio es de $\bar{k} = 12$, lo que indica que, en promedio
 
 La mediana de 12 sugiere que la distribución del grado está centrada y que una fracción amplia de hoteles comparte un nivel de conectividad similar. No obstante, se observan nodos con grados de hasta 16, lo cual apunta a zonas de alta concentración hotelera o corredores urbanos estratégicos. Estos establecimientos operan como hubs locales, reforzando la cohesión interna de sus áreas y facilitando la conectividad entre subzonas cercanas.
 
-#  Centralidades: grado, cercanía y betweenness
+# Centralidades: grado, cercanía y betweenness
 
 ```{r}
 # Centralidad de grado
@@ -204,7 +204,7 @@ Por su parte, la centralidad de intermediación revela de forma más clara los h
 
 En conjunto, el análisis de centralidades muestra una red hotelera jerarquizada, donde coexisten hoteles altamente conectados a nivel local, nodos centrales en términos de accesibilidad global y establecimientos estratégicos que articulan distintas zonas de la ciudad. Esta combinación refuerza la interpretación de la red como un sistema urbano policéntrico, en el cual ciertos hoteles desempeñan un papel clave en la cohesión y eficiencia espacial del conjunto.\
 
-# Coeficiente de agrupamiento 
+# Coeficiente de agrupamiento
 
 ```{r}
 # Clustering local (coeficiente de agrupamiento por nodo)
@@ -226,13 +226,13 @@ En la red hotelera analizada, el clustering promedio es 0.733, lo que evidencia 
 
 Estos resultados sugieren que la oferta hotelera se organiza en agrupamientos espaciales compactos, coherentes con corredores turísticos y zonas de alta densidad urbana. En conjunto, el clustering elevado refuerza la interpretación de una red estructurada en microzonas bien definidas, con fuerte conectividad interna.
 
-#  Caminos más cortos y diámetro
+# Caminos más cortos y diámetro
 
 ```{r}
 # Obtener el componente conectado más grande
 comp <- components(G_hoteles)
 largest_comp_nodes <- which(comp$membership == which.max(comp$csize))
-Gcc <- induced_subgraph(G_hospitales, vids = largest_comp_nodes)
+Gcc <- induced_subgraph(G_hoteles, vids = largest_comp_nodes)
 
 # Longitud promedio de caminos más cortos
 asp <- mean_distance(Gcc, directed = FALSE)
@@ -250,7 +250,7 @@ El diámetro de la red es 3, lo que implica que incluso los pares de hoteles má
 
 En conjunto, estos indicadores reflejan una red hotelera eficiente en términos de accesibilidad, donde la proximidad geográfica y la densidad de conexiones facilitan recorridos cortos y una fuerte integración espacial.\
 
-# Comunidades y modularidad 
+# Comunidades y modularidad
 
 ```{r}
 # Eliminar multi-edges y loops
@@ -285,7 +285,7 @@ Las comunidades detectadas corresponden de manera aproximada a zonas urbanas dif
 En conjunto, estos resultados confirman que la red hotelera de Bogotá presenta una segmentación espacial coherente, en la cual la proximidad geográfica y la estructura urbana favorecen la formación de comunidades bien delimitadas, sin perder la conectividad global del sistema.\
 \
 
-# Distribución del grado 
+# Distribución del grado
 
 \
 La distribución empírica de grados permite caracterizar el patrón de conectividad local de la red hotelera:\
