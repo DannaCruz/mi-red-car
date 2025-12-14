@@ -14,7 +14,7 @@ listing:
 
 Este proyecto analiza la estructura espacial de la red de hoteles en la ciudad de Bogotá mediante herramientas de teoría de redes complejas. A partir de datos geográficos y calificaciones promedio de los establecimientos, se construyó un grafo no dirigido utilizando el modelo de k vecinos más cercanos (k-NN) con distancia de Haversine como métrica de proximidad. Sobre esta red se evaluaron métricas de conectividad local y global, centralidades, estructura comunitaria, eficiencia en rutas mínimas, resiliencia estructural y patrones de homofilia por calidad.
 
-Los resultados muestran una red cohesionada, con grado medio intermedio, una única componente gigante y una estructura modular bien definida (Q ≈ 0.62), evidenciando la organización de la oferta hotelera en clusters urbanos coherentes con la geografía de la ciudad. El análisis de centralidades identifica hoteles estratégicos que actúan como nodos puente entre diferentes zonas, cuya eliminación puede fragmentar la red. Asimismo, la longitud promedio de los caminos y el diámetro indican una conectividad eficiente a escala urbana. La asortatividad por calificación revela una homofilia leve, sugiriendo una segmentación suave por calidad sin aislamiento extremo entre comunidades.
+Los resultados muestran una red cohesionada, con grado medio intermedio, una única componente gigante y una estructura modular bien definida (Q ≈ 0.53), evidenciando la organización de la oferta hotelera en clusters urbanos coherentes con la geografía de la ciudad. El análisis de centralidades identifica hoteles estratégicos que actúan como nodos puente entre diferentes zonas, cuya eliminación puede fragmentar la red. Asimismo, la longitud promedio de los caminos y el diámetro indican una conectividad eficiente a escala urbana. La asortatividad por calificación revela una homofilia leve, sugiriendo una segmentación suave por calidad sin aislamiento extremo entre comunidades.
 
 En conjunto, el estudio caracteriza la red hotelera de Bogotá como un sistema policéntrico, eficiente y moderadamente jerarquizado, donde la proximidad geográfica y la estructura urbana determinan los patrones de conectividad. El enfoque propuesto constituye una aproximación cuantitativa útil para el análisis de sistemas urbanos y puede extenderse a estudios temporales, comparativos entre ciudades o integrados con variables socioeconómicas.
 
@@ -359,5 +359,3 @@ La curva muestra un crecimiento rápido entre los grados 10 y 14, reflejando que
 En conjunto, la forma de la CDF sugiere una red densa y homogénea, donde la mayoría de los hoteles presenta conectividad comparable, sin una separación marcada entre nodos altamente conectados y nodos periféricos.
 
 
-
-![](hotel.jpg)
