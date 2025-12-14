@@ -1,5 +1,6 @@
 ---
-title: "Est6-descriptiva"
+title: "Análisis Descriptivo - Red de cines Bogota"
+author: "Julian Barros"
 format: html
 ---
 
