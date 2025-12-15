@@ -3,9 +3,20 @@ title: "Red de Moteles en la ciudad de Bogotá"
 author: Andrea Catalina Mora Roa.
 ---
 
-### **Introducción**
+Bienvenida/o a **Bogotá después de medianoche**: una ciudad que, además de avenecereres y trancones, también se organiza (sin pedir permiso) alrededor de un tipo de infraestructura urbana que casi nunca aparece en los diagnósticos oficiales: **los moteles**.
 
-BLABLABLABALA
+Esta página es el resultado de un proyecto de análisis espacial y de datos que explora **cómo se distribuyen los moteles en Bogotá**, qué patrones emergen cuando los miramos como un sistema (y no como puntos aislados), y qué nos dicen esas regularidades sobre la ciudad: **centralidades**, **corredores**, **agrupamientos**, **zonas de alta competencia**, y “vacíos” territoriales donde la oferta es mínima o inexistente.
+
+Aquí vas a encontrar, en un recorrido pensado para curiosear con método:
+
+* **Mapas interactivos** para explorar la ubicación de moteles por localidad y zona urbana.
+* **Estadística descriptiva** (ratings, reseñas, rangos de precio, tipos de negocio) para entender el “perfil” de la oferta.
+* **Análisis de redes** (grafos k-NN, centralidades, comunidades y sensibilidad estructural) para ver qué moteles actúan como nodos clave y cómo se conectan espacialmente.
+* **Lecturas e interpretaciones**: no solo gráficos bonitos, sino hallazgos explicados para que cada resultado responda a una pregunta real.
+* **Básica Bayesiana**: Abordaremos unas preguntas que nos van a poner a pensar aún más en esa forma de desarrollarse. 
+
+La invitación es simple: **explora**. Filtra, compara, zoom-in, zoom-out, sigue las conexiones y mira cómo la ciudad cambia cuando la observamos desde un ángulo que suele quedar fuera del mapa. Porque sí: esto es análisis urbano… solo que con menos discurso y más coordenadas.
+
 ![](Imagen burdel.webp)
 
 =======
