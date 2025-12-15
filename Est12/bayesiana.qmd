@@ -3,3 +3,67 @@ title: "bayesiana"
 format: html
 ---
 
+```{r}
+library(tidyverse)
+library(FNN)
+library(igraph)
+library(geosphere)
+library(kableExtra)
+
+df <- read_csv("fundacion_gato.csv", show_col_types = FALSE)
+
+coords <- as.matrix(df[, c("lat", "lon")])
+coords_rad <- coords * pi / 180
+
+k <- 6
+
+knn_result <- get.knn(coords_rad, k = k)
+
+edges <- list()
+
+for (i in 1:nrow(df)) {
+  for (j_pos in 1:k) {
+    j <- knn_result$nn.index[i, j_pos]
+    if (i != j) {
+      edges <- append(edges, list(c(i, j)))
+    }
+  }
+}
+
+edges_mat <- do.call(rbind, edges)
+edges_sorted <- t(apply(edges_mat, 1, sort))
+edges_unique <- unique(edges_sorted)
+
+G_gato <- graph_from_edgelist(edges_unique, directed = FALSE)
+
+V(G_gato)$nombre <- df$nombre
+V(G_gato)$lat <- df$lat
+V(G_gato)$lon <- df$lon
+
+E(G_gato)$weight <- apply(
+  ends(G_gato, E(G_gato)),
+  1,
+  function(e) {
+    i <- as.numeric(e[1])
+    j <- as.numeric(e[2])
+    distHaversine(coords[i, ], coords[j, ]) / 1000
+  }
+)
+
+A_adyacencia <- as.matrix(
+  as_adjacency_matrix(
+    G_gato,
+    attr = "weight",
+    sparse = FALSE
+  )
+)
+
+A_adyacencia[1:6, 1:6] |>
+  round(2) |>
+  kbl(caption = "Matriz de adyacencia ponderada (distancia en km)") |>
+  kable_styling(full_width = FALSE)
+
+write.csv(A_adyacencia, "matriz_adyacencia_gatos.csv")
+
+```
+

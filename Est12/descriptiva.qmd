@@ -105,7 +105,7 @@ plot(
   edge.color = "gray70",
   edge.width = 0.7,
   main = "Red de fundaciones de gatos en Bogotá (k vecinos más cercanos)",
-  sub = paste("Grafo k-NN simétrico (k =", k, ") – igual a versión Python")
+  sub = paste("Grafo k-NN simétrico (k =", k, ")")
 )
 
 ```
