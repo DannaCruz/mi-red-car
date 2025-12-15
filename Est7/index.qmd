@@ -30,9 +30,21 @@ sobre la base de datos de moteles es entender el comportamiento general del sect
 ### 2. GRAFOS
 **![Imagen](Imagen burdel.webp){.center-img width=50%}**
 
-**TÍTULO CAJITA 2**
+**Veamoslo en grafos**
 DESCRIPCIÓN CAJITA 2
 [Ver más →](Grafos.qmd){.btn-vermas}
+
+:::
+
+
+
+::: {.card .mis-card}
+### 3. BAYESIANO
+**![Imagen](Imagen burdel.webp){.center-img width=50%}**
+
+**Y si vamos más allá...**
+DESCRIPCIÓN CAJITA 2
+[Ver más →](BAYESIANO_FINAL.qmd){.btn-vermas}
 
 :::
 
