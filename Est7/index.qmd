@@ -2,6 +2,7 @@
 title: "Red de Moteles en la ciudad de Bogotá"
 author: Andrea Catalina Mora Roa.
 ---
+![](ilustrada2.png)
 
 Bienvenida/o a **Bogotá después de medianoche**: una ciudad que, además de avenecereres y trancones, también se organiza (sin pedir permiso) alrededor de un tipo de infraestructura urbana que casi nunca aparece en los diagnósticos oficiales: **los moteles**.
 
@@ -17,8 +18,6 @@ Aquí vas a encontrar, en un recorrido pensado para curiosear con método:
 
 La invitación es simple: **explora**. Filtra, compara, zoom-in, zoom-out, sigue las conexiones y mira cómo la ciudad cambia cuando la observamos desde un ángulo que suele quedar fuera del mapa. Porque sí: esto es análisis urbano… solo que con menos discurso y más coordenadas.
 
-![](Imagen burdel.webp)
-
 =======
 ![](Imagen burdel.webp){width=60% .center-img}
 
@@ -29,7 +28,7 @@ La invitación es simple: **explora**. Filtra, compara, zoom-in, zoom-out, sigue
 
 ::: {.card .mis-card}
 ### 1. DESCRIPTIVO
-**![Imagen](Imagen burdel.webp){.center-img width=50%}**
+**![Imagen](ilustrada1){.center-img width=50%}**
 
 **Realizar un análisis descriptivo**
 sobre la base de datos de moteles es entender el comportamiento general del sector antes de entrar en análisis más complejos.
@@ -46,7 +45,6 @@ DESCRIPCIÓN CAJITA 2
 [Ver más →](Grafos.qmd){.btn-vermas}
 
 :::
-
 
 
 ::: {.card .mis-card}
