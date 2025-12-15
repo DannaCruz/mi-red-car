@@ -1,26 +1,126 @@
 ---
 title: "Bayesiano"
+author: "Samuel A. Moreno"
 format: html
 editor: visual
 ---
 
-## Quarto
+## Preparación del entorno y datos espaciales
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE
+)
 
-## Running Code
+library(readr)
+library(dplyr)
+library(sf)
+library(spdep)
+library(CARBayes)
+library(ggplot2)
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
-```{r}
-1 + 1
 ```
 
-You can add options to executable code like this
+Se cargó el shapefile de las localidades de Bogotá y se construyó la matriz de adyacencia 𝑊 espacial basada en contigüidad. Esta matriz define la estructura de vecindad del modelo CAR y representa la dependencia territorial entre localidades vecinas.
+
+## Datos de estaciones de gasolina e IIV
 
 ```{r}
-#| echo: false
-2 * 2
+df <- read_csv("resultados_movilidad_trafico.csv")
+
+df <- df %>%
+  filter(!is.na(lat), !is.na(lon), !is.na(IIV))
+
+n <- nrow(df)
+
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Cada observación corresponde a una estación de gasolina georreferenciada, caracterizada por su Índice de Impacto Vehicular (IIV), el cual resume su rol estructural dentro de la red espacial y su relación con la infraestructura vial.
+
+## Construcción de la matriz de adyacencia 𝑊
+
+```{r}
+coords <- as.matrix(df[, c("lon", "lat")])
+
+k <- 6  # número de vecinos más cercanos
+
+knn <- knearneigh(coords, k = k)
+nb  <- knn2nb(knn)
+
+W <- nb2mat(nb, style = "B")
+
+# Forzar simetría (requerido por CARBayes)
+W <- (W + t(W)) > 0
+W <- 1 * W
+
+# Asegurar diagonal cero
+diag(W) <- 0
+
+
+```
+
+La matriz 𝑊 es una matriz binaria de vecindad espacial construida a partir de la contigüidad entre localidades. Su estructura es compatible con los requerimientos del modelo CAR, garantizando una representación válida de la dependencia espacial.
+
+## Datos para el modelo CAR
+
+```{r}
+car_data <- data.frame(
+  IIV = df$IIV
+)
+
+```
+
+Las estaciones fueron asignadas a sus respectivas localidades y el IIV fue agregado mediante el promedio por unidad administrativa. Esto permite analizar el impacto vehicular potencial a una escala territorial coherente con la estructura del modelo espacial.
+
+## Modelo CAR bayesiano
+
+```{r}
+modelo <- S.CARleroux(
+  formula  = IIV ~ 1,
+  family   = "gaussian",
+  data     = car_data,
+  W        = W,
+  burnin   = 100,
+  n.sample = 1000,
+  thin     = 1
+)
+
+```
+
+Se estimó un modelo CAR de Leroux con una especificación gaussiana que incluye un intercepto y un término espacial estructurado. El objetivo es evaluar la presencia de autocorrelación espacial en el IIV promedio entre localidades vecinas.
+
+```{r}
+summary(modelo)
+```
+
+## Efectos espaciales y visualización
+
+```{r}
+
+theta_hat <- apply(modelo$samples$phi, 2, mean)
+
+df$phi <- theta_hat
+
+
+```
+
+```{r}
+
+df_sf <- st_as_sf(df, coords = c("lon", "lat"), crs = 4326)
+
+ggplot(df_sf) +
+  geom_sf(aes(color = phi), size = 2) +
+  scale_color_viridis_c() +
+  labs(
+    title = "Efectos espaciales del IIV (modelo CAR)",
+    color = expression(phi)
+  ) +
+  theme_minimal()
+
+
+```
+
+Los efectos espaciales $\phi_i$​ capturan la variación territorial del IIV promedio no explicada por el nivel global. Valores positivos indican localidades con mayor impacto vehicular relativo, mientras que valores negativos corresponden a zonas con menor impacto.
+
+El análisis confirma que el Índice de Impacto Vehicular presenta una estructura espacial a nivel de localidades en Bogotá..
