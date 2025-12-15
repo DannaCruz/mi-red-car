@@ -1,5 +1,5 @@
 ---
-title: "Moteles en Bogotá: preguntas bayesianas con las bases adjuntas"
+title: "Moteles en Bogotá: preguntas bayesianas"
 format:
   html:
     toc: true
@@ -827,6 +827,7 @@ Estas probabilidades complementan muy bien la lectura del modelo, porque resumen
 
 
 En conclusión, el análisis bayesiano indica que la probabilidad de que un motel sea “exitoso” —bajo el criterio operativo de superar simultáneamente la mediana de *rating* y *reseñas*— se ubica alrededor de **0.39** en la muestra con datos completos ((n=54); ICr 95%: **0.27–0.52**), es decir, el éxito es relativamente frecuente pero no predominante. Al comparar zonas de **alta vs baja criminalidad**, la evidencia sugiere una diferencia **leve y positiva** en el rating promedio ((\Delta\approx 0.085)), con una probabilidad posterior (P(\Delta>0)\approx 0.81); no obstante, el intervalo creíble al 95% aún incluye cero, por lo que el efecto debe entenderse como una tendencia moderada y no como un contraste definitivo. En la dimensión espacial, la estimación Gamma–Poisson revela heterogeneidad clara en la **densidad de moteles por 100.000 habitantes**, destacándose **Antonio Nariño** y **Teusaquillo** con densidades relativas más altas frente a localidades más pobladas como **Kennedy** y **Usaquén**, lo que sugiere patrones de concentración que no se explican únicamente por el tamaño poblacional. Finalmente, el modelo logístico multivariado con Stan no encuentra asociaciones robustas entre éxito y las covariables consideradas (los ICr 95% de los coeficientes incluyen cero), aunque las probabilidades de signo sugieren señales débiles: un efecto positivo moderado para delitos ((P(\beta>0)\approx 0.62)) y una inclinación a efecto negativo para la proporción 20–39 ((P(\beta>0)\approx 0.23)). En conjunto, los resultados consolidan un panorama **probabilístico y exploratorio**: describen la prevalencia del éxito, identifican diferencias territoriales en densidad y sugieren relaciones potenciales con el contexto urbano, pero recomiendan ampliar variables y cobertura para fortalecer la explicación multivariada del desempeño comercial.
+
 
 
 
