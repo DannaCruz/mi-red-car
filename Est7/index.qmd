@@ -19,7 +19,7 @@ Aquí vas a encontrar, en un recorrido pensado para curiosear con método:
 La invitación es simple: **explora**. Filtra, compara, zoom-in, zoom-out, sigue las conexiones y mira cómo la ciudad cambia cuando la observamos desde un ángulo que suele quedar fuera del mapa. Porque sí: esto es análisis urbano… solo que con menos discurso y más coordenadas.
 
 
-
+---
 ### **Análisis de Moteles en Bogotá**
 
 
@@ -69,3 +69,6 @@ Aquí damos el salto a la inferencia con incertidumbre explícita: aplicamos mod
 [Ver más →](Proyecto_Redes_Andrea_Mora (5).pdf){.btn-vermas}
 
 :::
+
+---
+Gracias :)
