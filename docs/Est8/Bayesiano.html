@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Samuel A. Moreno">
 
 <title>Bayesiano – Proyecto — Mi Red CAR</title>
 <style>
@@ -103,6 +104,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../styles.css">
 </head>
@@ -207,8 +237,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#quarto" id="toc-quarto" class="nav-link active" data-scroll-target="#quarto">Quarto</a></li>
-  <li><a href="#running-code" id="toc-running-code" class="nav-link" data-scroll-target="#running-code">Running Code</a></li>
+  <li><a href="#preparación-del-entorno-y-datos-espaciales" id="toc-preparación-del-entorno-y-datos-espaciales" class="nav-link active" data-scroll-target="#preparación-del-entorno-y-datos-espaciales">Preparación del entorno y datos espaciales</a></li>
+  <li><a href="#datos-de-estaciones-de-gasolina-e-iiv" id="toc-datos-de-estaciones-de-gasolina-e-iiv" class="nav-link" data-scroll-target="#datos-de-estaciones-de-gasolina-e-iiv">Datos de estaciones de gasolina e IIV</a></li>
+  <li><a href="#construcción-de-la-matriz-de-adyacencia-𝑊" id="toc-construcción-de-la-matriz-de-adyacencia-𝑊" class="nav-link" data-scroll-target="#construcción-de-la-matriz-de-adyacencia-𝑊">Construcción de la matriz de adyacencia 𝑊</a></li>
+  <li><a href="#datos-para-el-modelo-car" id="toc-datos-para-el-modelo-car" class="nav-link" data-scroll-target="#datos-para-el-modelo-car">Datos para el modelo CAR</a></li>
+  <li><a href="#modelo-car-bayesiano" id="toc-modelo-car-bayesiano" class="nav-link" data-scroll-target="#modelo-car-bayesiano">Modelo CAR bayesiano</a></li>
+  <li><a href="#efectos-espaciales-y-visualización" id="toc-efectos-espaciales-y-visualización" class="nav-link" data-scroll-target="#efectos-espaciales-y-visualización">Efectos espaciales y visualización</a></li>
   </ul>
 </nav>
     </div>
@@ -224,6 +258,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta">
 
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Samuel A. Moreno </p>
+          </div>
+  </div>
     
   
     
@@ -234,26 +274,323 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
+<section id="preparación-del-entorno-y-datos-espaciales" class="level2">
+<h2 class="anchored" data-anchor-id="preparación-del-entorno-y-datos-espaciales">Preparación del entorno y datos espaciales</h2>
+<p>Se cargó el shapefile de las localidades de Bogotá y se construyó la matriz de adyacencia 𝑊 espacial basada en contigüidad. Esta matriz define la estructura de vecindad del modelo CAR y representa la dependencia territorial entre localidades vecinas.</p>
 </section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
+<section id="datos-de-estaciones-de-gasolina-e-iiv" class="level2">
+<h2 class="anchored" data-anchor-id="datos-de-estaciones-de-gasolina-e-iiv">Datos de estaciones de gasolina e IIV</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"resultados_movilidad_trafico.csv"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(lat), <span class="sc">!</span><span class="fu">is.na</span>(lon), <span class="sc">!</span><span class="fu">is.na</span>(IIV))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</div>
-<p>You can add options to executable code like this</p>
+<p>Cada observación corresponde a una estación de gasolina georreferenciada, caracterizada por su Índice de Impacto Vehicular (IIV), el cual resume su rol estructural dentro de la red espacial y su relación con la infraestructura vial.</p>
+</section>
+<section id="construcción-de-la-matriz-de-adyacencia-𝑊" class="level2">
+<h2 class="anchored" data-anchor-id="construcción-de-la-matriz-de-adyacencia-𝑊">Construcción de la matriz de adyacencia 𝑊</h2>
 <div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>coords <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(df[, <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>)])</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="dv">6</span>  <span class="co"># número de vecinos más cercanos</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>knn <span class="ot">&lt;-</span> <span class="fu">knearneigh</span>(coords, <span class="at">k =</span> k)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>nb  <span class="ot">&lt;-</span> <span class="fu">knn2nb</span>(knn)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">nb2mat</span>(nb, <span class="at">style =</span> <span class="st">"B"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Forzar simetría (requerido por CARBayes)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> (W <span class="sc">+</span> <span class="fu">t</span>(W)) <span class="sc">&gt;</span> <span class="dv">0</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">*</span> W</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Asegurar diagonal cero</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">diag</span>(W) <span class="ot">&lt;-</span> <span class="dv">0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La matriz 𝑊 es una matriz binaria de vecindad espacial construida a partir de la contigüidad entre localidades. Su estructura es compatible con los requerimientos del modelo CAR, garantizando una representación válida de la dependencia espacial.</p>
+</section>
+<section id="datos-para-el-modelo-car" class="level2">
+<h2 class="anchored" data-anchor-id="datos-para-el-modelo-car">Datos para el modelo CAR</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>car_data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">IIV =</span> df<span class="sc">$</span>IIV</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Las estaciones fueron asignadas a sus respectivas localidades y el IIV fue agregado mediante el promedio por unidad administrativa. Esto permite analizar el impacto vehicular potencial a una escala territorial coherente con la estructura del modelo espacial.</p>
+</section>
+<section id="modelo-car-bayesiano" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-car-bayesiano">Modelo CAR bayesiano</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">S.CARleroux</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">formula  =</span> IIV <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family   =</span> <span class="st">"gaussian"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data     =</span> car_data,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">W        =</span> W,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">burnin   =</span> <span class="dv">100</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">n.sample =</span> <span class="dv">1000</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">thin     =</span> <span class="dv">1</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
+<pre><code>Setting up the model.
+
+Markov chain 1 - generating 900 post burnin and thinned samples.
+
+  |                                                                            
+  |                                                                      |   0%
+  |                                                                            
+  |=                                                                     |   1%
+  |                                                                            
+  |=                                                                     |   2%
+  |                                                                            
+  |==                                                                    |   3%
+  |                                                                            
+  |===                                                                   |   4%
+  |                                                                            
+  |====                                                                  |   5%
+  |                                                                            
+  |====                                                                  |   6%
+  |                                                                            
+  |=====                                                                 |   7%
+  |                                                                            
+  |======                                                                |   8%
+  |                                                                            
+  |======                                                                |   9%
+  |                                                                            
+  |=======                                                               |  10%
+  |                                                                            
+  |========                                                              |  11%
+  |                                                                            
+  |========                                                              |  12%
+  |                                                                            
+  |=========                                                             |  13%
+  |                                                                            
+  |==========                                                            |  14%
+  |                                                                            
+  |==========                                                            |  15%
+  |                                                                            
+  |===========                                                           |  16%
+  |                                                                            
+  |============                                                          |  17%
+  |                                                                            
+  |=============                                                         |  18%
+  |                                                                            
+  |=============                                                         |  19%
+  |                                                                            
+  |==============                                                        |  20%
+  |                                                                            
+  |===============                                                       |  21%
+  |                                                                            
+  |===============                                                       |  22%
+  |                                                                            
+  |================                                                      |  23%
+  |                                                                            
+  |=================                                                     |  24%
+  |                                                                            
+  |==================                                                    |  25%
+  |                                                                            
+  |==================                                                    |  26%
+  |                                                                            
+  |===================                                                   |  27%
+  |                                                                            
+  |====================                                                  |  28%
+  |                                                                            
+  |====================                                                  |  29%
+  |                                                                            
+  |=====================                                                 |  30%
+  |                                                                            
+  |======================                                                |  31%
+  |                                                                            
+  |======================                                                |  32%
+  |                                                                            
+  |=======================                                               |  33%
+  |                                                                            
+  |========================                                              |  34%
+  |                                                                            
+  |========================                                              |  35%
+  |                                                                            
+  |=========================                                             |  36%
+  |                                                                            
+  |==========================                                            |  37%
+  |                                                                            
+  |===========================                                           |  38%
+  |                                                                            
+  |===========================                                           |  39%
+  |                                                                            
+  |============================                                          |  40%
+  |                                                                            
+  |=============================                                         |  41%
+  |                                                                            
+  |=============================                                         |  42%
+  |                                                                            
+  |==============================                                        |  43%
+  |                                                                            
+  |===============================                                       |  44%
+  |                                                                            
+  |================================                                      |  45%
+  |                                                                            
+  |================================                                      |  46%
+  |                                                                            
+  |=================================                                     |  47%
+  |                                                                            
+  |==================================                                    |  48%
+  |                                                                            
+  |==================================                                    |  49%
+  |                                                                            
+  |===================================                                   |  50%
+  |                                                                            
+  |====================================                                  |  51%
+  |                                                                            
+  |====================================                                  |  52%
+  |                                                                            
+  |=====================================                                 |  53%
+  |                                                                            
+  |======================================                                |  54%
+  |                                                                            
+  |======================================                                |  55%
+  |                                                                            
+  |=======================================                               |  56%
+  |                                                                            
+  |========================================                              |  57%
+  |                                                                            
+  |=========================================                             |  58%
+  |                                                                            
+  |=========================================                             |  59%
+  |                                                                            
+  |==========================================                            |  60%
+  |                                                                            
+  |===========================================                           |  61%
+  |                                                                            
+  |===========================================                           |  62%
+  |                                                                            
+  |============================================                          |  63%
+  |                                                                            
+  |=============================================                         |  64%
+  |                                                                            
+  |==============================================                        |  65%
+  |                                                                            
+  |==============================================                        |  66%
+  |                                                                            
+  |===============================================                       |  67%
+  |                                                                            
+  |================================================                      |  68%
+  |                                                                            
+  |================================================                      |  69%
+  |                                                                            
+  |=================================================                     |  70%
+  |                                                                            
+  |==================================================                    |  71%
+  |                                                                            
+  |==================================================                    |  72%
+  |                                                                            
+  |===================================================                   |  73%
+  |                                                                            
+  |====================================================                  |  74%
+  |                                                                            
+  |====================================================                  |  75%
+  |                                                                            
+  |=====================================================                 |  76%
+  |                                                                            
+  |======================================================                |  77%
+  |                                                                            
+  |=======================================================               |  78%
+  |                                                                            
+  |=======================================================               |  79%
+  |                                                                            
+  |========================================================              |  80%
+  |                                                                            
+  |=========================================================             |  81%
+  |                                                                            
+  |=========================================================             |  82%
+  |                                                                            
+  |==========================================================            |  83%
+  |                                                                            
+  |===========================================================           |  84%
+  |                                                                            
+  |============================================================          |  85%
+  |                                                                            
+  |============================================================          |  86%
+  |                                                                            
+  |=============================================================         |  87%
+  |                                                                            
+  |==============================================================        |  88%
+  |                                                                            
+  |==============================================================        |  89%
+  |                                                                            
+  |===============================================================       |  90%
+  |                                                                            
+  |================================================================      |  91%
+  |                                                                            
+  |================================================================      |  92%
+  |                                                                            
+  |=================================================================     |  93%
+  |                                                                            
+  |==================================================================    |  94%
+  |                                                                            
+  |==================================================================    |  95%
+  |                                                                            
+  |===================================================================   |  96%
+  |                                                                            
+  |====================================================================  |  97%
+  |                                                                            
+  |===================================================================== |  98%
+  |                                                                            
+  |===================================================================== |  99%
+  |                                                                            
+  |======================================================================| 100%
+
+Summarising results.
+Finished in  0.5 seconds.</code></pre>
 </div>
 </div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+<p>Se estimó un modelo CAR de Leroux con una especificación gaussiana que incluye un intercepto y un término espacial estructurado. El objetivo es evaluar la presencia de autocorrelación espacial en el IIV promedio entre localidades vecinas.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(modelo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                    Length Class      Mode     
+summary.results     28     -none-     numeric  
+samples              7     -none-     list     
+fitted.values       60     -none-     numeric  
+residuals            2     data.frame list     
+modelfit             6     -none-     numeric  
+accept               5     -none-     numeric  
+localised.structure  0     -none-     NULL     
+formula              3     formula    call     
+model                2     -none-     character
+mcmc.info            5     -none-     numeric  
+X                   60     -none-     numeric  </code></pre>
+</div>
+</div>
+</section>
+<section id="efectos-espaciales-y-visualización" class="level2">
+<h2 class="anchored" data-anchor-id="efectos-espaciales-y-visualización">Efectos espaciales y visualización</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>theta_hat <span class="ot">&lt;-</span> <span class="fu">apply</span>(modelo<span class="sc">$</span>samples<span class="sc">$</span>phi, <span class="dv">2</span>, mean)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>phi <span class="ot">&lt;-</span> theta_hat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(df, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"lon"</span>, <span class="st">"lat"</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_sf) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">color =</span> phi), <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Efectos espaciales del IIV (modelo CAR)"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">expression</span>(phi)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Bayesiano_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Los efectos espaciales <span class="math inline">\(\phi_i\)</span>​ capturan la variación territorial del IIV promedio no explicada por el nivel global. Valores positivos indican localidades con mayor impacto vehicular relativo, mientras que valores negativos corresponden a zonas con menor impacto.</p>
+<p>El análisis confirma que el Índice de Impacto Vehicular presenta una estructura espacial a nivel de localidades en Bogotá..</p>
 
 
 </section>
