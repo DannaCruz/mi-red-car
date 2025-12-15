@@ -8,7 +8,7 @@ editor: visual
 #| echo: false
 #| warning: false
 library(ggplot2)
-df_moteles <- read.csv("C:/Users/Andrea/Downloads/Moteles_Final.csv")
+df_moteles<- read.csv("Moteles_Final.csv")
 coords_completo <- as.matrix(
   na.omit(df_moteles[, c("lat", "lon")]) * pi / 180
 )
@@ -413,4 +413,5 @@ Los resultados muestran que la red presenta una componente gigante bien definida
 La detección de comunidades mostró una red segmentada en subzonas claras, coherentes con patrones de localización urbana, y una modularidad considerable que confirma agrupamientos internos bien definidos. El análisis de sensibilidad evidenció diferencias marcadas en la importancia estructural de ciertos nodos: mientras algunos moteles son críticos para mantener la conectividad global, otros desempeñan un rol más local y su ausencia no afecta la estructura general.
 
 En conjunto, el estudio demuestra que los moteles conforman una red espacialmente coherente, con patrones de interacción determinados fundamentalmente por la proximidad geográfica. La organización interna observada, las comunidades detectadas y la resiliencia estructural del sistema confirman que las redes urbanas —incluso aquellas asociadas a actividades tabú— pueden analizarse con rigor científico mediante modelos de grafos, permitiendo extraer conclusiones útiles sobre su funcionamiento y estructura territorial. Este trabajo sienta una base sólida para futuras investigaciones que deseen ampliar el análisis incorporando temporalidad, segmentaciones urbanas o comparaciones con otros servicios de la ciudad.
+
 
