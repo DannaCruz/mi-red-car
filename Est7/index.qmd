@@ -41,7 +41,7 @@ sobre la base de datos de moteles es entender el comportamiento general del sect
 
 **Veamoslo en grafos**
 DESCRIPCIÓN CAJITA 2
-[Ver más →](Grafos.qmd){.btn-vermas}
+[Ver más →](Grafos2.qmd){.btn-vermas}
 
 :::
 
