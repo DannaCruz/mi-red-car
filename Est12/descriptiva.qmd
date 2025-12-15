@@ -2,4 +2,487 @@
 title: "Análisis descriptivo"
 format: html
 author: Danna Catalina Amezquita Borja
+execute: 
+  warning: false
 ---
+
+# Introducción
+
+El análisis de redes permite representar interacciones complejas entre entidades —ya sean personas, lugares o instituciones— a través de nodos y aristas. En este trabajo se emplean herramientas de R para construir, caracterizar y visualizar una red real.
+
+El objetivo es identificar estructuras internas como comunidades, medir homofilia por atributos y analizar la robustez del sistema ante la eliminación de nodos clave.
+
+# Metodología
+
+La red se modela como un grafo no dirigido $G = (V, E)$ donde los vértices representan las unidades de análisis y las aristas indican relaciones de proximidad, interacción o similitud. A continuación se describen los pasos analíticos seguidos.
+
+## Construcción del grafo de proximidad
+
+Los datos provienen de *Google Places* y contienen información sobre fundaciones de gatos ubicadas en Bogotá y sus alrededores. Cada fila representa un nodo con atributos específicos *(coordenadas geográficas, calificación, número de reseñas)*. La red se construye usando el modelo de vecinos más cercanos $(k-NN)$ y la distancia haversine:
+
+```{r, echo=FALSE}
+library(igraph)
+library(dplyr)
+library(knitr)
+library(DT)
+library(tidyr)
+library(ggplot2)
+library(plotly)
+library(leaflet)
+library(geosphere)
+library(FNN)
+library(readr)
+library(tibble)
+library(ggraph)
+```
+
+```{r}
+options(repr.plot.width = 10, repr.plot.height = 8)
+
+df <- read_csv("fundacion_gato.csv")
+
+coords <- as.matrix(df[c("lat", "lon")])
+coords_rad <- coords * pi / 180
+
+k <- 6
+```
+
+El grafo resultante muestra una conectividad espacial significativa entre las fundaciones de gatos en Bogotá. Con $k=6$ vecinos más cercanos, cada fundación se conecta geográficamente con $6$ fundaciones cercanas, creando una red moderadamente densa de $60$ nodos.
+
+# Análisis estructural de la red
+
+## Construcción del grafo de proximidad
+
+La red analizada se construyó a partir de un conjunto de datos recopilado mediante la plataforma *Google Places*, exportado en formato `fundacion_gato.csv`. Cada registro corresponde a una fundación de gatos e incluye su nombre, coordenadas geográficas *(latitud y longitud)*, calificación promedio *(rating)* y número de reseñas reportadas por los usuarios, dando un total de $60$ fundaciones distribuidas en Bogotá y sus alrededores.
+
+A partir de esta información se definió un grafo no dirigido $G = (V, E)$ en el que cada nodo representa una fundación y cada arista une a seis fundaciones espacialmente próximas. La relación de vecindad se determinó mediante el modelo de $k$ vecinos más cercanos $(k-NN)$, empleando la distancia haversine (en radianes) como métrica de proximidad geográfica. El parámetro $k = 6$ controla la densidad del grafo: valores mayores generan más enlaces y, por tanto, una red más densa y conectada.
+
+Para construir la red, las coordenadas geográficas de cada fundación se transforman a radianes con el fin de calcular correctamente las distancias mediante la fórmula de Haversine. A partir de estas distancias, se determina cuáles son las seis fundaciones más cercanas a cada una y se establecen conexiones bidireccionales entre ellas. Finalmente, a cada conexión se le asigna como peso la distancia en kilómetros que separa a las fundaciones, lo que permite representar no solo la relación de vecindad, sino también la intensidad de esa cercanía geográfica.
+
+```{r}
+knn_result <- get.knn(coords_rad, k = k)
+
+edges <- list()
+weights <- c()
+
+R <- 6371 
+
+for (i in 1:nrow(df)) {
+  for (j_pos in 1:k) {
+    j <- knn_result$nn.index[i, j_pos]
+
+    if (i != j) {
+      d_km <- distHaversine(coords[i, ], coords[j, ]) / 1000
+
+      edges <- append(edges, list(c(i, j)))
+      weights <- c(weights, d_km)
+    }
+  }
+}
+
+edges_mat <- do.call(rbind, edges)
+edges_sorted <- t(apply(edges_mat, 1, sort))   
+edges_unique <- unique(edges_sorted)
+
+G_gato <- graph_from_edgelist(edges_unique, directed = FALSE)
+
+V(G_gato)$name <- df$nombre
+V(G_gato)$rating <- df$rating
+V(G_gato)$lat <- df$lat
+V(G_gato)$lon <- df$lon
+
+x_norm <- (df$lon - min(df$lon)) / (max(df$lon) - min(df$lon))
+y_norm <- (df$lat - min(df$lat)) / (max(df$lat) - min(df$lat))
+coords_2d <- cbind(x_norm, y_norm)
+
+plot(
+  G_gato,
+  layout = coords_2d,
+  vertex.size = 6,
+  vertex.color = "tomato",
+  vertex.label = NA,
+  edge.arrow.mode = 0,
+  edge.color = "gray70",
+  edge.width = 0.7,
+  main = "Red de fundaciones de gatos en Bogotá (k vecinos más cercanos)",
+  sub = paste("Grafo k-NN simétrico (k =", k, ") – igual a versión Python")
+)
+
+```
+
+En el grafo las conexiones no reflejan afinidad organizacional o colaboración directa, sino cercanía geográfica dentro del tejido urbano bogotano. De este modo, la red modela la estructura espacial de la oferta de cuidado felino en la ciudad y permite explorar su conectividad y posibles conglomerados geográficos.
+
+La distribución espacial de las fundaciones evidencia una mayor presencia en el norte y centro de Bogotá, lo que genera una red con una componente principal sólida y algunas extensiones periféricas. El uso de $k=6$ permite mantener un nivel de conexión equilibrado, suficiente para conservar la cohesión del grafo sin introducir enlaces innecesarios.
+
+Con esta configuración es posible observar cómo se organiza territorialmente la oferta de cuidado felino en la ciudad y analizar variaciones que podrían estar asociadas a factores como las características socioeconómicas, la disponibilidad de espacio o la densidad poblacional de cada zona.
+
+## Grado y distribución del grafo
+
+El grado $k_i$ de un nodo $i$ representa el número de vecinos directos con los que está conectado, en este caso sería el número de otras fundaciones que están geográficamente cercanas:
+
+$$k_i = \sum_{j} A_{ij}$$
+
+donde $A$ es la matriz de adyacencia del grafo.
+
+```{r}
+densidad <- edge_density(G_gato)
+n_nodos <- vcount(G_gato)
+n_aristas <- ecount(G_gato)
+
+cat("Nodos:", n_nodos, "| Aristas:", n_aristas,
+    "| Densidad:", sprintf("%.4f", densidad), "\n")
+
+grados <- degree(G_gato)
+cat("Grado medio:", sprintf("%.2f", mean(grados)),
+    "| Mediana:", median(grados),
+    "| Máximo:", max(grados), "\n")
+```
+
+El promedio y la dispersión de estos valores resumen el nivel de conectividad local. En la red analizada se observó un grado medio de $8.27$, lo que indica que cada fundación está conectada con alrededor de ocho vecinas. Aunque el modelo parte de $k=6$, las conexiones bidireccionales elevan ligeramente este valor, reflejando una red suficientemente densa para permitir comunicación y apoyo entre organizaciones. La mediana, igual a $8$, confirma que la distribución de conexiones es bastante equilibrada, sin fundaciones extremadamente aisladas o sobresaturadas.
+
+El grado máximo, de $13$ conexiones, corresponde a una fundación que actúa como nodo central dentro de la red. Su posición geográfica al norte de Bogotá le permite desempeñar un papel relevante en la coordinación y el flujo de información entre las demás fundaciones y con el público objetivo.
+
+## Componentes conexos
+
+```{r}
+componentes <- components(G_gato)
+cat("Componentes:", componentes$no, 
+    "tamaños:", componentes$csize, "\n")
+```
+
+Para evaluar la conectividad global se identificaron las componentes conexas del grafo, es decir, los subconjuntos de nodos que se encuentran enlazados entre sí por al menos un camino. El resultado mostró la presencia de una única componente gigante que abarca todas las fundaciones a pesar de que algunas están bastante alejadas de la zona urbana.
+
+La existencia de una única componente principal dominante indica una cobertura territorial equilibrada (apesar de los puntos más alejados de Bogotá) permitiendo así la posibilidad de coordinación entre entidades, facilidad de transporte, compartir recursos, entre otros.
+
+## Centralidades: grado, cercanía y betweeness
+
+```{r}
+c_deg <- centr_degree(G_gato, normalized = TRUE)$res
+c_clo <- closeness(G_gato, normalized = TRUE)
+c_bet <- betweenness(G_gato, normalized = TRUE)
+
+tabla_centralidades <- data.frame(
+  nombre = V(G_gato)$name,
+  degree = round(c_deg, 4),
+  closeness = round(c_clo, 4),
+  betweenness = round(c_bet, 4)
+)
+
+top_idx <- order(c_bet, decreasing = TRUE)[1:5]
+top_bet <- data.frame(
+  nombre = V(G_gato)$name[top_idx],
+  betweenness = round(c_bet[top_idx], 4)
+)
+
+datatable(
+  tabla_centralidades,
+  options = list(pageLength = 10),
+  caption = "Tabla dinámica de centralidades del grafo"
+)
+```
+
+La estructura de la red se analizó también a partir de tres medidas de centralidad complementarias:
+
+-   Centralidad de grado, que cuantifica la popularidad local de cada nodo *(fundación)*.
+
+-   Centralidad de cercanía *(closeness)*, que mide la accesibilidad promedio al resto de la red.
+
+-   Centralidad de intermediación *(betweenness)*, que identifica nodos puente ubicados en las rutas más cortas entre pares de vértices.
+
+Las fundaciones con alto grado se concentran en zonas densas y urbanas, mientras que aquellos con elevada *betweenness* actúan como conectores entre la ciudad y los nodos más alejados. Estos nodos puente resultan estratégicos para la difusión de información o para el diseño de rutas urbanas, dado que su eliminación podría fragmentar la red o aumentar las distancias promedio.
+
+## Coeficiente de agrupamiento
+
+El coeficiente de clustering describe la densidad local de triángulos y se define como
+
+$$C_i = \frac{2t_i}{k_i(k_i - 1)},$$
+
+donde $t_i$ es el número de triángulos que incluyen al nodo $i$. El valor medio
+
+$$C = \frac{1}{|V|}\sum_i C_i$$
+
+resume el nivel general de agrupamiento de la red.
+
+```{r}
+clustering_prom <- transitivity(G_gato, type = "average")
+cat("Clustering promedio:", sprintf("%.4f", clustering_prom), "\n")
+```
+
+En la red de fundaciones, el clustering promedio resultó moderadamente alto *(de 0.634)*, lo que refleja una distribución concentrada en ciertas zonas de Bogotá, en especial en el norte, lo que facilita la comunicación entre cada una de las entidades para resolución de emergencias o compartir recursos de ser necesario.
+
+## Caminos más cortos
+
+Para la componente gigante se estimaron la longitud promedio de los caminos mínimos *(ASP, Average Shortest Path)* y el diámetro de la red.
+
+```{r}
+componentes <- components(G_gato)
+id_gcc <- which.max(componentes$csize)
+
+Gcc <- induced_subgraph(
+  G_gato,
+  vids = V(G_gato)[componentes$membership == id_gcc]
+)
+
+asp <- mean_distance(Gcc, weights = E(Gcc)$weight, directed = FALSE)
+
+diam <- diameter(Gcc, weights = E(Gcc)$weight, directed = FALSE)
+
+cat(
+  sprintf(
+    "Longitud promedio de camino (ASP): %.4f | Diámetro: %.4f\n",
+    asp, diam
+  )
+)
+```
+
+La eficiencia de la red *(ASP = 3.41)* muestra que cualquier fundación puede conectarse con otra en pocos pasos, lo que facilita la comunicación, la coordinación y la respuesta rápida ante casos urgentes o necesidades de reubicación. Además, el diámetro de $8$ indica que la red mantiene su conectividad incluso en las zonas más periféricas, reflejando una distribución territorial equilibrada de los servicios de cuidado felino en Bogotá.
+
+## Comunidades y modularidad
+
+Para identificar agrupamientos estructurales se aplicó el algoritmo de maximización de modularidad *(greedy modularity)*. La métrica de modularidad $Q$ cuantifica la densidad interna de las comunidades frente a las conexiones externas:
+
+$$Q = \frac{1}{2m}\sum_{i,j}\left[A_{ij} - \frac{k_i k_j}{2m}\right]\delta(c_i, c_j),$$
+
+donde $m$ es el número total de aristas y $δ(ci, cj) = 1$ si los nodos $i$ y $j$ pertenecen a la misma comunidad.
+
+```{r}
+coms <- cluster_louvain(G_gato, weights = E(G_gato)$weight)
+
+num_coms <- length(coms)
+
+Q <- modularity(coms)
+
+cat(
+  sprintf(
+    "Comunidades: %d | Modularidad Q: %.4f\n",
+    num_coms, Q
+  )
+)
+```
+
+Se detectaron cinco comunidades principales con un valor de $Q = 0.576$, indicador de una estructura comunitaria bien definida.
+
+```{r}
+V(G_gato)$comunidad <- membership(coms)
+
+plot(
+  G_gato,
+  layout = coords_2d,
+  vertex.size = 7,
+  vertex.label = NA,
+  vertex.color = V(G_gato)$comunidad,
+  edge.color = "gray",
+  main = "Comunidades detectadas (Louvain)"
+)
+```
+
+Cada grupo corresponde a una zona geográfica diferente como la zona norte dentro de Bogotá, o distintas zonas en los aldededores.
+
+## Distribución de grados
+
+Finalmente, la distribución de grados es unimodal con una ligera cola a la derecha, con un grado modal de $8$ conexiones y un rango que va de $6$ a $13$ por fundación. La mayoría de organizaciones *(37 de 60)* se concentran entre $6$ y $8$ conexiones, mientras que los grados más altos disminuyen progresivamente, con solo una fundación alcanzando el máximo. Este patrón refleja una red equilibrada, sin nodos aislados ni dominancia excesiva, lo que contribuye a su estabilidad estructural. Además, garantiza buena accesibilidad entre fundaciones y permite una expansión futura sin comprometer la cohesión ni generar puntos críticos de falla.
+
+```{r}
+hist(grados, 
+     breaks = seq(min(grados), max(grados) + 1, 1) - 0.5,
+     main = "Distribución de grado — Red de fundaciones en Bogotá",
+     xlab = "Grado (vecinos)",
+     ylab = "Frecuencia de fundaciones de gatos",
+     col = "lightblue",
+     border = "darkblue")
+
+```
+
+# Rutas, subgrafos y sensibilidad estructural de la red
+
+Esta sección complementa el análisis estructural mediante el estudio de rutas óptimas, subgrafos inducidos por atributos y evaluación de robustez ante la remoción de nodos clave. Se busca entender no sólo cómo se organiza la red, sino también qué tan eficiente y resistente es frente a perturbaciones locales.
+
+## Datos generales
+
+La red final está compuesta por $|V| = 60$ nodos y $|E| = 248$ aristas, construidas a partir de la relación de proximidad geográfica definida por el modelo de $k-vecinos$ más cercanos con $k = 6$.
+
+Cada nodo representa una fundación en Bogotá y sus alrededores,y conserva atributos como su nombre y calificación promedio *(rating)*. A modo de ejemplo:
+
+1.  Fundacion El Gatio — Rating 4.7
+
+2.  CASA MIL BIGOTES — Rating 4.7
+
+3.  El Orfagato — Rating 4.5
+
+La red presenta una estructura conectada y densa, adecuada para el análisis de rutas y medidas de accesibilidad.
+
+## Ruta óptima inicial (Dijkstra)
+
+Para ilustrar la eficiencia de las conexiones, se calculó la ruta más corta —en términos de distancia geográfica— entre dos nodos estratégicos de la red principal.
+
+```{r}
+library(igraph)
+
+ruta_mas_corta <- function(G_gato, posicion1, posicion2) {
+  
+  if (posicion1 >= vcount(G_gato) || posicion2 >= vcount(G_gato)) {
+    cat("▲ Alguno de los índices no existe en el grafo.\n")
+    return(G_gato)
+  }
+  
+  src <- V(G_gato)[posicion1 + 1]
+  tgt <- V(G_gato)[posicion2 + 1]
+  
+  ruta <- shortest_paths(
+    G_gato,
+    from = src,
+    to = tgt,
+    weights = E(G_gato)$weight,
+    output = "vpath"
+  )$vpath[[1]]
+  
+  distancia <- distances(
+    G_gato,
+    v = src,
+    to = tgt,
+    weights = E(G_gato)$weight
+  )
+  
+  # Marcar nodos
+  V(G_gato)$en_ruta <- FALSE
+  V(G_gato)$en_ruta[ruta] <- TRUE
+  
+  # Marcar aristas
+  E(G_gato)$en_ruta <- FALSE
+  E(G_gato, path = ruta)$en_ruta <- TRUE
+  
+  cat(
+    sprintf(
+      "Ruta más corta entre %s y %s:\n",
+      V(G_gato)$nombre[src],
+      V(G_gato)$nombre[tgt]
+    )
+  )
+  
+  cat(paste(V(G_gato)$nombre[ruta], collapse = " -> "), "\n")
+  
+  cat(
+    sprintf(
+      "Distancia (radianes): %.5f (~ %.2f km)\n",
+      distancia,
+      distancia * 6371
+    )
+  )
+  
+  return(G_gato)
+}
+```
+
+El camino óptimo identificado usando la función anterior fue:
+
+FIMLM → Fundacion Doggy In Home → Fundación Hogar De Paso Perro Amor
+
+La distancia total estimada fue de 2 radianes, equivalente aproximadamente a 12.742 kilómetros.
+
+El recorrido se desarrolla entre la localidad de Suba y el municipio de Cota, conectando solo 3 fundaciones. El nodo Fundacion Doggy In Home funciona como puente intermedio que enlaza la parte rural de Bogotá con Cota. En términos estructurales, estos nodos acortan rutas globales y contribuyen a la eficiencia espacial del sistema.
+
+## Subgrafo inducido por atributo
+
+Con el fin de explorar la homogeneidad por calidad percibida, se generó un subgrafo compuesto únicamente por las fundaciones con calificación promedio *rating ≥ 4.5*.
+
+```{r}
+indices_rating_alto <- which(V(G_gato)$rating >= 4.5)
+G_sub <- induced_subgraph(G_gato, indices_rating_alto)
+
+cat("Subgrafo de fundaciones con rating ≥ 4.5:\n")
+cat("Nodos:", vcount(G_sub), ", Aristas:", ecount(G_sub), "\n")
+
+plot(
+  G_sub, 
+  layout = coords_2d[indices_rating_alto, ],
+  vertex.size = 8,
+  vertex.color = "green",
+  vertex.frame.color = "white",
+  vertex.frame.width = 1,
+  vertex.label = NA,        
+  edge.color = "gray",
+  edge.width = 0.5,
+  main = "Subgrafo con rating ≥ 4.5",
+  xlab = "", ylab = "",
+  xaxt = "n", yaxt = "n",
+  bty = "n"
+)
+```
+
+El subgrafo resultante conservó $29$ nodos y $61$ aristas, representando menos del $50%$ de la estructura original *(48.3% de nodos y 24.6% de aristas)*.
+
+Esta estructura bifurcada del subgrafo indica que existe una división significativa en la distribución de fundaciones de gatos con rating alto *(≥ 4.5)* dentro del territorio de Bogotá. La diferencia de tamaño entre los grupos sugiere que las fundaciones de alta calidad no están uniformemente distribuidas, sino que se concentran en la zona noroccidente y a las afuerzas de bogotá por el sur, dejando una parte grande de la ciudad sin cubrir. Resaltando también la alta concentración de fundaciones hacia el norte
+
+## Análisis de sensibilidad: Impacto de remover nodos clave
+
+Para evaluar la resiliencia estructural de la red, se analizaron los efectos de eliminar nodos previamente identificados con alta centralidad de intermediación *(betweenness)*.
+
+Se midieron dos indicadores antes y después de cada eliminación:
+
+-   Número de componentes conexos *(C)*.
+
+-   Longitud promedio de caminos mínimos *(ASP, Average Shortest Path)*.
+
+```{r}
+impacto_remocion <- function(G_gato, posicion) {
+  
+  if (posicion >= vcount(G_gato)) {
+    cat("⚠️ La posición no existe en el grafo.\n")
+    return(invisible(NULL))
+  }
+  
+  nodo <- V(G_gato)[posicion + 1]
+  nombre_gato <- V(G_gato)$nombre[nodo]
+  
+  comps_antes <- components(G_gato)
+  num_antes <- comps_antes$no
+  
+  gcc_id <- which.max(comps_antes$csize)
+  Gcc <- induced_subgraph(G_gato, comps_antes$membership == gcc_id)
+  
+  asp_antes <- average.path.length(
+    Gcc,
+    weights = E(Gcc)$weight,
+    directed = FALSE
+  )
+  
+  G2 <- delete_vertices(G_gato, nodo)
+  
+  comps_despues <- components(G2)
+  num_despues <- comps_despues$no
+  
+  gcc2_id <- which.max(comps_despues$csize)
+  Gcc2 <- induced_subgraph(G2, comps_despues$membership == gcc2_id)
+  
+  asp_despues <- average.path.length(
+    Gcc2,
+    weights = E(Gcc2)$weight,
+    directed = FALSE
+  )
+  
+  cat("\n🔹 Fundación removida:", nombre_gato, "(Posición:", posicion, ")\n")
+  cat("Componentes:", num_antes, "→", num_despues, "\n")
+  cat(
+    sprintf(
+      "ASP (camino promedio): %.3f → %.3f\n",
+      asp_antes, asp_despues
+    )
+  )
+  cat(
+    sprintf(
+      "Δ Componentes = %d, Δ ASP = %.3f\n",
+      num_despues - num_antes,
+      asp_despues - asp_antes
+    )
+  )
+}
+
+```
+
+| Fundación removida | Comp. | ASP | $\Delta C$ | $\Delta ASP$ | Interpretación |
+|------------|------------|------------|------------|------------|------------|
+| Corazón Peludito Foundation | 1→1 | 3.410→3.680 | 0 | +0.270 | Redundante: no rompe la red, pero aumenta ligeramente las distancias mínimas. |
+| GatoLatte Cat Cafe | 1→1 | 3.410→3.448 | 0 | +0.039 | Redundante: no rompe la red, pero aumenta ligeramente las distancias mínimas. |
+| GATOS GATOS Y PERROS | 1→1 | 3.410→3.508 | 0 | +0.099 | Redundante: no rompe la red, pero aumenta ligeramente las distancias mínimas. |
+
+El resultado no muestra un contraste claro entre nodos críticos y redundantes. Puntualmente para Corazon Peludito Foundation, su ausencia no fragmenta la red en términos de número de componentes *(mantiene C = 1)*, pero aumenta sustancialmente la distancia promedio de caminos mínimos (ASP) de 3.410 a 3.68 pasos. Esto indica que, aunque la red permanece conectada, la eliminación de esta fundación crea rutas significativamente más largas, afectando la eficiencia de coordinación y respuesta entre fundaciones.
