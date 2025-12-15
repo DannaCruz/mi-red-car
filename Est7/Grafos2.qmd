@@ -279,7 +279,7 @@ La red de moteles constituye el primer objeto de análisis en este estudio, perm
 La red de moteles se compone de $59$ nodos y $225$ aristas resultantes de la aplicación del modelo de vecindad geográfica con $k = 6$. Esta estructura inicial permite identificar un sistema moderadamente conectado, donde la densidad, calculada como la proporción de aristas existentes frente a todas las posibles:
 
 $$
-\[ \Delta\_m = \frac{m}{n(n-1)/2} = \frac{2m}{n(n-1)} = \frac{2*(255)}{59*(58)} \approx 0,13 \]
+ \Delta\_m = \frac{m}{n(n-1)/2} = \frac{2m}{n(n-1)} = \frac{2*(255)}{59*(58)} \approx 0,13 
 $$
 
 Se mantiene en valores bajos, lo cual es natural para redes espaciales donde los enlaces están restringidos por proximidad física.
@@ -413,3 +413,4 @@ Los resultados muestran que la red presenta una componente gigante bien definida
 La detección de comunidades mostró una red segmentada en subzonas claras, coherentes con patrones de localización urbana, y una modularidad considerable que confirma agrupamientos internos bien definidos. El análisis de sensibilidad evidenció diferencias marcadas en la importancia estructural de ciertos nodos: mientras algunos moteles son críticos para mantener la conectividad global, otros desempeñan un rol más local y su ausencia no afecta la estructura general.
 
 En conjunto, el estudio demuestra que los moteles conforman una red espacialmente coherente, con patrones de interacción determinados fundamentalmente por la proximidad geográfica. La organización interna observada, las comunidades detectadas y la resiliencia estructural del sistema confirman que las redes urbanas —incluso aquellas asociadas a actividades tabú— pueden analizarse con rigor científico mediante modelos de grafos, permitiendo extraer conclusiones útiles sobre su funcionamiento y estructura territorial. Este trabajo sienta una base sólida para futuras investigaciones que deseen ampliar el análisis incorporando temporalidad, segmentaciones urbanas o comparaciones con otros servicios de la ciudad.
+
