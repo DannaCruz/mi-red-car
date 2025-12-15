@@ -2,7 +2,7 @@
 title: "Red de Moteles en la ciudad de Bogotá"
 author: Andrea Catalina Mora Roa.
 ---
-![](ilustrada2.png)
+![](ilustrada4.png)
 
 Bienvenida/o a **Bogotá después de medianoche**: una ciudad que, además de avenecereres y trancones, también se organiza (sin pedir permiso) alrededor de un tipo de infraestructura urbana que casi nunca aparece en los diagnósticos oficiales: **los moteles**.
 
@@ -18,8 +18,7 @@ Aquí vas a encontrar, en un recorrido pensado para curiosear con método:
 
 La invitación es simple: **explora**. Filtra, compara, zoom-in, zoom-out, sigue las conexiones y mira cómo la ciudad cambia cuando la observamos desde un ángulo que suele quedar fuera del mapa. Porque sí: esto es análisis urbano… solo que con menos discurso y más coordenadas.
 
-=======
-![](Imagen burdel.webp){width=60% .center-img}
+
 
 ### **Análisis de Moteles en Bogotá**
 
@@ -28,7 +27,7 @@ La invitación es simple: **explora**. Filtra, compara, zoom-in, zoom-out, sigue
 
 ::: {.card .mis-card}
 ### 1. DESCRIPTIVO
-**![Imagen](ilustrada1){.center-img width=50%}**
+**![Imagen](ilustrada1.png){.center-img width=50%}**
 
 **Realizar un análisis descriptivo**
 sobre la base de datos de moteles es entender el comportamiento general del sector antes de entrar en análisis más complejos.
@@ -38,7 +37,7 @@ sobre la base de datos de moteles es entender el comportamiento general del sect
 
 ::: {.card .mis-card}
 ### 2. GRAFOS
-**![Imagen](Imagen burdel.webp){.center-img width=50%}**
+**![Imagen](ilustrada3.png){.center-img width=50%}**
 
 **Veamoslo en grafos**
 DESCRIPCIÓN CAJITA 2
@@ -49,7 +48,7 @@ DESCRIPCIÓN CAJITA 2
 
 ::: {.card .mis-card}
 ### 3. BAYESIANO
-**![Imagen](Imagen burdel.webp){.center-img width=50%}**
+**![Imagen](ilustrada5.png){.center-img width=50%}**
 
 **Y si vamos más allá...**
 DESCRIPCIÓN CAJITA 2
