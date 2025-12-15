@@ -76,14 +76,18 @@ Las estaciones fueron asignadas a sus respectivas localidades y el IIV fue agreg
 ## Modelo CAR bayesiano
 
 ```{r}
-modelo <- S.CARleroux(
-  formula  = IIV ~ 1,
-  family   = "gaussian",
-  data     = car_data,
-  W        = W,
-  burnin   = 100,
-  n.sample = 1000,
-  thin     = 1
+invisible(
+  capture.output(
+    modelo <- S.CARleroux(
+      formula  = IIV ~ 1,
+      family   = "gaussian",
+      data     = car_data,
+      W        = W,
+      burnin   = 100,
+      n.sample = 1000,
+      thin     = 1
+    )
+  )
 )
 
 ```
