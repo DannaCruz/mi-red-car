@@ -1,0 +1,415 @@
+---
+title: "Grafos"
+format: html
+editor: visual
+---
+
+```{r}
+#| echo: false
+#| warning: false
+library(ggplot2)
+df_moteles <- read.csv("C:/Users/Andrea/Downloads/Moteles_Final.csv")
+coords_completo <- as.matrix(
+  na.omit(df_moteles[, c("lat", "lon")]) * pi / 180
+)
+
+```
+
+## Introducción
+
+El análisis de redes permite representar interacciones complejas entre entidades (ya sean personas, lugares o instituciones) mediante nodos y aristas que capturan su estructura de relación. En este trabajo se emplean herramientas de programación en Python, para construir, caracterizar y visualizar redes espaciales reales a partir de datos extraídos de la API de Google Places. El propósito central es identificar estructuras internas como comunidades, medir homofilia según atributos de los establecimientos (por ejemplo, el rating reportado por los usuarios) y analizar la robustez del sistema ante la eliminación de nodos clave con alta centralidad.
+
+El objeto de estudio son los centros de entretenimiento para adultos, específicamente moteles localizados en Bogotá. Aunque se trata de un tema socialmente sensible y, en muchos casos, percibido como tabú, aquí se aborda de manera estrictamente académica, entendiendo estos establecimientos como puntos de una red urbana que se distribuye en el territorio bajo ciertas lógicas de localización, regulación y demanda. El interés del estudio es ilustrar cómo las herramientas de teoría de grafos permiten describir y comparar la organización espacial de diferentes tipos de servicios urbanos y su relación con la percepción de calidad expresada en reseñas en línea.
+
+A partir de una base de datos se construye un grafo de proximidad en el que las aristas representan vecindad geográfica entre lugares. Sobre esta red se calcula métricas clásicas de teoría de grafos, adicionalmente, se realizan análisis de sensibilidad eliminando nodos fundamentales para observar las variaciones en el número de componentes y en el camino más corto promedio.
+
+## Construcción de grafos espaciales
+
+### Elección del modelo de proximidad
+
+El grafo se construye mediante un modelo de vecindad geográfica bajo la técnica k-Nearest Neighbors ($k-NN$), ampliamente empleada en redes espaciales donde las conexiones dependen de la cercanía física entre puntos. Se utiliza la distancia haversine, para determinar en kilómetros la distancia que separa dos coordenadas.
+
+Para escoger el $k$ adecuado en el que se garantice redes conectadas con suficiente variación estructural, se realizaron 3 pruebas ($k = 4$, $6$ y $8$). A continuación se muestra cómo varía cada uno de los grafos dependiendo del $k$ escogido:
+
+```{r}
+#| echo: false
+#| warning: false
+
+library(geosphere)  # para distancias Haversine
+library(igraph)     # para la red
+
+k <- 4
+df_moteles_valid <- subset(df_moteles, !is.na(lat) & !is.na(lon))
+rownames(df_moteles_valid) <- NULL  # similar a reset_index
+
+# Matriz de coordenadas (geosphere usa lon, lat en grados)
+coords_moteles <- as.matrix(df_moteles_valid[, c("lon", "lat")])
+
+# Matriz de distancias Haversine (en metros)
+dist_mat <- distm(coords_moteles, fun = distHaversine)
+
+# Evitar que un punto se escoja a sí mismo como vecino
+diag(dist_mat) <- Inf
+
+# Índices de los k vecinos más cercanos para cada punto
+# (cada fila: índices de los k vecinos más cercanos)
+idx <- t(apply(dist_mat, 1, function(x) order(x)[1:k]))
+
+# Crear el grafo
+n <- nrow(df_moteles_valid)
+G_motel_4 <- make_empty_graph(n = n, directed = FALSE)
+
+# Añadir atributos de los nodos
+V(G_motel_4)$nombre <- df_moteles_valid$nombre
+V(G_motel_4)$rating <- df_moteles_valid$rating
+
+# Construir lista de aristas y pesos (distancia en km)
+edge_list <- list()
+weights <- c()
+cnt <- 1
+
+for (i in 1:n) {
+  for (j in idx[i, ]) {
+    edge_list[[cnt]] <- c(i, j)
+    weights[cnt] <- dist_mat[i, j] / 1000  # metros -> km
+    cnt <- cnt + 1
+  }
+}
+
+# Pasar a matriz y añadir aristas al grafo
+edges_mat <- do.call(rbind, edge_list)
+G_motel_4 <- add_edges(G_motel_4, t(edges_mat))
+E(G_motel_4)$weight <- weights
+
+# Normalizar coordenadas para el layout (como en tu código Python)
+x <- (df_moteles_valid$lon - min(df_moteles_valid$lon)) /
+     (max(df_moteles_valid$lon) - min(df_moteles_valid$lon))
+
+y <- (df_moteles_valid$lat - min(df_moteles_valid$lat)) /
+     (max(df_moteles_valid$lat) - min(df_moteles_valid$lat))
+
+pos <- cbind(x, y)
+
+# En Windows:
+dev.new(width = 10, height = 8)
+# En RStudio también puedes simplemente agrandar el panel "Plots".
+# Márgenes casi nulos
+par(mar = c(0, 0, 3, 0))
+
+# Graficar el grafo (más grande y claro)
+plot(
+  G_motel_4,
+  layout       = pos,
+  vertex.size  = 6,          # antes 3
+  vertex.label = NA,
+  vertex.color = "tomato",
+  edge.color   = "gray80",
+  edge.width   = 1,          # aristas más visibles
+  main         = "Red de moteles en Bogotá (4 vecinos más cercanos)",
+  cex.main     = 1.8         # título más grande
+)
+
+
+```
+
+```{r}
+#| echo: false
+# Número de vecinos cercanos
+k <- 6
+# Filtrar moteles con coordenadas válidas (equivalente a dropna y reset_index)
+df_moteles_valid <- subset(df_moteles, !is.na(lat) & !is.na(lon))
+rownames(df_moteles_valid) <- NULL  # similar a reset_index
+
+# Matriz de coordenadas (geosphere usa lon, lat en grados)
+coords_moteles <- as.matrix(df_moteles_valid[, c("lon", "lat")])
+
+# Matriz de distancias Haversine (en metros)
+dist_mat <- distm(coords_moteles, fun = distHaversine)
+
+# Evitar que un punto se escoja a sí mismo como vecino
+diag(dist_mat) <- Inf
+
+# Índices de los k vecinos más cercanos para cada punto
+# (cada fila: índices de los k vecinos más cercanos)
+idx <- t(apply(dist_mat, 1, function(x) order(x)[1:k]))
+
+# Crear el grafo
+n <- nrow(df_moteles_valid)
+G_motel_4 <- make_empty_graph(n = n, directed = FALSE)
+
+# Añadir atributos de los nodos
+V(G_motel_4)$nombre <- df_moteles_valid$nombre
+V(G_motel_4)$rating <- df_moteles_valid$rating
+
+# Construir lista de aristas y pesos (distancia en km)
+edge_list <- list()
+weights <- c()
+cnt <- 1
+
+for (i in 1:n) {
+  for (j in idx[i, ]) {
+    edge_list[[cnt]] <- c(i, j)
+    weights[cnt] <- dist_mat[i, j] / 1000  # metros -> km
+    cnt <- cnt + 1
+  }
+}
+
+# Pasar a matriz y añadir aristas al grafo
+edges_mat <- do.call(rbind, edge_list)
+G_motel_4 <- add_edges(G_motel_4, t(edges_mat))
+E(G_motel_4)$weight <- weights
+
+# Normalizar coordenadas para el layout (como en tu código Python)
+x <- (df_moteles_valid$lon - min(df_moteles_valid$lon)) /
+     (max(df_moteles_valid$lon) - min(df_moteles_valid$lon))
+
+y <- (df_moteles_valid$lat - min(df_moteles_valid$lat)) /
+     (max(df_moteles_valid$lat) - min(df_moteles_valid$lat))
+
+pos <- cbind(x, y)
+
+# En Windows:
+dev.new(width = 10, height = 8)
+# En RStudio también puedes simplemente agrandar el panel "Plots".
+# Márgenes casi nulos
+par(mar = c(0, 0, 3, 0))
+
+# Graficar el grafo (más grande y claro)
+plot(
+  G_motel_4,
+  layout       = pos,
+  vertex.size  = 6,          # antes 3
+  vertex.label = NA,
+  vertex.color = "tomato",
+  edge.color   = "gray80",
+  edge.width   = 1,          # aristas más visibles
+  main         = "Red de moteles en Bogotá (6 vecinos más cercanos)",
+  cex.main     = 1.8         # título más grande
+)
+
+```
+
+```{r}
+#| echo: false
+# Número de vecinos cercanos
+k <- 8
+
+# Filtrar moteles con coordenadas válidas (equivalente a dropna y reset_index)
+df_moteles_valid <- subset(df_moteles, !is.na(lat) & !is.na(lon))
+rownames(df_moteles_valid) <- NULL  # similar a reset_index
+
+# Matriz de coordenadas (geosphere usa lon, lat en grados)
+coords_moteles <- as.matrix(df_moteles_valid[, c("lon", "lat")])
+
+# Matriz de distancias Haversine (en metros)
+dist_mat <- distm(coords_moteles, fun = distHaversine)
+
+# Evitar que un punto se escoja a sí mismo como vecino
+diag(dist_mat) <- Inf
+
+# Índices de los k vecinos más cercanos para cada punto
+# (cada fila: índices de los k vecinos más cercanos)
+idx <- t(apply(dist_mat, 1, function(x) order(x)[1:k]))
+
+# Crear el grafo
+n <- nrow(df_moteles_valid)
+G_motel_4 <- make_empty_graph(n = n, directed = FALSE)
+
+# Añadir atributos de los nodos
+V(G_motel_4)$nombre <- df_moteles_valid$nombre
+V(G_motel_4)$rating <- df_moteles_valid$rating
+
+# Construir lista de aristas y pesos (distancia en km)
+edge_list <- list()
+weights <- c()
+cnt <- 1
+
+for (i in 1:n) {
+  for (j in idx[i, ]) {
+    edge_list[[cnt]] <- c(i, j)
+    weights[cnt] <- dist_mat[i, j] / 1000  # metros -> km
+    cnt <- cnt + 1
+  }
+}
+
+# Pasar a matriz y añadir aristas al grafo
+edges_mat <- do.call(rbind, edge_list)
+G_motel_4 <- add_edges(G_motel_4, t(edges_mat))
+E(G_motel_4)$weight <- weights
+
+# Normalizar coordenadas para el layout (como en tu código Python)
+x <- (df_moteles_valid$lon - min(df_moteles_valid$lon)) /
+     (max(df_moteles_valid$lon) - min(df_moteles_valid$lon))
+
+y <- (df_moteles_valid$lat - min(df_moteles_valid$lat)) /
+     (max(df_moteles_valid$lat) - min(df_moteles_valid$lat))
+
+pos <- cbind(x, y)
+
+# En Windows:
+dev.new(width = 10, height = 8)
+# En RStudio también puedes simplemente agrandar el panel "Plots".
+# Márgenes casi nulos
+par(mar = c(0, 0, 3, 0))
+
+# Graficar el grafo (más grande y claro)
+plot(
+  G_motel_4,
+  layout       = pos,
+  vertex.size  = 6,          # antes 3
+  vertex.label = NA,
+  vertex.color = "tomato",
+  edge.color   = "gray80",
+  edge.width   = 1,          # aristas más visibles
+  main         = "Red de moteles en Bogotá (8 vecinos más cercanos)",
+  cex.main     = 1.8         # título más grande
+)
+
+
+```
+
+Podemos observar en los grafos que cuando el valor $k = 4$ se producen grafos fragmentados que no garantizan una componente gigante y, por tanto, impiden el cálculo consistente de métricas globales como diámetro, rutas mínimas, modularidad o centralidades basadas en caminos. Por el contrario, $k = 8$ genera una sobredensificación de aristas, incorporando conexiones largas y artificiales que distorsionan los patrones de proximidad espacial y dificultan la identificación de estructuras internas reales, como puentes o clusters. El valor intermedio $k = 6$ ofreció, de forma consistente en las tres bases, un equilibrio óptimo en conectividad, permite analizar métricas globales de manera válida. Por estas razones metodológicas, $k = 6$ se adopta como el valor óptimo y homogéneo para los tres análisis.
+
+## Análisis de la red de moteles
+
+La red de moteles constituye el primer objeto de análisis en este estudio, permitiendo explorar cómo se estructuran espacialmente estos establecimientos en Bogotá y qué patrones de conectividad emergen al modelar sus relaciones mediante un grafo $k-6$. A continuación se presentan los resultados más relevantes respecto a la organización interna de la red, sus métricas estructurales y los comportamientos observados en términos de centralidad, transitividad, comunidades y atributos asociados al rating.
+
+### Grado, densidad, componentes conexos y componente gigante
+
+La red de moteles se compone de $59$ nodos y $225$ aristas resultantes de la aplicación del modelo de vecindad geográfica con $k = 6$. Esta estructura inicial permite identificar un sistema moderadamente conectado, donde la densidad, calculada como la proporción de aristas existentes frente a todas las posibles:
+
+$$
+\[ \Delta\_m = \frac{m}{n(n-1)/2} = \frac{2m}{n(n-1)} = \frac{2*(255)}{59*(58)} \approx 0,13 \]
+$$
+
+Se mantiene en valores bajos, lo cual es natural para redes espaciales donde los enlaces están restringidos por proximidad física.
+
+El análisis de conectividad muestra la existencia de $3$ componentes conexos, aunque uno de ellos domina claramente la estructura: la componente gigante, que agrupa la mayor parte de los moteles ($37$ de los $59$ nodos se encuentran en este componente) y concentra la conectividad urbana principal. Los componentes restantes son grupos o nodos aislados localizados en zonas aisladas, lo que implica que sus $6$ vecinos más cercanos se encuentran adyacentes a ellos.
+
+![](GradoMoteles.jpg)
+
+![](MapaGrafoMoteles.jpg)
+
+Ahora bien, la distribución de grado revela cómo se distribuye el número de conexiones entre los moteles. En esta red, la mayor parte de los nodos tiene un grado $6$, lo cuál nos puede indicar que los moteles se contruyen en comunidades relativamente pequeñas y cercanas. Los grados $10$, $11$, y $12$ son puntos geográficamente densos, es decir, zonas en las que la oferta esta concentrada y ese nodo se vuelve un punto de referencia espacial (zonas cómo Teusaquillo, Chapinero, Kennedy o Puente Aranda), podemos ver con más claridad estos puntos en la gráfica dónde el color celeste y amarillo presentan nodos con un mayor grado.
+
+Estos nodos de alto grado funcionan como pequeños “núcleos” locales donde los moteles se encuentran especialmente próximos entre sí, generando micro-estructuras densas dentro del grafo. En la red también se observa que el grado medio es $7,783$ cercano a 8, lo que indica una densidad intermedia: cada café se conecta, en promedio, con ocho establecimientos cercanos.
+
+### Centralidades: grado, cercanía y betweenness
+
+El análisis de centralidades permite identificar los establecimientos que desempeñan roles estratégicos dentro de la red de moteles de Bogotá. Las tres medidas consideradas (grado, cercanía y betweenness) revelan funciones diferenciadas y complementarias, asociadas tanto a la estructura del grafo como a patrones urbanos de localización
+
+A continuación se muestran los top $5$ en cada categoría:
+
+![](Top5CercMotel.jpg)
+
+![](Top5BetwMotel.jpg)
+
+![](Top5CentMotel.jpg)
+
+Los establecimientos con mayor centralidad de grado, como se ve en la Figura \ref{fig:CentGradMot}, entre ellos: Motel Blue Sea, Las Camelias Motel, Motel Safari y Motel El Encanto Vip, corresponden a nodos con un elevado número de conexiones directas, reflejando su ubicación en zonas urbanas de alta densidad de moteles (Fig: \ref{fig:centgrad}. La centralidad de grado muestra una fuerte relación con indicadores de reputación digital: estos establecimientos concentran un volumen significativamente mayor de reseñas y presentan calificaciones altas en Google.
+
+![](Asornoseque.jpg)
+
+Los moteles con mayor centralidad de cercanía (Fig: \ref{fig:CenCercMot}) como lo son el Motel Sueños, Motel Amoblados Palace y Motel Four Point, presentan la menor distancia promedio al resto de la red. Esto indica que se encuentran ubicados en posiciones estratégicamente centrales, desde las cuales es posible alcanzar a la mayoría de los establecimientos con un número reducido de pasos. Su localización geográfica y relacional los convierte en puntos de referencia internos, conformando nodos que favorecen la eficiencia de comunicación dentro del grafo. Es relevante observar que Motel Amoblados Palace y Motel Four Point aparecen también en el top de betweenness, lo que sugiere que combinan una posición globalmente central con un rol de intermediación clave.
+
+De la Figura \ref{fig:CenBetwMot} podemos inferir que los establecimientos con mayor centralidad de betweenness, encabezados por Amoblados El Romance, Motel Amoblados Palace y Motel Four Point, actúan como intermediarios críticos en la red. Su importancia radica en que concentran una proporción relevante de los caminos más cortos entre otros nodos, cumpliendo la función de puentes que conectan diferentes zonas o subredes de moteles. Aunque no son los establecimientos con mayor número de reseñas ni los de mayor conectividad directa, sí representan puntos estructuralmente sensibles: su ausencia aumentaría las distancias entre sectores de la red e incluso podría fragmentarla. Estos resultados sugieren que ocupan posiciones de transición en áreas urbanas donde la oferta se distribuye de manera dispersa.
+
+![Nodos que se encuentran como los más representativos para puentes en el grafo](Betweensnodos.jpg)
+
+### Clustering
+
+El coeficiente de clustering promedio refleja la tendencia de los moteles a organizarse en grupos donde los vecinos de un nodo también están conectados entre sí. Se identificaron varios tríos de moteles formando triángulos, evidencia de alta transitividad local y de micro-zonas donde la oferta es especialmente densa.
+
+![Coeficiente de clustering por nodo.](CoefiClusterMot.jpg)
+
+La Figura \ref{fig:CoefiClusterMot} muestra la distribución del coeficiente de clustering para los moteles incluidos en la componente gigante de la red. En términos generales, el comportamiento observado indica que la red presenta niveles de clustering consistentemente altos, con valores que oscilan aproximadamente entre $0.55$ y $1.0$, lo cual es inusual para redes espaciales k-NN y revela patrones de agrupación fuertes.
+
+Para aquellos establecimientos que cuentan con un clustering entre $0.9$ y $1$, podemos decir que tienen vecinos que también están conectados entre sí, es decir que existe una redundancia estructural elevada, típica de zonas donde la oferta se concentra en zonas específicas.
+
+Los establecimientos con valores intermedios (entre $0,65 - 0,8$) indican estructuras donde algunos vecinos están conectados entre sí, pero no todos, probablemente zonas donde los moteles se encuentran cercanos, pero no tan densos como en el primer grupo. A continuación (Fig: \ref{fig:mapacluster}) encontramos los establecimientos coloreados depende su coeficiente de clustering: en verde cluster alto, en amarillo, intermedio, y en rojo, cluster bajo.
+
+![Mapa coeficiente de clustering](MapaCluster.jpg)
+
+### ASP y diámetro
+
+El camino más corto promedio (ASP) de 3,46 indica que, en la componente gigante de la red de moteles, cualquier par de establecimientos se conecta, en promedio, a través de tres o cuatro intermediarios. Esto refleja una estructura relativamente compacta, característica de redes espaciales donde los nodos se agrupan en corredores y clusters, pero mantienen una buena accesibilidad estructural
+
+Para ilustrar la eficiencia estructural del sistema, se calculó la ruta más corta (en términos de distancia geográfica) entre dos moteles ubicados en extremos opuestos de la componente gigante (Fig: \ref{fig:dija}. El camino óptimo obtenido mediante el algoritmo de Dijkstra que conecta una secuencia de establecimientos que forman el eje estructural de la red y coincide con el patrón observado en la medición del diámetro.
+
+![Algoritmo Dijkstra para encontar ruta más corta](Dijanose.jpg){#dija}
+
+Podemos ver en la figura anterior que el recorrido para llegar del Motel Kancun al Motel La Cita es:
+
+-   Motel Kancun
+
+-   MOTEL
+
+-   Motel Four Point
+
+-   Flamingo
+
+-   Motel Blue Sea
+
+-   Motel La Cita
+
+Recogiendo cuatro moteles que sirven como puentes, para recorrer una distancia total de $31 km$ o $0.00487$ radianes.
+
+El diámetro de la componente gigante es 8, es decir, el par de moteles más distante requiere ocho pasos para conectarse a través de la red. Comparado con el ASP, este valor sugiere que los trayectos extremos son poco frecuentes y que la mayor parte de la red se organiza en distancias significativamente menores, con periferias que se conectan al ‘cuerpo’ principal de la red sin quedar completamente aisladas. La Figura \ref{fig:diametromotel} muestra el par de moteles que definen el diámetro de la componente gigante, ubicados en extremos opuestos del tejido urbano
+
+![Diámetro de la red de moteles](diametromotel.jpg){#diametromotel}
+
+### Comunidades y modularidad
+
+La detección de comunidades en la componente gigante de la red de moteles reveló la presencia de tres grupos claramente diferenciados, respaldados por un valor de modularidad $Q = 0.5945$. Este nivel de modularidad indica que las conexiones son significativamente más densas dentro de cada comunidad que entre ellas, lo cual sugiere que la red está estructurada en subzonas urbanas bien definidas, donde los moteles tienden a agruparse espacialmente y a mantener proximidad con nodos dentro del mismo cluster. A continuación se presenta el grafo con las comunidades en color:
+
+![Grafo de comunidades en la red de moteles](comunidades.jpg){#comunidades}
+
+En la siguiente tabla podemos ver algunas métricas importantes de cada una de las comunidades:
+
+![Tabla de métricas de las comunidades.](metricascomunidades.jpg){#metricascomunidades .Figura}
+
+El análisis de métricas internas de las tres comunidades detectadas en la red de moteles muestra diferencias estructurales claras que explican la forma en que estas se organizan en el espacio urbano. La Comunidad $0$, compuesta por $16$ nodos, presenta una densidad interna de $0.50$ y un clustering promedio de $0.81$, lo que indica un grupo bien conectado pero menos compacto que los demás; su ASP interno (1.65) sugiere que la mayoría de los nodos estan conectados.
+
+La Comunidad 1, con 13 nodos, muestra la segunda densidad más alta (0.65) y un clustering promedio de 0.84, conformando un bloque más cohesionado y con mayor proximidad estructural entre sus moteles; su ASP de 1.38 confirma una comunidad más compacta. Finalmente, la Comunidad 2, aunque es la más pequeña (8 nodos), alcanza la densidad interna más alta (0.96) y un clustering promedio casi perfecto (0.96), formando un microcluster altamente cerrado y transitivo, visible en el grafo como un grupo compacto de moteles con conexiones casi completas.
+
+### Asortividad por rating: interpretación de homofilia.
+
+El coeficiente de asortatividad por rating fue de $r = –0.0422$, indicando una ligera heterofilia en la red: los moteles no tienden a conectarse preferentemente con establecimientos de calificación similar, y las conexiones entre moteles de distinto nivel de rating son incluso levemente más frecuentes que las conexiones entre moteles con el mismo nivel (Fig: \ref{fig:asor}). Este valor, cercano a cero, sugiere que el rating no es un atributo estructurador de la red y que la organización espacial de los moteles no refleja patrones de homofilia reputacional.
+
+![](Asornoseque.jpg){#asor .Figura}
+
+### Subgrafos inducidos por atributos
+
+El subgrafo inducido por los moteles con más de 50 reseñas agrupa un total de 27 establecimientos, todos pertenecientes a una única componente gigante, lo que revela un conjunto altamente conectado dentro del sistema general de la red. En este subgrupo, la densidad observada es de 0.239, un valor superior al del grafo completo, lo cual indica que los moteles con mayor volumen de reseñas tienden a formar un tejido más cohesionado y con mayor proximidad estructural. El grado promedio de este subgrafo es 6.22, coherente con una red espacial construida mediante k-NN, pero ligeramente superior al promedio global, sugiriendo que estos moteles mantienen un número de conexiones algo mayor con sus vecinos. El clustering promedio, de 0.756, confirma la presencia de una transitividad relevante: muchos de los moteles con altas reseñas forman triángulos y microestructuras densas, lo que evidencia que este grupo se ubica en sectores donde los establecimientos se encuentran próximos (Observe la Figura: \ref{fig:subgrafo}. En cuanto a las métricas de distancia, el subgrafo presenta un ASP de 3.23, bastante cercano al valor global, lo que implica que la accesibilidad estructural entre estos moteles es eficiente y que no existen trayectorias excesivamente largas. Finalmente, el diámetro de 7 sugiere que, aunque este conjunto es compacto, aún existen nodos que ocupan posiciones relativamente periféricas dentro del subgrupo, pero que se mantienen conectados sin generar fragmentación. En conjunto, estas métricas muestran que los moteles con mayor volumen de reseñas conforman un segmento estructuralmente más cohesionado, denso y transitivo, lo que podría reflejar su localización en corredores urbanos de alta actividad o en zonas consolidadas de oferta.
+
+![Subgrafo](Subgrafo.jpg){#Figura .subgrafo}
+
+### Análisis de sensibilidad
+
+Con el fin de evaluar la resiliencia estructural de la red de moteles, se simuló la eliminación de los nodos con mayor centralidad de intermediación (betweenness), es decir, aquellos que actúan como puentes críticos entre zonas de la ciudad. Para cada nodo removido se midieron los indicadores estructurales antes y después de la eliminación:
+
+-   Número de componentes conexos (C).
+
+-   Longitud promedio de caminos mínimos (ASP).
+
+Los resultados revelan patrones diferenciados entre los nodos clave. En general, la eliminación de moteles con betweenness alta produce aumentos en el número de componentes y elongación del ASP, lo que sugiere ruptura en corredores estructurales. Por el contrario, los moteles ubicados dentro de comunidades muy densas generan efectos mínimos, pues la estructura interna del cluster absorbe su ausencia sin pérdida significativa de conectividad.
+
+| Motel removido | Comp. antes | Comp. después | ∆C | ASP antes | ASP después | ∆ASP | Interpretación |
+|---------|---------|---------|---------|---------|---------|---------|---------|
+| Amoblados El Ro- mance | 1 | 2 | 1 | 3.457 | 2.842 | -0.615 | Crítico: su eliminación fragmenta la red principal |
+| Motel Amoblados Palace | 1 | 1 | 0 | 3.457 | 3.530 | +0.072 | Redundante: Impacto local mínimo |
+| Motel FourPoint | 1 | 1 | 0 | 3.457 | 3.530 | +0.072 | Redundante: Impacto local mínimo |
+
+: Evaluación de sensibilidad estructural frente a la remoción de nodos clave.
+
+\emph{Amoblados El Romance motel bogota} actúa como un auténtico \emph{broker} espacial: su ausencia divide la red en dos componentes y acorta (aparentemente) la distancia promedio sólo porque se elimina un enlace inter-cluster esencial. Por el contrario, \emph{Motel Amoblados Palace} y \emph{Motel Four Point} conservan la unidad estructural, contribuyendo principalmente a la eficiencia local más que a la conectividad global.
+
+### Conclusiones
+
+El análisis de la red espacial de moteles en Bogotá permitió demostrar que, aun dentro de un servicio urbano socialmente sensible, la teoría de grafos ofrece herramientas robustas para describir patrones de organización, conectividad y estructura territorial. A partir de los datos obtenidos mediante la API de Google Places y aplicando un modelo de proximidad k-NN, fue posible caracterizar cómo se distribuyen estos establecimientos en el espacio urbano sin recurrir a información externa adicional.
+
+Los resultados muestran que la red presenta una componente gigante bien definida, que concentra la mayor parte de los moteles y articula la conectividad global del sistema. La elección de k = 6 se confirmó como óptima para equilibrar conectividad y realismo espacial, permitiendo el cálculo estable de métricas como densidad, diámetro, ASP y centralidades. Las medidas de centralidad revelaron que los nodos más influyentes no coinciden necesariamente con los moteles con mayor popularidad, sino con aquellos que funcionan como puentes, organizando los flujos estructurales entre sectores urbanos. Asimismo, los altos niveles de clustering observados evidencian la presencia de microzonas densas, donde la proximidad geográfica conduce a la formación de triángulos y estructuras altamente transitivas.
+
+La detección de comunidades mostró una red segmentada en subzonas claras, coherentes con patrones de localización urbana, y una modularidad considerable que confirma agrupamientos internos bien definidos. El análisis de sensibilidad evidenció diferencias marcadas en la importancia estructural de ciertos nodos: mientras algunos moteles son críticos para mantener la conectividad global, otros desempeñan un rol más local y su ausencia no afecta la estructura general.
+
+En conjunto, el estudio demuestra que los moteles conforman una red espacialmente coherente, con patrones de interacción determinados fundamentalmente por la proximidad geográfica. La organización interna observada, las comunidades detectadas y la resiliencia estructural del sistema confirman que las redes urbanas —incluso aquellas asociadas a actividades tabú— pueden analizarse con rigor científico mediante modelos de grafos, permitiendo extraer conclusiones útiles sobre su funcionamiento y estructura territorial. Este trabajo sienta una base sólida para futuras investigaciones que deseen ampliar el análisis incorporando temporalidad, segmentaciones urbanas o comparaciones con otros servicios de la ciudad.
