@@ -40,7 +40,7 @@ sobre la base de datos de moteles es entender el comportamiento general del sect
 **![Imagen](ilustrada3.png){.center-img width=50%}**
 
 **Veamoslo en grafos**
-DESCRIPCIÓN CAJITA 2
+Convertimos los moteles en una red urbana: cada motel es un nodo y las conexiones se definen por cercanía geográfica (k-vecinos). Así identificamos corredores, comunidades y moteles “puente” que sostienen la conectividad del sistema.
 [Ver más →](Grafos2.qmd){.btn-vermas}
 
 :::
@@ -51,7 +51,7 @@ DESCRIPCIÓN CAJITA 2
 **![Imagen](ilustrada5.png){.center-img width=50%}**
 
 **Y si vamos más allá...**
-DESCRIPCIÓN CAJITA 2
+Aquí damos el salto a la inferencia con incertidumbre explícita: aplicamos modelos bayesianos para estimar probabilidades (no solo promedios) y actualizar conclusiones con la evidencia. Ideal para responder preguntas del tipo “¿qué tan probable es…?” con soporte estadístico y no con fe
 [Ver más →](BAYESIANO_FINAL.qmd){.btn-vermas}
 
 :::
