@@ -120,7 +120,9 @@ ggplot(df_sf) +
     title = "Efectos espaciales del IIV (modelo CAR)",
     color = expression(phi)
   ) +
-  theme_minimal()
+  theme_minimal()+ theme(
+    axis.text.x = element_text(angle = 45, hjust = 1)
+  )
 
 
 ```
