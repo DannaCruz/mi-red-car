@@ -1,0 +1,843 @@
+---
+title: "Moteles en Bogotá: preguntas bayesianas con las bases adjuntas"
+format:
+  html:
+    toc: true
+    number-sections: true
+    df-print: paged
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+## Preparación e integración de datos (paso a paso)
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+# Mínimos (para limpieza, joins y gráficos)
+# install.packages(c("tidyverse","readr","readxl","stringi","janitor"))
+
+library(tidyverse)
+library(readr)
+library(readxl)
+library(stringi)
+library(janitor)
+
+set.seed(123)
+```
+
+
+```{r} 
+#| echo: false
+#| message: false
+#| warning: false
+data_dir <- "."  # carpeta donde están los archivos
+
+f_moteles <- file.path(data_dir, "Moteles_Final (2).csv")
+f_pop    <- file.path(data_dir, "osb_demografia-poblacion-localidad.csv")
+f_siedco <- file.path(data_dir, "Análisis de datos Siedco_Modelo Siedco - Delitos.xlsx")
+
+# Si tu sistema tiene problemas con tildes/espacios, renombra archivos a nombres simples
+# y actualiza aquí. Ej: "siedco_delitos.xlsx"
+```
+
+### Cargar moteles y crear variable de éxito comercial
+
+**Definición (operativa) de éxito comercial**  
+Un motel es "exitoso" si **rating** y **reseñas** están por encima (o igual) de la mediana del conjunto.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+moteles <- read_csv(f_moteles, show_col_types = FALSE) %>%
+  clean_names()
+
+# En tu archivo original, "reseñas" suele quedar como "rese_nas" con clean_names()
+if(!"resenas" %in% names(moteles)){
+  if("rese_nas" %in% names(moteles)) moteles <- moteles %>% rename(resenas = rese_nas)
+}
+
+moteles <- moteles %>%
+  mutate(
+    rating  = as.numeric(rating),
+    resenas = as.numeric(resenas),
+    lat = as.numeric(lat),
+    lon = as.numeric(lon)
+  )
+
+med_rating  <- median(moteles$rating,  na.rm = TRUE)
+med_resenas <- median(moteles$resenas, na.rm = TRUE)
+
+moteles <- moteles %>%
+  mutate(exito = as.integer(rating >= med_rating & resenas >= med_resenas))
+
+moteles %>%
+  summarise(
+    n = n(),
+    mediana_rating = med_rating,
+    mediana_resenas = med_resenas,
+    exitosos = sum(exito, na.rm = TRUE),
+    proporcion_exito = mean(exito, na.rm = TRUE)
+  )
+```
+
+### Asignar localidad a cada motel (desde la dirección)
+
+No tenemos un shapefile de localidades dentro de la base de moteles; por eso hacemos una asignación práctica buscando el nombre de la localidad dentro del texto de `direccion`.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| include: false
+
+
+library(dplyr)
+library(stringr)
+library(purrr)
+library(stringi)
+
+# 0) Validaciones mínimas
+stopifnot("direccion" %in% names(moteles))
+
+# 1) Catálogo de localidades (ajústalo si deseas)
+localidades <- c(
+  "Usaquén","Chapinero","Santa Fe","San Cristóbal","Usme","Tunjuelito",
+  "Bosa","Kennedy","Fontibón","Engativá","Suba","Barrios Unidos",
+  "Teusaquillo","Los Mártires","Antonio Nariño","Puente Aranda",
+  "La Candelaria","Rafael Uribe Uribe","Ciudad Bolívar","Sumapaz"
+)
+
+# 2) Normalizador: quita tildes, baja a minúsculas, limpia espacios
+norm_txt <- function(x){
+  x %>%
+    stri_trans_general("Latin-ASCII") %>%
+    str_to_lower() %>%
+    str_replace_all("[[:punct:]]", " ") %>%
+    str_squish()
+}
+
+localidades_norm <- norm_txt(localidades)
+
+# 3) Extractor de localidad desde texto (dirección)
+extraer_localidad <- function(txt){
+  if (is.na(txt) || nchar(txt) == 0) return(NA_character_)
+  t <- norm_txt(txt)
+
+  # búsqueda directa por presencia del nombre de localidad
+  hit <- which(str_detect(t, paste0("\\b", localidades_norm, "\\b")))[1]
+
+  if (is.na(hit)) return(NA_character_)
+  localidades[hit]
+}
+
+# 4) Crear columna 'localidad' si no existe
+if(!"localidad" %in% names(moteles)){
+  moteles <- moteles %>% mutate(localidad = NA_character_)
+}
+
+# 5) Calcular localidad_texto solo donde aún esté vacía
+moteles <- moteles %>%
+  mutate(
+    localidad_texto = if_else(
+      is.na(localidad),
+      map_chr(direccion, extraer_localidad),
+      localidad
+    ),
+    # Consolidar: si localidad estaba vacía, usar la extraída
+    localidad = coalesce(localidad, localidad_texto)
+  )
+
+# 6) Resumen rápido de calidad (para depurar; lo puedes mostrar si quieres)
+res_localidad <- moteles %>%
+  summarise(
+    total = n(),
+    con_localidad = sum(!is.na(localidad)),
+    sin_localidad = sum(is.na(localidad)),
+    pct_asignada = round(100 * con_localidad/total, 1)
+  )
+
+# 7) (opcional) lista de ejemplos NA para revisar el patrón en direcciones
+ejemplos_na <- moteles %>%
+  filter(is.na(localidad)) %>%
+  select(nombre, direccion) %>%
+  head(10)
+
+```
+
+
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+library(dplyr)
+library(geosphere)
+
+if(!"motel_id" %in% names(moteles)) {
+  moteles <- moteles %>% mutate(motel_id = row_number())
+}
+
+known <- moteles %>% filter(!is.na(localidad), !is.na(lon), !is.na(lat))
+unk   <- moteles %>% filter(is.na(localidad), !is.na(lon), !is.na(lat))
+
+stopifnot(nrow(known) > 0)
+stopifnot(nrow(unk) > 0)
+
+D <- distm(
+  as.matrix(unk[, c("lon","lat")]),
+  as.matrix(known[, c("lon","lat")]),
+  fun = distHaversine
+)
+
+idx <- apply(D, 1, which.min)
+
+unk2 <- unk %>%
+  mutate(
+    localidad_knn = known$localidad[idx],
+    dist_km = D[cbind(seq_len(nrow(unk)), idx)]/1000,
+    localidad_knn = if_else(dist_km <= 2, localidad_knn, NA_character_)
+  ) %>%
+  select(motel_id, localidad_knn, dist_km)
+
+# Join limpio: elimina columnas viejas para evitar .x/.y
+moteles <- moteles %>%
+  select(-any_of(c("localidad_knn","dist_km"))) %>%
+  left_join(unk2, by = "motel_id") %>%
+  mutate(
+    localidad = coalesce(localidad, localidad_knn)
+  )
+
+moteles %>% count(localidad, sort = TRUE)
+
+
+
+
+```
+
+
+
+### Población por localidad (año de referencia)
+
+Usamos una base de demografía por localidades y agregamos población total por localidad (año objetivo: 2025).
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+ano_ref <- 2025
+
+pob_loc <- read_delim(f_pop, delim = ";", show_col_types = FALSE) %>%
+  clean_names() %>%
+  filter(ano == ano_ref) %>%
+  group_by(nombre_localidad) %>%
+  summarise(
+    poblacion_total = sum(poblacion_7, na.rm = TRUE),
+    poblacion_20_39 = sum(poblacion_7[edad %in% 20:39], na.rm = TRUE),
+    prop_20_39      = poblacion_20_39 / poblacion_total,
+    .groups = "drop"
+  ) %>%
+  filter(nombre_localidad != "Bogotá") %>%  # total ciudad
+  rename(localidad = nombre_localidad)
+
+pob_loc %>% arrange(desc(poblacion_total)) %>% head(10)
+```
+
+### Delitos sexuales por localidad (SIEDCO)
+
+Usamos una base en la que se encuentra un recuento de delitos sexuales cometidos en las localidades de Bogotá.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| results: hide
+
+
+library(readxl)
+library(dplyr)
+library(stringr)
+
+
+# 1) Lee el Excel como tabla "cruda" (sin encabezados)
+raw_siedco <- read_excel(
+  file.path(data_dir, "Análisis de datos Siedco.xlsx"),
+  sheet = 1,
+  col_names = FALSE
+)
+
+# 2) Mira las primeras filas
+raw_siedco[1:25, 1:8]
+
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+
+hdr_row <- which(apply(raw_siedco, 1, function(x) any(grepl("LOCALIDAD", x, ignore.case = TRUE))))[1]
+raw_siedco[hdr_row, 1:8]
+
+del_loc <- raw_siedco[(hdr_row+1):nrow(raw_siedco), 1:6]
+
+names(del_loc) <- c("localidad_raw","ene_nov_2024","ene_nov_2025","var_ene_nov","nov_2024","nov_2025")
+
+del_loc <- del_loc %>%
+  mutate(across(-localidad_raw, as.numeric)) %>%
+  filter(!is.na(localidad_raw)) %>%
+  mutate(localidad_raw = as.character(localidad_raw)) %>%
+  filter(!str_detect(localidad_raw, regex("TOTAL|Mensaje|Fecha|SIN LOCALIZACION", ignore_case = TRUE))) %>%
+  mutate(
+    localidad = str_replace(localidad_raw, "^[0-9]{1,2}-", ""),
+    localidad = str_squish(localidad),
+    # 👇 CLAVE: normaliza formato para que matchee con moteles/población
+    localidad = str_to_title(str_to_lower(localidad))
+  ) %>%
+  select(localidad, ene_nov_2024)
+
+moteles %>% distinct(localidad) %>% arrange(localidad)
+del_loc %>% distinct(localidad) %>% arrange(localidad)
+
+# ¿Qué localidades existen en moteles pero no en del_loc?
+moteles %>% distinct(localidad) %>% anti_join(del_loc %>% distinct(localidad), by="localidad")
+
+```
+
+### Dataset final para modelar
+
+Unimos moteles + población + delitos por localidad y calculamos tasa de delitos por 100k hab.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+datos <- moteles %>%
+  filter(!is.na(localidad)) %>%
+  left_join(pob_loc, by = "localidad") %>%
+  left_join(del_loc, by = "localidad") %>%
+  mutate(
+    log_poblacion     = log(poblacion_total),
+    tasa_delitos_100k = (ene_nov_2024 / poblacion_total) * 1e5
+  ) %>%
+  filter(!is.na(poblacion_total), !is.na(ene_nov_2024))
+
+datos %>%
+  select(nombre, localidad, rating, resenas, exito, poblacion_total, prop_20_39, ene_nov_2024, tasa_delitos_100k) %>%
+  head()
+```
+
+---
+
+## Preguntas Bayesianas
+
+### Pregunta 1 (Beta–Binomial): ¿Cuál es la probabilidad posterior de que un motel sea exitoso?
+
+- Prior: \(p \sim \text{Beta}(1,1)\)  
+- Datos: \(s \sim \text{Binomial}(n,p)\)  
+- Posterior: \(p \mid s \sim \text{Beta}(1+s,\;1+n-s)\)
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+n <- nrow(datos)
+s <- sum(datos$exito, na.rm = TRUE)
+
+a0 <- 1; b0 <- 1
+a_post <- a0 + s
+b_post <- b0 + (n - s)
+
+posterior_mean <- a_post / (a_post + b_post)
+ci_95 <- qbeta(c(0.025, 0.975), a_post, b_post)
+
+tibble(
+  n = n, exitosos = s,
+  media_posterior = posterior_mean,
+  ci_2_5 = ci_95[1],
+  ci_97_5 = ci_95[2]
+)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+p_grid <- seq(0, 1, length.out = 400)
+
+dens_df <- tibble(
+  p = p_grid,
+  Prior = dbeta(p_grid, a0, b0),
+  Posterior = dbeta(p_grid, a_post, b_post)
+) %>%
+  pivot_longer(-p, names_to = "distribucion", values_to = "densidad")
+
+ggplot(dens_df, aes(p, densidad, color = distribucion)) +
+  geom_line(linewidth = 1) +
+  labs(
+    title = "Probabilidad de éxito comercial (prior vs posterior)",
+    x = "p = P(éxito)",
+    y = "Densidad"
+  )
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+grid <- tibble(p = seq(0, 1, length.out = 2000)) %>%
+  mutate(
+    Prior     = dbeta(p, a0, b0),
+    Posterior = dbeta(p, a_post, b_post)
+  ) %>%
+  pivot_longer(cols = c(Prior, Posterior),
+               names_to = "distribution", values_to = "densidad")
+
+ggplot(grid, aes(x = p, y = densidad, color = distribution)) +
+  geom_line(linewidth = 1) +
+  geom_vline(xintercept = posterior_mean, linetype = 2) +
+  geom_vline(xintercept = ci_95, linetype = 3) +
+  labs(
+    title = "Probabilidad de éxito comercial (prior vs posterior)",
+    x = "p = P(éxito)",
+    y = "Densidad",
+    color = ""
+  )
+
+```
+
+Bajo un enfoque **Beta–Binomial** con prior no informativo (p\sim\text{Beta}(1,1)), y usando la muestra ampliada con emparejamiento geográfico exitoso ((n=54) moteles), se observan (s=21) establecimientos clasificados como “exitosos” (según el criterio operativo de superar las medianas de *rating* y *reseñas*). La actualización bayesiana conduce a una posterior (,p\mid s \sim \text{Beta}(22,34),), con una **media posterior** de **0.393** y un **intervalo creíble al 95%** de **[0.270, 0.523]**. En términos sustantivos, la evidencia disponible sugiere que la probabilidad de éxito comercial de un motel “típico” en la submuestra está alrededor de **4 de cada 10**, con incertidumbre razonable pero acotada. Gráficamente, esto se refleja en el contraste entre el prior uniforme (sin preferencia inicial) y la distribución posterior, que se **concentra** alrededor de valores cercanos a 0.4, incorporando la información empírica observada y reduciendo la dispersión respecto al prior.
+
+
+---
+
+### Pregunta 2 (Normal–InvGamma): ¿Cambia el rating promedio en zonas de alta vs baja criminalidad?
+
+Definimos **alta criminalidad** si la tasa de delitos (por localidad) está por encima de la mediana.
+
+Modelo por grupo \(g\in\{0,1\}\):  
+\[
+y_i \mid \mu_g,\sigma_g^2 \sim \mathcal{N}(\mu_g,\sigma_g^2),\quad
+\mu_g \mid \sigma_g^2 \sim \mathcal{N}(m_0,\sigma_g^2/k_0),\quad
+\sigma_g^2 \sim \text{Inv-Gamma}(a_0,b_0)
+\]
+Conjugado => posterior cerrada. Muestreamos la posterior para obtener \(\Delta = \mu_{alta} - \mu_{baja}\).
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| results: hide
+
+datos2 <- datos %>%
+  mutate(alta_criminalidad = as.integer(tasa_delitos_100k >= median(tasa_delitos_100k, na.rm = TRUE)))
+
+```
+
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| results: hide
+
+# Hiperparámetros (débiles)
+m0 <- 4.0    # rating típico
+k0 <- 0.5    # "peso" del prior en la media
+a0 <- 2
+b0 <- 0.5    # controla la escala del prior en varianza
+
+post_group <- function(y, m0, k0, a0, b0){
+  y <- y[is.finite(y)]
+  n <- length(y)
+  ybar <- mean(y)
+  sse <- sum((y - ybar)^2)
+
+  kN <- k0 + n
+  mN <- (k0*m0 + n*ybar) / kN
+  aN <- a0 + n/2
+  bN <- b0 + 0.5*sse + (k0*n*(ybar - m0)^2)/(2*kN)
+
+  list(n=n, mN=mN, kN=kN, aN=aN, bN=bN)
+}
+
+y_low  <- datos2 %>% filter(alta_criminalidad==0) %>% pull(rating)
+y_high <- datos2 %>% filter(alta_criminalidad==1) %>% pull(rating)
+
+P_low  <- post_group(y_low,  m0,k0,a0,b0)
+P_high <- post_group(y_high, m0,k0,a0,b0)
+
+P_low
+P_high
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+# Muestreo posterior
+S <- 20000
+
+# Si sigma^2 ~ InvGamma(a,b) entonces 1/sigma^2 ~ Gamma(a, rate=b)
+sig2_low  <- 1 / rgamma(S, shape = P_low$aN,  rate = P_low$bN)
+mu_low    <- rnorm(S, mean = P_low$mN,  sd = sqrt(sig2_low / P_low$kN))
+
+sig2_high <- 1 / rgamma(S, shape = P_high$aN, rate = P_high$bN)
+mu_high   <- rnorm(S, mean = P_high$mN, sd = sqrt(sig2_high / P_high$kN))
+
+delta <- mu_high - mu_low
+
+tibble(
+  delta_media = mean(delta),
+  delta_q025  = quantile(delta, 0.025),
+  delta_q975  = quantile(delta, 0.975),
+  prob_delta_mayor_0 = mean(delta > 0)
+)
+```
+
+Sí **cambia**, pero el cambio es **pequeño** y con **incertidumbre**.
+ (\Delta=\mu(\text{alta})-\mu(\text{baja})), el posterior quedó:
+
+* **(\Delta) media posterior:** **0.085** puntos de rating
+* **ICr 95%:** **[-0.112, 0.280]**
+* **(P(\Delta>0)):** **0.805**
+
+Interpretación: con los datos actuales hay alrededor de **80.5%** de probabilidad de que el rating promedio sea **mayor en zonas de alta criminalidad** que en zonas de baja criminalidad, pero el **intervalo creíble incluye 0**, así que el efecto no es concluyente en el sentido “fuerte”. En términos prácticos, si existe diferencia, parece ser del orden de **una décima de punto**, es decir, **leve**.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+delta_df <- tibble(delta = delta)
+
+ggplot(delta_df, aes(delta)) +
+  geom_histogram(bins = 50) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  labs(
+    title = "Posterior de Δ = μ(alta criminalidad) − μ(baja criminalidad)",
+    x = "Δ (puntos de rating)",
+    y = "Frecuencia"
+  )
+```
+
+
+
+En esta comparación se estimó bayesianamente la diferencia (\Delta=\mu(\text{alta criminalidad})-\mu(\text{baja criminalidad})) en el **rating promedio**. La posterior se concentra en valores levemente positivos (media (\approx 0.085)), lo que sugiere una tendencia a ratings ligeramente mayores en zonas de alta criminalidad. Sin embargo, el intervalo creíble al 95% ([-0.112,;0.280]) aún incluye el cero, por lo que la magnitud del efecto es incierta y compatible con ausencia de diferencia. Aun así, la probabilidad posterior (P(\Delta>0)=0.805) indica que, dadas las observaciones, es más plausible un efecto positivo pequeño que uno negativo; en conjunto, la evidencia apunta a una diferencia **modesta** más que a un contraste marcado entre zonas.
+
+
+
+---
+
+### Pregunta 3 (Gamma–Poisson): ¿Qué localidades tienen mayor densidad de moteles por 100k hab?
+
+Modelo por localidad:
+\[
+y_j \sim \text{Poisson} (\text{poblacion}_j \cdot \lambda_j),\quad
+\lambda_j \sim \text{Gamma}(a_0,b_0)
+\Rightarrow
+\lambda_j\mid y_j \sim \text{Gamma}(a_0+y_j,\; b_0+\text{poblacion}_j)
+\]
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+conteos_loc <- datos %>%
+  count(localidad, name = "n_moteles") %>%
+  left_join(pob_loc, by = "localidad")
+
+# Prior débil: media ~ 1 motel por 100k hab (tasa por persona)
+a0 <- 2
+b0 <- 2e5
+
+conteos_loc <- conteos_loc %>%
+  mutate(
+    a_post = a0 + n_moteles,
+    b_post = b0 + poblacion_total,
+    lambda_mean = a_post / b_post,  # moteles por persona
+    densidad_100k_mean = lambda_mean * 1e5,
+    densidad_100k_q025 = qgamma(0.025, shape = a_post, rate = b_post) * 1e5,
+    densidad_100k_q975 = qgamma(0.975, shape = a_post, rate = b_post) * 1e5
+  )
+
+conteos_loc %>%
+  arrange(desc(densidad_100k_mean)) %>%
+  select(localidad, n_moteles, poblacion_total, densidad_100k_mean, densidad_100k_q025, densidad_100k_q975)
+```
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+plot_df <- conteos_loc %>%
+  arrange(densidad_100k_mean) %>%
+  mutate(localidad = factor(localidad, levels = localidad))
+
+ggplot(plot_df, aes(x = densidad_100k_mean, y = localidad)) +
+  geom_point(size = 3) +
+  geom_errorbarh(aes(xmin = densidad_100k_q025, xmax = densidad_100k_q975), height = 0.2) +
+  labs(
+    title = "Densidad posterior de moteles por 100.000 hab (ICr 95%)",
+    x = "Moteles por 100.000 habitantes",
+    y = ""
+  )
+```
+En la Pregunta 3 se estimó, mediante un modelo **Gamma–Poisson**, la **densidad de moteles por 100.000 habitantes** en cada localidad, con el fin de comparar territorios controlando por tamaño poblacional (no solo por conteo bruto de moteles). Los resultados muestran un gradiente claro: **Antonio Nariño** presenta la mayor densidad posterior (media ≈ **4.65** moteles/100k), seguida por **Teusaquillo** (≈ **3.36**) y **Tunjuelito** (≈ **2.12**); en un nivel intermedio aparece **Chapinero** (≈ **1.92**), mientras que **Engativá** (≈ **1.17**), **Kennedy** (≈ **0.86**) y **Usaquén** (≈ **0.65**) exhiben densidades menores. En el gráfico, los puntos representan la **media posterior** y las barras el **intervalo creíble al 95%**: aunque la incertidumbre varía entre localidades (en especial donde el conteo es más bajo), la separación entre los grupos de mayor y menor densidad se mantiene, lo que sugiere que la oferta de moteles está **relativamente más concentrada** —por habitante— en localidades centrales y de menor población total como Antonio Nariño y Teusaquillo, y **más dispersa** en localidades grandes como Kennedy y Usaquén.
+
+
+---
+
+## Visualizaciones rápidas
+
+### 3.1 Puntos por coordenadas
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+
+library(leaflet)
+
+pal <- colorFactor(c("red","blue"), domain = c(0,1))
+
+leaflet(datos) %>%
+  addProviderTiles(providers$CartoDB.Positron) %>%
+  addCircleMarkers(
+    ~lon, ~lat,
+    radius = 6,
+    color = ~pal(exito),
+    fillOpacity = 0.8,
+    popup = ~paste0("<b>", nombre, "</b><br>",
+                    "Localidad: ", localidad, "<br>",
+                    "Rating: ", rating, "<br>",
+                    "Reseñas: ", resenas, "<br>",
+                    "Éxito: ", exito)
+  ) %>%
+  addLegend("bottomright", pal = pal, values = ~exito, title = "Éxito")
+
+
+```
+
+En el mapa interactivo se visualiza la **distribución espacial** de los moteles analizados en Bogotá, diferenciando por color la variable de **éxito comercial** (según el criterio del estudio). La representación permite identificar que los establecimientos se agrupan principalmente en corredores urbanos específicos —con presencia tanto de moteles exitosos como no exitosos—, lo cual sugiere que el desempeño no depende únicamente de “estar en una zona”, sino de una combinación de condiciones locales y características del establecimiento. Además, el contraste visual entre puntos evidencia posibles **clústeres** donde conviene profundizar el análisis (por ejemplo, comparando con la densidad por 100.000 habitantes y el contexto de seguridad), mientras que la exploración dinámica (zoom y desplazamiento) facilita revisar casos puntuales y su ubicación relativa dentro de la ciudad.
+
+
+
+### Rating vs reseñas (con cortes de mediana)
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+library(dplyr)
+library(plotly)
+
+datos_sc <- datos %>%
+  filter(!is.na(rating), !is.na(resenas), resenas > 0) %>%   # <- clave
+  mutate(
+    exito_f = factor(exito),
+    resenas_log10 = log10(resenas),
+    hover = paste0(
+      "<b>", nombre, "</b><br>",
+      "Localidad: ", localidad, "<br>",
+      "Rating: ", round(rating, 2), "<br>",
+      "Reseñas: ", resenas, "<br>",
+      "Éxito: ", exito
+    )
+  )
+
+ymin <- min(datos_sc$resenas_log10, na.rm = TRUE)
+ymax <- max(datos_sc$resenas_log10, na.rm = TRUE)
+xmin <- min(datos_sc$rating, na.rm = TRUE)
+xmax <- max(datos_sc$rating, na.rm = TRUE)
+
+plot_ly(
+  data = datos_sc,
+  x = ~rating,
+  y = ~resenas_log10,
+  type = "scatter",
+  mode = "markers",
+  color = ~exito_f,
+  text = ~hover,
+  hoverinfo = "text"
+) %>%
+  layout(
+    title = "Rating vs Reseñas (reseñas en log10)",
+    xaxis = list(title = "Rating"),
+    yaxis = list(title = "Reseñas (log10)"),
+    shapes = list(
+      # Línea vertical: mediana rating
+      list(type = "line", x0 = med_rating, x1 = med_rating, y0 = ymin, y1 = ymax,
+           line = list(dash = "dash")),
+      # Línea horizontal: mediana reseñas (en log10)
+      list(type = "line", x0 = xmin, x1 = xmax, y0 = log10(med_resenas), y1 = log10(med_resenas),
+           line = list(dash = "dash"))
+    )
+  )
+
+```
+
+En la figura **Rating vs Reseñas (log10)** se explora la relación entre la **reputación** del motel (calificación promedio) y un proxy de **tracción o demanda observada** (número de reseñas, representado en escala logarítmica para hacer comparables valores muy dispares). Las líneas punteadas corresponden a los **puntos de corte por mediana** y dividen el plano en cuatro cuadrantes: el **cuadrante superior derecho** concentra los establecimientos que superan simultáneamente ambos umbrales y, por tanto, se clasifican como **exitosos** bajo la regla operativa del estudio. Visualmente se aprecia que el éxito no equivale únicamente a tener un rating alto: existen moteles con buena calificación pero pocas reseñas (alta reputación, baja evidencia de demanda) y otros con más reseñas pero ratings cercanos al umbral. En conjunto, la dispersión observada respalda el uso de un criterio combinado (rating + reseñas), al distinguir entre calidad percibida y visibilidad/uso efectivo, y evita conclusiones basadas en una sola dimensión.
+
+
+---
+
+## Modelo multivariado con Stan
+
+[
+\text{exito}_i \sim \text{Bernoulli}(p_i),\qquad
+\text{logit}(p_i)=\beta_0+\beta_1,\text{log_poblacion_sc}+\beta_2,\text{tasa_delitos_sc}+\beta_3,\text{prop_20_39_sc}
+]
+
+con **n = 22** observaciones (submuestra con datos completos) y 4 predictores (incluyendo intercepto).
+
+### Resultados (mediana posterior)
+
+* Intercepto: **−0.87**
+* **log_poblacion_sc:** **+0.45**
+* **tasa_delitos_sc:** **+0.17**
+* **prop_20_39_sc:** **+0.04**
+
+**Interpretación:** en términos de dirección, el modelo “tiende” a decir que:
+
+* mayor **población** (estandarizada) se asocia con **mayor** probabilidad de éxito,
+* mayor **tasa de delitos** (estandarizada) se asocia con **mayor** probabilidad de éxito (ojo: esto puede ser un efecto espurio o de confusión por centralidad/densidad urbana),
+* mayor proporción de población 20–39 se asocia con un efecto **casi nulo**.
+
+### Lo más importante: la incertidumbre es grande
+
+El gráfico de intervalos posteriores que muestras deja claro que, con **n=22**, los intervalos son amplios y **cruzan 0** (o muy cerca) para varios coeficientes. Eso implica:
+
+* hay **señal débil**,
+* el modelo **no puede afirmar** (con alta credibilidad) que los efectos sean distintos de cero para todos los predictores,
+* y la interpretación debe ir en clave de “tendencias” más que de “prueba concluyente”.
+
+### Traducción a odds ratio (más intuitivo)
+
+Como las covariables están en z-score (`_sc`), un aumento de **1 desviación estándar** implica:
+
+* **log_poblacion_sc = 0.45** → OR ≈ (e^{0.45}=1.57).
+  *Aumenta ~57% las odds de éxito* (tendencia).
+* **tasa_delitos_sc = 0.17** → OR ≈ (e^{0.17}=1.19).
+  *Aumenta ~19% las odds* (tendencia pequeña).
+* **prop_20_39_sc = 0.04** → OR ≈ (e^{0.04}=1.04).
+  *Efecto prácticamente nulo*.
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+# install.packages(c("rstanarm","bayesplot","posterior"))
+library(rstan)
+library(rstanarm)
+library(bayesplot)
+library(posterior)
+
+options(mc.cores = parallel::detectCores())
+rstan_options(auto_write = TRUE)
+
+datos_m <- datos %>%
+  mutate(
+    log_poblacion_sc = as.numeric(scale(log_poblacion)),
+    tasa_delitos_sc  = as.numeric(scale(tasa_delitos_100k)),
+    prop_20_39_sc    = as.numeric(scale(prop_20_39))
+  )
+
+fit_logit <- stan_glm(
+  exito ~ log_poblacion_sc + tasa_delitos_sc + prop_20_39_sc,
+  data = datos_m,
+  family = binomial(link = "logit"),
+  prior = normal(0, 1, autoscale = FALSE),
+  prior_intercept = normal(0, 2.5, autoscale = FALSE),
+  chains = 4, iter = 2000, seed = 123
+)
+
+print(fit_logit, digits = 2)
+
+draws <- as.matrix(fit_logit)
+mcmc_intervals(draws[, c("(Intercept)", "log_poblacion_sc", "tasa_delitos_sc", "prop_20_39_sc")]) +
+  ggtitle("Coeficientes: mediana e intervalos posteriores")
+```
+
+
+En el modelo multivariado bayesiano (regresión logística con Stan) se estimó la probabilidad de **éxito comercial** en función de tres predictores estandarizados: (\log()población()), tasa de delitos por 100.000 habitantes y proporción de población 20–39. La figura resume para cada coeficiente la **mediana posterior** y sus **intervalos creíbles**, permitiendo evaluar dirección e incertidumbre del efecto en la escala logit. En términos generales, los resultados sugieren una **tendencia positiva** para (\log()población()) y para la **tasa de delitos**, mientras que la proporción 20–39 muestra un efecto **más débil** y cercano a cero; sin embargo, la amplitud de los intervalos (y su cercanía/cruce con el cero) indica que la evidencia no es igualmente concluyente para todos los predictores. En conjunto, el modelo apunta a que variables del entorno urbano podrían asociarse con el éxito, pero la inferencia debe interpretarse como **probabilística y exploratoria**, consistente con el tamaño muestral y la variabilidad observada en los datos.
+
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+print(fit_logit, digits = 2)
+posterior_interval(fit_logit, prob = 0.95)
+
+```
+
+
+En el modelo multivariado bayesiano (regresión logística con Stan) se explicó la probabilidad de **éxito comercial** a partir de (\log()población()), tasa de delitos por 100.000 habitantes y proporción de población 20–39 (todas estandarizadas). La **mediana posterior** sugiere efectos pequeños: (\beta_{\text{log_población}}\approx -0.05), (\beta_{\text{delitos}}\approx 0.11) y (\beta_{\text{20–39}}\approx -0.23). No obstante, los **intervalos creíbles al 95%** para los tres predictores incluyen el cero (p. ej., (\log()población()) ([-0.73,;0.59]), delitos ([-0.63,;0.81]), 20–39 ([-0.84,;0.38])), lo que indica que, con la información disponible, **no hay evidencia fuerte** para afirmar un efecto distinto de cero en ninguno de ellos. En consecuencia, el modelo sugiere que, una vez controladas simultáneamente estas covariables, la probabilidad de éxito no presenta una asociación robusta con población, criminalidad o estructura etaria; el resultado es consistente con efectos potencialmente modestos y con la incertidumbre residual propia del tamaño muestral y de la variabilidad entre localidades.
+
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+post <- as.matrix(fit_logit)
+
+c(
+  P_log_poblacion_pos = mean(post[, "log_poblacion_sc"] > 0),
+  P_tasa_delitos_pos  = mean(post[, "tasa_delitos_sc"] > 0),
+  P_prop_20_39_pos    = mean(post[, "prop_20_39_sc"] > 0)
+)
+
+```
+
+Estas probabilidades complementan muy bien la lectura del modelo, porque resumen directamente cuánta masa posterior apoya que cada efecto sea positivo. En particular, (P(\beta_{\text{log_población}}>0)=0.449) indica que el signo del efecto de la población está **prácticamente balanceado** (ligera inclinación a ser negativo), por lo que no hay una tendencia clara. Para la tasa de delitos, (P(\beta_{\text{delitos}}>0)=0.619) sugiere una **inclinación moderada** hacia un efecto positivo, aunque insuficiente para considerarlo robusto dado que el intervalo creíble al 95% aún incluye cero. Finalmente, (P(\beta_{\text{20–39}}>0)=0.232) muestra que la mayor parte de la masa posterior favorece un efecto **negativo** de esta proporción sobre el éxito; sin embargo, al igual que en los demás predictores, la incertidumbre sigue siendo alta y el resultado debe interpretarse como una señal sugerente más que concluyente.
+
+
+
+En conclusión, el análisis bayesiano indica que la probabilidad de que un motel sea “exitoso” —bajo el criterio operativo de superar simultáneamente la mediana de *rating* y *reseñas*— se ubica alrededor de **0.39** en la muestra con datos completos ((n=54); ICr 95%: **0.27–0.52**), es decir, el éxito es relativamente frecuente pero no predominante. Al comparar zonas de **alta vs baja criminalidad**, la evidencia sugiere una diferencia **leve y positiva** en el rating promedio ((\Delta\approx 0.085)), con una probabilidad posterior (P(\Delta>0)\approx 0.81); no obstante, el intervalo creíble al 95% aún incluye cero, por lo que el efecto debe entenderse como una tendencia moderada y no como un contraste definitivo. En la dimensión espacial, la estimación Gamma–Poisson revela heterogeneidad clara en la **densidad de moteles por 100.000 habitantes**, destacándose **Antonio Nariño** y **Teusaquillo** con densidades relativas más altas frente a localidades más pobladas como **Kennedy** y **Usaquén**, lo que sugiere patrones de concentración que no se explican únicamente por el tamaño poblacional. Finalmente, el modelo logístico multivariado con Stan no encuentra asociaciones robustas entre éxito y las covariables consideradas (los ICr 95% de los coeficientes incluyen cero), aunque las probabilidades de signo sugieren señales débiles: un efecto positivo moderado para delitos ((P(\beta>0)\approx 0.62)) y una inclinación a efecto negativo para la proporción 20–39 ((P(\beta>0)\approx 0.23)). En conjunto, los resultados consolidan un panorama **probabilístico y exploratorio**: describen la prevalencia del éxito, identifican diferencias territoriales en densidad y sugieren relaciones potenciales con el contexto urbano, pero recomiendan ampliar variables y cobertura para fortalecer la explicación multivariada del desempeño comercial.
+
+
+
+
+
+
+
+
+
