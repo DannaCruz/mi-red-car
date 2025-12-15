@@ -1,5 +1,6 @@
 ---
 title: "Descriptivo"
+author: "Samuel A. Moreno"
 format: html
 editor: visual
 ---
