@@ -56,3 +56,16 @@ Aquí damos el salto a la inferencia con incertidumbre explícita: aplicamos mod
 
 :::
 
+
+
+
+
+::: {.card .mis-card}
+### 4. INFORME
+**![Imagen](motel2.png){.center-img width=50%}**
+
+**Informe conjunto**
+
+[Ver más →](Proyecto_Redes_Andrea_Mora (5).pdf){.btn-vermas}
+
+:::
