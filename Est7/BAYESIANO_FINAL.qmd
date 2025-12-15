@@ -40,8 +40,6 @@ f_moteles <- file.path(data_dir, "Moteles_Final (2).csv")
 f_pop    <- file.path(data_dir, "osb_demografia-poblacion-localidad.csv")
 f_siedco <- file.path(data_dir, "Análisis de datos Siedco_Modelo Siedco - Delitos.xlsx")
 
-# Si tu sistema tiene problemas con tildes/espacios, renombra archivos a nombres simples
-# y actualiza aquí. Ej: "siedco_delitos.xlsx"
 ```
 
 ### Cargar moteles y crear variable de éxito comercial
@@ -58,7 +56,6 @@ Un motel es "exitoso" si **rating** y **reseñas** están por encima (o igual) d
 moteles <- read_csv(f_moteles, show_col_types = FALSE) %>%
   clean_names()
 
-# En tu archivo original, "reseñas" suele quedar como "rese_nas" con clean_names()
 if(!"resenas" %in% names(moteles)){
   if("rese_nas" %in% names(moteles)) moteles <- moteles %>% rename(resenas = rese_nas)
 }
@@ -170,7 +167,6 @@ ejemplos_na <- moteles %>%
   head(10)
 
 ```
-
 
 
 ```{r}
@@ -303,7 +299,6 @@ del_loc <- del_loc %>%
   mutate(
     localidad = str_replace(localidad_raw, "^[0-9]{1,2}-", ""),
     localidad = str_squish(localidad),
-    # 👇 CLAVE: normaliza formato para que matchee con moteles/población
     localidad = str_to_title(str_to_lower(localidad))
   ) %>%
   select(localidad, ene_nov_2024)
@@ -347,9 +342,9 @@ datos %>%
 
 ### Pregunta 1 (Beta–Binomial): ¿Cuál es la probabilidad posterior de que un motel sea exitoso?
 
-- Prior: \(p \sim \text{Beta}(1,1)\)  
-- Datos: \(s \sim \text{Binomial}(n,p)\)  
-- Posterior: \(p \mid s \sim \text{Beta}(1+s,\;1+n-s)\)
+- Prior: $$ \(p ~ \text{Beta} (1,1)\) $$ 
+- Datos: $$ \(s ~ \text{Binomial}(n,p)\) $$ 
+- Posterior: $$ \(p \mid s ~ \text{Beta}(1+s,\;1+n-s)\) $$
 
 ```{r}
 #| echo: false
@@ -426,7 +421,7 @@ ggplot(grid, aes(x = p, y = densidad, color = distribution)) +
 
 ```
 
-Bajo un enfoque **Beta–Binomial** con prior no informativo (p\sim\text{Beta}(1,1)), y usando la muestra ampliada con emparejamiento geográfico exitoso ((n=54) moteles), se observan (s=21) establecimientos clasificados como “exitosos” (según el criterio operativo de superar las medianas de *rating* y *reseñas*). La actualización bayesiana conduce a una posterior (,p\mid s \sim \text{Beta}(22,34),), con una **media posterior** de **0.393** y un **intervalo creíble al 95%** de **[0.270, 0.523]**. En términos sustantivos, la evidencia disponible sugiere que la probabilidad de éxito comercial de un motel “típico” en la submuestra está alrededor de **4 de cada 10**, con incertidumbre razonable pero acotada. Gráficamente, esto se refleja en el contraste entre el prior uniforme (sin preferencia inicial) y la distribución posterior, que se **concentra** alrededor de valores cercanos a 0.4, incorporando la información empírica observada y reduciendo la dispersión respecto al prior.
+Bajo un enfoque **Beta–Binomial** con prior no informativo $$ (p\sim\text{Beta}(1,1)) $$, y usando la muestra ampliada con emparejamiento geográfico exitoso ((n=54) moteles), se observan (s=21) establecimientos clasificados como “exitosos” (según el criterio operativo de superar las medianas de *rating* y *reseñas*). La actualización bayesiana conduce a una posterior $$ (,p\mid s \sim \text{Beta}(22,34),) $$ , con una **media posterior** de **0.393** y un **intervalo creíble al 95%** de **[0.270, 0.523]**. En términos sustantivos, la evidencia disponible sugiere que la probabilidad de éxito comercial de un motel “típico” en la submuestra está alrededor de **4 de cada 10**, con incertidumbre razonable pero acotada. Gráficamente, esto se refleja en el contraste entre el prior uniforme (sin preferencia inicial) y la distribución posterior, que se **concentra** alrededor de valores cercanos a 0.4, incorporando la información empírica observada y reduciendo la dispersión respecto al prior.
 
 
 ---
@@ -435,12 +430,12 @@ Bajo un enfoque **Beta–Binomial** con prior no informativo (p\sim\text{Beta}(1
 
 Definimos **alta criminalidad** si la tasa de delitos (por localidad) está por encima de la mediana.
 
-Modelo por grupo \(g\in\{0,1\}\):  
-\[
+Modelo por grupo $$ \(g\in\{0,1\}\) $$ :  
+$$
 y_i \mid \mu_g,\sigma_g^2 \sim \mathcal{N}(\mu_g,\sigma_g^2),\quad
 \mu_g \mid \sigma_g^2 \sim \mathcal{N}(m_0,\sigma_g^2/k_0),\quad
 \sigma_g^2 \sim \text{Inv-Gamma}(a_0,b_0)
-\]
+$$
 Conjugado => posterior cerrada. Muestreamos la posterior para obtener \(\Delta = \mu_{alta} - \mu_{baja}\).
 
 ```{r}
@@ -518,9 +513,9 @@ tibble(
 ```
 
 Sí **cambia**, pero el cambio es **pequeño** y con **incertidumbre**.
- (\Delta=\mu(\text{alta})-\mu(\text{baja})), el posterior quedó:
+ ( \Delta = \mu(\text{alta}) - \mu(\text{baja})) , el posterior quedó:
 
-* **(\Delta) media posterior:** **0.085** puntos de rating
+* **( \Delta ) media posterior:** **0.085** puntos de rating
 * **ICr 95%:** **[-0.112, 0.280]**
 * **(P(\Delta>0)):** **0.805**
 
@@ -555,12 +550,12 @@ En esta comparación se estimó bayesianamente la diferencia (\Delta=\mu(\text{a
 ### Pregunta 3 (Gamma–Poisson): ¿Qué localidades tienen mayor densidad de moteles por 100k hab?
 
 Modelo por localidad:
-\[
+$$
 y_j \sim \text{Poisson} (\text{poblacion}_j \cdot \lambda_j),\quad
 \lambda_j \sim \text{Gamma}(a_0,b_0)
 \Rightarrow
 \lambda_j\mid y_j \sim \text{Gamma}(a_0+y_j,\; b_0+\text{poblacion}_j)
-\]
+$$
 
 ```{r}
 #| echo: false
@@ -832,6 +827,7 @@ Estas probabilidades complementan muy bien la lectura del modelo, porque resumen
 
 
 En conclusión, el análisis bayesiano indica que la probabilidad de que un motel sea “exitoso” —bajo el criterio operativo de superar simultáneamente la mediana de *rating* y *reseñas*— se ubica alrededor de **0.39** en la muestra con datos completos ((n=54); ICr 95%: **0.27–0.52**), es decir, el éxito es relativamente frecuente pero no predominante. Al comparar zonas de **alta vs baja criminalidad**, la evidencia sugiere una diferencia **leve y positiva** en el rating promedio ((\Delta\approx 0.085)), con una probabilidad posterior (P(\Delta>0)\approx 0.81); no obstante, el intervalo creíble al 95% aún incluye cero, por lo que el efecto debe entenderse como una tendencia moderada y no como un contraste definitivo. En la dimensión espacial, la estimación Gamma–Poisson revela heterogeneidad clara en la **densidad de moteles por 100.000 habitantes**, destacándose **Antonio Nariño** y **Teusaquillo** con densidades relativas más altas frente a localidades más pobladas como **Kennedy** y **Usaquén**, lo que sugiere patrones de concentración que no se explican únicamente por el tamaño poblacional. Finalmente, el modelo logístico multivariado con Stan no encuentra asociaciones robustas entre éxito y las covariables consideradas (los ICr 95% de los coeficientes incluyen cero), aunque las probabilidades de signo sugieren señales débiles: un efecto positivo moderado para delitos ((P(\beta>0)\approx 0.62)) y una inclinación a efecto negativo para la proporción 20–39 ((P(\beta>0)\approx 0.23)). En conjunto, los resultados consolidan un panorama **probabilístico y exploratorio**: describen la prevalencia del éxito, identifican diferencias territoriales en densidad y sugieren relaciones potenciales con el contexto urbano, pero recomiendan ampliar variables y cobertura para fortalecer la explicación multivariada del desempeño comercial.
+
 
 
 
